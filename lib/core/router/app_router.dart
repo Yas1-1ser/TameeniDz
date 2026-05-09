@@ -33,6 +33,7 @@ import '../../features/client/settings/client_settings_screen.dart';
 import '../../features/client/policies/client_policies_screen.dart';
 import '../../features/operator/operator_policies_screen.dart';
 import '../../features/onboarding/operator_auth_gate_screen.dart';
+import '../../features/admin/dashboard/admin_application_detail_screen.dart';
 
 class AppRouter {
   static final router = GoRouter(
@@ -216,6 +217,12 @@ class AppRouter {
       GoRoute(
         path: '/admin/settings',
         builder: (c, s) => const ClientSettingsScreen(),
+      ),
+      GoRoute(
+        path: '/admin/application/:id',
+        builder: (c, s) => AdminApplicationDetailScreen(
+          id: s.pathParameters['id']!,
+        ),
       ),
     ],
   );

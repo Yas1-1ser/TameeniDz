@@ -9,6 +9,9 @@ class AppLocalizationsAr extends AppLocalizations {
   AppLocalizationsAr([String locale = 'ar']) : super(locale);
 
   @override
+  String get allOperators => 'جميع المشغلين';
+
+  @override
   String get recentRequests => 'الطلبات الأخيرة';
 
   @override
@@ -1411,4 +1414,31 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get uploadDocuments => 'رفع الوثائق';
+
+  @override
+  String get statusPaid => 'تم الدفع';
+
+  @override
+  String get paymentReceiptTitle => 'إيصال الدفع';
+
+  @override
+  String get paymentReceiptSentToOperator => 'تم إرسال الإيصال إلى المشغل بنجاح';
+
+  @override
+  String get paymentReceiptNumber => 'رقم الإيصال';
+
+  @override
+  String get paymentDate => 'تاريخ الدفع';
+
+  @override
+  String get paymentConfirmedByClient => 'تأكيد الدفع من العميل';
+
+  @override
+  String get downloadReceipt => 'تحميل الإيصال';
+
+  @override
+  String get paymentVerified => 'تم التحقق من الدفع ✓';
+
+  @override
+  String get phoneNumberAlreadyTaken => 'رقم الهاتف هذا مسجل بالفعل';
 }

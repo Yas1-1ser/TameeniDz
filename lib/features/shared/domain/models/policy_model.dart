@@ -17,6 +17,7 @@ class PolicyModel {
   final String? applicantIdNumber;
   final String? planName;
   final String? applicantFullName; // To store the fetched name from users table
+  final String? receiptUrl;
 
 
   PolicyModel({
@@ -36,6 +37,7 @@ class PolicyModel {
     this.applicantIdNumber,
     this.planName,
     this.applicantFullName,
+    this.receiptUrl,
   });
 
   String get applicantName => applicantFullName ?? 'العميل (${id.substring(0, 5)})';
@@ -73,6 +75,7 @@ class PolicyModel {
       applicantIdNumber: json['applicant_id_number'],
       planName: json['plan_name'],
       applicantFullName: json['applicant_full_name'], // Assuming it might be joined
+      receiptUrl: json['receipt_url'],
     );
   }
 
@@ -93,6 +96,7 @@ class PolicyModel {
       'admin_notes': adminNotes,
       'applicant_id_number': applicantIdNumber,
       'plan_name': planName,
+      'receipt_url': receiptUrl,
     };
   }
 
@@ -100,6 +104,8 @@ class PolicyModel {
     switch (statusStr?.toLowerCase()) {
       case 'accepted':
         return PolicyStatus.accepted;
+      case 'paid':
+        return PolicyStatus.paid;
       case 'rejected':
         return PolicyStatus.rejected;
       case 'modificationrequested':
@@ -115,6 +121,8 @@ class PolicyModel {
     switch (status) {
       case PolicyStatus.accepted:
         return 'accepted';
+      case PolicyStatus.paid:
+        return 'paid';
       case PolicyStatus.rejected:
         return 'rejected';
       case PolicyStatus.modificationRequested:

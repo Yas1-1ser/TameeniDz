@@ -8,7 +8,7 @@ import '../../../core/theme/app_colors_extension.dart';
 /// App reload / boot screen.
 ///
 /// Shown every time the app cold-starts (registered as the initial route '/')
-/// before the SplashScreen. Shows the Taminy Elite logo with a pulse animation
+/// before the SplashScreen. Shows the Tameeni Elite logo with a pulse animation
 /// and a loading indicator, then:
 ///  - redirects authenticated users straight to /client/home
 ///  - redirects unauthenticated users to /onboarding

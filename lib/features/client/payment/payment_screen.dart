@@ -1,8 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import 'package:screenshot/screenshot.dart';
+import 'package:share_plus/share_plus.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+import 'dart:io';
+import 'dart:typed_data';
 import 'package:tameenidz/core/theme/app_colors_extension.dart';
 import 'package:tameenidz/generated/l10n/app_localizations.dart';
 import '../../../core/constants/app_colors.dart';
@@ -18,6 +26,7 @@ class PaymentScreen extends ConsumerStatefulWidget {
 
 class _PaymentScreenState extends ConsumerState<PaymentScreen> {
   final _formKey = GlobalKey<FormState>();
+  final _screenshotController = ScreenshotController();
   String _selectedCard = 'dahabiya';
   final TextEditingController _amountController = TextEditingController(
     text: '8,500',
@@ -26,6 +35,9 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
   final TextEditingController _expiryController = TextEditingController();
   final TextEditingController _cvvController = TextEditingController();
   final TextEditingController _cardHolderController = TextEditingController();
+
+  PlatformFile? _receiptPhoto;
+  bool _isUploading = false;
 
   @override
   void dispose() {
@@ -60,91 +72,140 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
       fallbackRoute: '/client',
       body: Form(
         key: _formKey,
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(24),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Back button handled by PortalLayout AppBar
-              const SizedBox(height: 16),
-
-              Text(
-                l10n.electronicPayment,
-                style: const TextStyle(
-                  fontSize: 28,
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.primaryGreen,
-                ),
-              ),
-              const SizedBox(height: 8),
-              Text(
-                l10n.choosePaymentMethod,
-                style: TextStyle(fontSize: 14, color: colors.slate500),
-              ),
-              const SizedBox(height: 32),
-
-              _buildCardIllustration(),
-              const SizedBox(height: 32),
-
-              _buildCardSelection(colors, l10n),
-              const SizedBox(height: 32),
-
-              _buildAmountInput(colors, l10n),
-              const SizedBox(height: 32),
-
-              _buildCardForm(colors, l10n),
-              const SizedBox(height: 32),
-
-              _buildSecurityInfo(colors, l10n),
-              const SizedBox(height: 32),
-
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: () async {
-                    if (_formKey.currentState!.validate()) {
-                      // Perform the actual database insert
-                      await _processSubscription(context, l10n);
-                    }
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.primaryGreen,
-                    foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(vertical: 18),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    elevation: 0,
-                  ),
-                  child: Text(
-                    l10n.payNow,
+        child: Stack(
+          children: [
+            SingleChildScrollView(
+              padding: const EdgeInsets.all(24),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    l10n.electronicPayment,
                     style: const TextStyle(
-                      fontSize: 18,
+                      fontSize: 28,
                       fontWeight: FontWeight.bold,
+                      color: AppColors.primaryGreen,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    l10n.choosePaymentMethod,
+                    style: TextStyle(fontSize: 14, color: colors.slate500),
+                  ),
+                  const SizedBox(height: 32),
+                  _buildCardIllustration(),
+                  const SizedBox(height: 32),
+                  _buildCardSelection(colors, l10n),
+                  const SizedBox(height: 32),
+                  _buildAmountInput(colors, l10n),
+                  const SizedBox(height: 32),
+                  _buildCardForm(colors, l10n),
+                  const SizedBox(height: 24),
+                  _buildReceiptUploadSection(l10n),
+                  const SizedBox(height: 32),
+                  _buildSecurityInfo(colors, l10n),
+                  const SizedBox(height: 32),
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: _isUploading ? null : () async {
+                        if (_formKey.currentState!.validate()) {
+                          await _processSubscription(context, l10n);
+                        }
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.primaryGreen,
+                        foregroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(vertical: 18),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        elevation: 0,
+                      ),
+                      child: Text(
+                        l10n.payNow,
+                        style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 40),
+                ],
+              ),
+            ),
+            if (_isUploading)
+              Positioned.fill(
+                child: Container(
+                  color: Colors.black.withValues(alpha: 0.3),
+                  child: const Center(
+                    child: Card(
+                      child: Padding(
+                        padding: EdgeInsets.all(24),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            CircularProgressIndicator(),
+                            SizedBox(height: 16),
+                            Text('Processing...', style: TextStyle(fontWeight: FontWeight.bold)),
+                          ],
+                        ),
+                      ),
                     ),
                   ),
                 ),
               ),
-              const SizedBox(height: 40),
-            ],
-          ),
+          ],
         ),
       ),
     );
   }
 
+  String? _selectedOperatorId;
+  String? _selectedPlanId;
+
   @override
   void initState() {
     super.initState();
-    // Pre-fill amount if provided from previous screen
+    // Pre-fill amount and track plan/operator details if provided
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (GoRouterState.of(context).extra is double) {
-        final extraAmount = GoRouterState.of(context).extra as double;
-        _amountController.text = NumberFormat.decimalPattern().format(
-          extraAmount,
-        );
+      final extra = GoRouterState.of(context).extra;
+      
+      if (extra is Map<String, dynamic>) {
+        setState(() {
+          _selectedOperatorId = extra['operatorId'] as String?;
+          _selectedPlanId = extra['planId'] as String?;
+          final price = extra['price'];
+          if (price != null) {
+            _amountController.text = NumberFormat.decimalPattern().format(price);
+          }
+        });
+      } else if (extra is double) {
+        _amountController.text = NumberFormat.decimalPattern().format(extra);
       }
     });
+  }
+
+  Future<void> _pickReceipt(AppLocalizations l10n) async {
+    try {
+      final result = await FilePicker.platform.pickFiles(
+        type: FileType.image,
+        withData: true,
+      );
+
+      if (result != null && result.files.isNotEmpty) {
+        setState(() {
+          _receiptPhoto = result.files.first;
+        });
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error picking photo: $e')),
+        );
+      }
+    }
   }
 
   Future<void> _processSubscription(
@@ -154,65 +215,90 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
     final authUser = ref.read(supabaseProvider).auth.currentUser;
     if (authUser == null) return;
 
-    // Show loading indicator
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) => const Center(child: CircularProgressIndicator()),
-    );
+    setState(() => _isUploading = true);
 
     try {
       final client = ref.read(supabaseProvider);
 
-      // Parse amount from controller (handling commas if present)
+      // Parse amount
       final amountStr = _amountController.text.replaceAll(',', '');
       final amount = double.tryParse(amountStr) ?? 8500.0;
 
+      String? receiptUrl;
+
+      // 1. Upload manual receipt photo if provided
+      if (_receiptPhoto != null) {
+        final ext = _receiptPhoto!.extension ?? 'png';
+        final storagePath = 'receipts/${authUser.id}_${DateTime.now().millisecondsSinceEpoch}.$ext';
+        
+        if (kIsWeb) {
+          await client.storage.from('documents').uploadBinary(
+            storagePath,
+            _receiptPhoto!.bytes!,
+            fileOptions: const FileOptions(contentType: 'image/png'),
+          );
+        } else {
+          await client.storage.from('documents').upload(
+            storagePath,
+            File(_receiptPhoto!.path!),
+            fileOptions: const FileOptions(contentType: 'image/png'),
+          );
+        }
+        receiptUrl = client.storage.from('documents').getPublicUrl(storagePath);
+      }
+
       if (widget.policyId != null && widget.policyId!.isNotEmpty) {
         // SCENARIO A: Paying for an existing accepted policy
+        final receiptNum = 'REC-${DateTime.now().millisecondsSinceEpoch}';
         await client
             .from('policies')
             .update({
+              'status': 'paid',
               'paid_at': DateTime.now().toIso8601String(),
-              'receipt_number': 'PAY-${DateTime.now().millisecondsSinceEpoch}',
+              'receipt_number': receiptNum,
+              'receipt_url': receiptUrl,
             })
             .eq('id', widget.policyId!);
       } else {
-        // SCENARIO B: Creating a new direct subscription (legacy flow)
-        final planData =
-            await client
-                .from('plans')
-                .select('id, operator_id, premium_amount')
-                .limit(1)
-                .maybeSingle();
+        // SCENARIO B: Creating a new direct subscription
+        // Use tracked IDs if available, otherwise fallback
+        final planId = _selectedPlanId;
+        final operatorId = _selectedOperatorId;
 
-        if (planData == null) {
-          throw Exception(
-            'No active insurance plans found in database. Please contact support.',
-          );
+        if (planId == null || operatorId == null) {
+           // Fallback to fetching a random one if somehow not provided (legacy)
+           final planData = await client.from('plans').select('id, operator_id').limit(1).maybeSingle();
+           if (planData == null) throw Exception('No plan selected');
+           
+           await client.from('policies').insert({
+              'client_id': authUser.id,
+              'plan_id': planData['id'],
+              'operator_id': planData['operator_id'],
+              'status': 'pending',
+              'amount': amount,
+              'submitted_at': DateTime.now().toIso8601String(),
+              'receipt_url': receiptUrl,
+              'plan_name': 'Comprehensive Auto Takaful',
+            });
+        } else {
+            await client.from('policies').insert({
+              'client_id': authUser.id,
+              'plan_id': planId,
+              'operator_id': operatorId,
+              'status': 'pending',
+              'amount': amount,
+              'submitted_at': DateTime.now().toIso8601String(),
+              'receipt_url': receiptUrl,
+              'plan_name': 'Comprehensive Auto Takaful',
+            });
         }
-
-        final planId = planData['id'];
-        final operatorId = planData['operator_id'];
-
-        await client.from('policies').insert({
-          'client_id': authUser.id,
-          'plan_id': planId,
-          'operator_id': operatorId,
-          'status': 'pending',
-          'amount': amount,
-          'submitted_at': DateTime.now().toIso8601String(),
-          'plan_name': 'Comprehensive Auto Takaful',
-        });
       }
 
       if (mounted) {
-        Navigator.pop(context); // Close loading indicator
         _showSuccessDialog(context, l10n);
       }
     } catch (e) {
       if (mounted) {
-        Navigator.pop(context); // Close loading indicator
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text("❌ Payment Error: $e"),
@@ -220,54 +306,253 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
           ),
         );
       }
+    } finally {
+      if (mounted) setState(() => _isUploading = false);
     }
   }
 
   void _showSuccessDialog(BuildContext context, AppLocalizations l10n) {
+    final now = DateTime.now();
+    final receiptNumber = 'REC-${now.millisecondsSinceEpoch}';
+    final dateStr = DateFormat('dd MMM yyyy – HH:mm').format(now);
+    final methodName = _selectedCard == 'dahabiya' ? 'Edahabia' : 'CIB';
+
     showDialog(
       context: context,
-      builder:
-          (context) => AlertDialog(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20),
-            ),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Icon(
-                  Icons.check_circle,
+      barrierDismissible: false,
+      builder: (context) => Dialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // ── Success Icon ──────────────────────────────────────────
+              Container(
+                width: 80,
+                height: 80,
+                decoration: BoxDecoration(
+                  color: AppColors.accepted.withAlpha(20),
+                  shape: BoxShape.circle,
+                ),
+                child: const Icon(
+                  Icons.check_circle_rounded,
                   color: AppColors.accepted,
-                  size: 64,
+                  size: 48,
                 ),
-                const SizedBox(height: 16),
-                Text(
-                  l10n.paymentSuccessTitle,
-                  style: const TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
+              ),
+              const SizedBox(height: 16),
+              Text(
+                l10n.paymentReceiptTitle,
+                style: const TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 4),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(Icons.send_rounded, size: 14, color: AppColors.accepted),
+                  const SizedBox(width: 6),
+                  Text(
+                    l10n.paymentReceiptSentToOperator,
+                    style: const TextStyle(
+                      fontSize: 12,
+                      color: AppColors.accepted,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  l10n.paymentSuccessSubtitle(
-                    _amountController.text,
-                    _selectedCard == 'dahabiya' ? 'Edahabia' : 'CIB',
-                  ),
-                  textAlign: TextAlign.center,
-                  style: TextStyle(color: context.colors.slate500),
-                ),
-                const SizedBox(height: 24),
-                SizedBox(
+                ],
+              ),
+              const SizedBox(height: 24),
+              // ── Receipt Card ─────────────────────────────────────────
+              Screenshot(
+                controller: _screenshotController,
+                child: Container(
                   width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: () => context.go('/client'),
-                    child: Text(l10n.backToDashboard),
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: context.colors.slate100,
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(color: context.colors.slate200),
+                  ),
+                  child: Column(
+                    children: [
+                      _buildReceiptRow(
+                        l10n.paymentReceiptNumber,
+                        receiptNumber,
+                        Icons.tag_rounded,
+                        context,
+                      ),
+                      const Divider(height: 20),
+                      _buildReceiptRow(
+                        l10n.paymentDate,
+                        dateStr,
+                        Icons.calendar_today_rounded,
+                        context,
+                      ),
+                      const Divider(height: 20),
+                      _buildReceiptRow(
+                        l10n.paymentMethod,
+                        methodName,
+                        Icons.credit_card_rounded,
+                        context,
+                      ),
+                      const Divider(height: 20),
+                      _buildReceiptRow(
+                        l10n.amountToPay,
+                        '${_amountController.text} ${l10n.dzd}',
+                        Icons.account_balance_wallet_rounded,
+                        context,
+                        valueColor: AppColors.primaryGreen,
+                        valueBold: true,
+                      ),
+                    ],
                   ),
                 ),
-              ],
-            ),
+              ),
+              const SizedBox(height: 16),
+              // ── Operator Confirmation Banner ──────────────────────────
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                decoration: BoxDecoration(
+                  color: const Color(0xFF0097A7).withAlpha(15),
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(
+                    color: const Color(0xFF0097A7).withAlpha(60),
+                  ),
+                ),
+                child: Row(
+                  children: [
+                    const Icon(
+                      Icons.verified_rounded,
+                      color: Color(0xFF0097A7),
+                      size: 18,
+                    ),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: Text(
+                        l10n.paymentVerified,
+                        style: const TextStyle(
+                          color: Color(0xFF0097A7),
+                          fontWeight: FontWeight.w700,
+                          fontSize: 13,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 24),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: () => context.go('/client'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.primaryGreen,
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(vertical: 14),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(14),
+                    ),
+                  ),
+                  child: Text(
+                    l10n.backToDashboard,
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 12),
+              SizedBox(
+                width: double.infinity,
+                child: OutlinedButton.icon(
+                  onPressed: () => _shareReceiptPhoto(l10n),
+                  icon: const Icon(Icons.share_rounded, size: 20),
+                  label: Text(
+                    l10n.downloadReceipt,
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  style: OutlinedButton.styleFrom(
+                    foregroundColor: AppColors.primaryGreen,
+                    side: const BorderSide(color: AppColors.primaryGreen, width: 1.5),
+                    padding: const EdgeInsets.symmetric(vertical: 14),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(14),
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
+        ),
+      ),
     );
+  }
+
+  Widget _buildReceiptRow(
+    String label,
+    String value,
+    IconData icon,
+    BuildContext context, {
+    Color? valueColor,
+    bool valueBold = false,
+  }) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Icon(icon, size: 16, color: context.colors.slate500),
+        const SizedBox(width: 10),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                label,
+                style: TextStyle(
+                  fontSize: 11,
+                  color: context.colors.slate500,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              const SizedBox(height: 2),
+              Text(
+                value,
+                style: TextStyle(
+                  fontSize: 13,
+                  color: valueColor ?? context.colors.darkText,
+                  fontWeight: valueBold ? FontWeight.w800 : FontWeight.w600,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Future<void> _shareReceiptPhoto(AppLocalizations l10n) async {
+    try {
+      final Uint8List? imageBytes = await _screenshotController.capture(
+        delay: const Duration(milliseconds: 10),
+      );
+
+      if (imageBytes != null) {
+        final directory = await getTemporaryDirectory();
+        final imagePath =
+            '${directory.path}/receipt_${DateTime.now().millisecondsSinceEpoch}.png';
+        final imageFile = File(imagePath);
+        await imageFile.writeAsBytes(imageBytes);
+
+        await Share.shareXFiles(
+          [XFile(imagePath)],
+          text: l10n.paymentReceiptTitle,
+        );
+      }
+    } catch (e) {
+      debugPrint('Error sharing receipt: $e');
+    }
   }
 
   // ── Input Formatters ──────────────────────────────────────────────────────
@@ -371,6 +656,82 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
                 ),
               ),
             ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildReceiptUploadSection(AppLocalizations l10n) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: context.colors.surfaceContainerLow,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: context.colors.outlineVariant.withValues(alpha: 0.5)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              const Icon(Icons.receipt_long_rounded, color: Color(0xFF0097A7), size: 20),
+              const SizedBox(width: 8),
+              Text(
+                'Manual Payment Proof',
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                  color: context.colors.onSurface,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          Text(
+            'If you paid via bank transfer or CCP, please upload the receipt photo here.',
+            style: TextStyle(fontSize: 12, color: context.colors.onSurfaceVariant),
+          ),
+          const SizedBox(height: 16),
+          if (_receiptPhoto != null)
+            Container(
+              margin: const EdgeInsets.only(bottom: 12),
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: Colors.green.withValues(alpha: 0.3)),
+              ),
+              child: Row(
+                children: [
+                  const Icon(Icons.check_circle_rounded, color: Colors.green, size: 16),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      _receiptPhoto!.name,
+                      style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.close_rounded, size: 16),
+                    onPressed: () => setState(() => _receiptPhoto = null),
+                  ),
+                ],
+              ),
+            ),
+          SizedBox(
+            width: double.infinity,
+            child: OutlinedButton.icon(
+              onPressed: () => _pickReceipt(l10n),
+              icon: const Icon(Icons.add_a_photo_rounded, size: 18),
+              label: Text(_receiptPhoto == null ? 'Upload Receipt Photo' : 'Change Photo'),
+              style: OutlinedButton.styleFrom(
+                padding: const EdgeInsets.symmetric(vertical: 12),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+              ),
+            ),
           ),
         ],
       ),

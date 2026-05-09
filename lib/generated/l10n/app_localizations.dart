@@ -99,6 +99,12 @@ abstract class AppLocalizations {
     Locale('kab')
   ];
 
+  /// No description provided for @allOperators.
+  ///
+  /// In en, this message translates to:
+  /// **'All Operators'**
+  String get allOperators;
+
   /// No description provided for @recentRequests.
   ///
   /// In en, this message translates to:
@@ -252,13 +258,13 @@ abstract class AppLocalizations {
   /// No description provided for @appTitle.
   ///
   /// In en, this message translates to:
-  /// **'Taminy Elite'**
+  /// **'Tameeni Elite'**
   String get appTitle;
 
   /// No description provided for @welcome.
   ///
   /// In en, this message translates to:
-  /// **'Welcome to Taminy Elite'**
+  /// **'Welcome to Tameeni Elite'**
   String get welcome;
 
   /// No description provided for @login.
@@ -450,7 +456,7 @@ abstract class AppLocalizations {
   /// No description provided for @commissionTaminyElite.
   ///
   /// In en, this message translates to:
-  /// **'Taminy Elite Commission (4%)'**
+  /// **'Tameeni Elite Commission (4%)'**
   String get commissionTaminyElite;
 
   /// No description provided for @transactionCount.
@@ -1146,7 +1152,7 @@ abstract class AppLocalizations {
   /// No description provided for @footerText.
   ///
   /// In en, this message translates to:
-  /// **'Taminy Elite — Digital Takaful Platform\nCompliant with Decree 21-81'**
+  /// **'Tameeni Elite — Digital Takaful Platform\nCompliant with Decree 21-81'**
   String get footerText;
 
   /// No description provided for @operatorPortal.
@@ -1176,7 +1182,7 @@ abstract class AppLocalizations {
   /// No description provided for @adminPortalTitle.
   ///
   /// In en, this message translates to:
-  /// **'Taminy Elite'**
+  /// **'Tameeni Elite'**
   String get adminPortalTitle;
 
   /// No description provided for @adminPortalSubtitle.
@@ -1548,7 +1554,7 @@ abstract class AppLocalizations {
   /// No description provided for @mediationMandateContent.
   ///
   /// In en, this message translates to:
-  /// **'As an elite financial mediator, Taminy Elite operates within a strictly defined perimeter designed to ensure absolute impartiality and ethical transparency. We do not hold client funds; rather, we orchestrate the secure alignment of Takaful principles between participants and operators.\\n\\nOur role is fundamentally advisory and protective, ensuring that every contractual engagement meets rigorous institutional standards before execution. This separation of powers is central to our commitment to Sovereign Trust.'**
+  /// **'As an elite financial mediator, Tameeni Elite operates within a strictly defined perimeter designed to ensure absolute impartiality and ethical transparency. We do not hold client funds; rather, we orchestrate the secure alignment of Takaful principles between participants and operators.\\n\\nOur role is fundamentally advisory and protective, ensuring that every contractual engagement meets rigorous institutional standards before execution. This separation of powers is central to our commitment to Sovereign Trust.'**
   String get mediationMandateContent;
 
   /// No description provided for @decreeFrameworkTitle.
@@ -1974,7 +1980,7 @@ abstract class AppLocalizations {
   /// No description provided for @firstTimeSubtitle.
   ///
   /// In en, this message translates to:
-  /// **'First time using Taminy Elite'**
+  /// **'First time using Tameeni Elite'**
   String get firstTimeSubtitle;
 
   /// No description provided for @decree2181Compliance.
@@ -2822,6 +2828,60 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Upload Documents'**
   String get uploadDocuments;
+
+  /// No description provided for @statusPaid.
+  ///
+  /// In en, this message translates to:
+  /// **'Paid'**
+  String get statusPaid;
+
+  /// No description provided for @paymentReceiptTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment Receipt'**
+  String get paymentReceiptTitle;
+
+  /// No description provided for @paymentReceiptSentToOperator.
+  ///
+  /// In en, this message translates to:
+  /// **'Receipt sent to operator successfully'**
+  String get paymentReceiptSentToOperator;
+
+  /// No description provided for @paymentReceiptNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Receipt Number'**
+  String get paymentReceiptNumber;
+
+  /// No description provided for @paymentDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment Date'**
+  String get paymentDate;
+
+  /// No description provided for @paymentConfirmedByClient.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment confirmed by client'**
+  String get paymentConfirmedByClient;
+
+  /// No description provided for @downloadReceipt.
+  ///
+  /// In en, this message translates to:
+  /// **'Download Receipt'**
+  String get downloadReceipt;
+
+  /// No description provided for @paymentVerified.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment Verified ✓'**
+  String get paymentVerified;
+
+  /// No description provided for @phoneNumberAlreadyTaken.
+  ///
+  /// In en, this message translates to:
+  /// **'This phone number is already registered'**
+  String get phoneNumberAlreadyTaken;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

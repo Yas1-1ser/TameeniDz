@@ -1,6 +1,6 @@
 // Static keys — actual values live in l10n ARB files
 class AppStrings {
-  static const String appName = 'Taminy Elite';
+  static const String appName = 'Tameeni Elite';
   static const String ccpMandatory = 'ccp_mandatory_label';
   static const String hardLockMsg = 'payment_hard_lock_message';
   static const String decree2181 = 'decree_21_81_label';

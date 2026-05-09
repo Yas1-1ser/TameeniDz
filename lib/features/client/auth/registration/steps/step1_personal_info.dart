@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../../../core/theme/app_colors_extension.dart';
 import '../../../../../generated/l10n/app_localizations.dart';
 import '../../../../../core/constants/app_colors.dart';
@@ -76,6 +77,7 @@ class _Step1PersonalInfoState extends ConsumerState<Step1PersonalInfo> {
   ];
 
   bool _isLoading = false;
+  String? _error;
 
   @override
   void dispose() {
@@ -113,9 +115,49 @@ class _Step1PersonalInfoState extends ConsumerState<Step1PersonalInfo> {
 
       final phone = _normalizePhone(_phoneController.text.trim());
 
-      // DUMMY NAVIGATION TO BYPASS FIREBASE BILLING ERROR
-      await Future.delayed(const Duration(seconds: 1));
-      
+      // Check if phone or email is already taken
+      try {
+        final client = Supabase.instance.client;
+        
+        // 1. Check if user exists in our profiles table (phone check)
+        final phoneCheck = await client
+            .from('profiles')
+            .select('id')
+            .eq('phone_number', phone)
+            .maybeSingle();
+            
+        if (phoneCheck != null) {
+          setState(() {
+            _isLoading = false;
+            _error = AppLocalizations.of(context)!.phoneNumberAlreadyTaken;
+          });
+          return;
+        }
+
+        // 2. Check email
+        final emailCheck = await client
+            .from('profiles')
+            .select('id')
+            .eq('email', _emailController.text.trim())
+            .maybeSingle();
+
+        if (emailCheck != null) {
+          setState(() {
+            _isLoading = false;
+            _error = AppLocalizations.of(context)!.alreadyHaveAccount;
+          });
+          return;
+        }
+
+        // DUMMY NAVIGATION TO BYPASS FIREBASE BILLING ERROR
+        await Future.delayed(const Duration(seconds: 1));
+      } catch (e) {
+        setState(() {
+          _isLoading = false;
+          _error = '${AppLocalizations.of(context)!.unexpectedError}: $e';
+        });
+      }
+
       if (mounted) {
         setState(() => _isLoading = false);
         context.push(
@@ -179,6 +221,10 @@ class _Step1PersonalInfoState extends ConsumerState<Step1PersonalInfo> {
               _buildStepper(l10n),
               const SizedBox(height: 32),
               _buildFormCard(l10n),
+              if (_error != null) ...[
+                const SizedBox(height: 16),
+                _buildErrorCard(),
+              ],
               const SizedBox(height: 32),
               _buildSubmitButton(l10n),
             ],
@@ -570,6 +616,29 @@ class _Step1PersonalInfoState extends ConsumerState<Step1PersonalInfo> {
                     ),
                   ],
                 ),
+      ),
+    );
+  }
+
+  Widget _buildErrorCard() {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: AppColors.rejected.withValues(alpha: 0.1),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: AppColors.rejected.withValues(alpha: 0.3)),
+      ),
+      child: Row(
+        children: [
+          const Icon(Icons.error_outline, color: AppColors.rejected),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Text(
+              _error!,
+              style: const TextStyle(color: AppColors.rejected, fontSize: 13),
+            ),
+          ),
+        ],
       ),
     );
   }

@@ -9,6 +9,9 @@ class AppLocalizationsKab extends AppLocalizations {
   AppLocalizationsKab([String locale = 'kab']) : super(locale);
 
   @override
+  String get allOperators => 'Akk imseddayen';
+
+  @override
   String get recentRequests => 'Isutar imaynuten';
 
   @override
@@ -86,10 +89,10 @@ class AppLocalizationsKab extends AppLocalizations {
   String get selected => 'Fren';
 
   @override
-  String get appTitle => 'Taminy Elite';
+  String get appTitle => 'Tameeni Elite';
 
   @override
-  String get welcome => 'Ansuf yis-wen ɣer Taminy Elite';
+  String get welcome => 'Ansuf yis-wen ɣer Tameeni Elite';
 
   @override
   String get login => 'Adduff';
@@ -185,7 +188,7 @@ class AppLocalizationsKab extends AppLocalizations {
   String get totalPremiumsCollected => 'Asemmayer ameqqran yettwali';
 
   @override
-  String get commissionTaminyElite => 'Tabzert n Taminy Elite (4%)';
+  String get commissionTaminyElite => 'Tabzert n Tameeni Elite (4%)';
 
   @override
   String get transactionCount => 'Amḍan n tneyyirin';
@@ -239,10 +242,10 @@ class AppLocalizationsKab extends AppLocalizations {
   String get support => 'Tallalt';
 
   @override
-  String get supportHeaderTitle => 'Tallalt n Taminy Elite';
+  String get supportHeaderTitle => 'Tallalt n Tameeni Elite';
 
   @override
-  String get supportHeaderSubtitle => 'Tallalt i yimezdaɣen n Taminy Elite. Imaslayen-nneɣ n wemsawa llan dagi i wakken ad d-gren i tikli-nwen.';
+  String get supportHeaderSubtitle => 'Tallalt i yimezdaɣen n Tameeni Elite. Imaslayen-nneɣ n wemsawa llan dagi i wakken ad d-gren i tikli-nwen.';
 
   @override
   String get liveChat => 'Di tura';
@@ -308,7 +311,7 @@ class AppLocalizationsKab extends AppLocalizations {
   String get platformCommission => 'Tabzert n tnarit (4%)';
 
   @override
-  String get paymentMethod => 'Tarrayt n tussda';
+  String get paymentMethod => 'Tarrayt n Tussda';
 
   @override
   String get confirmPayment => 'Senqed tussda';
@@ -535,7 +538,7 @@ class AppLocalizationsKab extends AppLocalizations {
   String get adminRoleSubtitle => 'Tawwurt s krad n yiferdisen';
 
   @override
-  String get footerText => 'Taminy Elite — Taɣamsa n Takaful Amḍan\nYemsečba d Lqanun 21-81';
+  String get footerText => 'Tameeni Elite — Taɣamsa n Takaful Amḍan\nYemsečba d Lqanun 21-81';
 
   @override
   String get operatorPortal => 'Tawwurt n Umsedday';
@@ -550,7 +553,7 @@ class AppLocalizationsKab extends AppLocalizations {
   String get loginAction => 'Akcam';
 
   @override
-  String get adminPortalTitle => 'Taminy Elite';
+  String get adminPortalTitle => 'Tameeni Elite';
 
   @override
   String get adminPortalSubtitle => 'Taɣamsa n Takaful Amḍan Yettwamin\nYemsečba d Lqanun 21-81';
@@ -721,7 +724,7 @@ class AppLocalizationsKab extends AppLocalizations {
   String get paymentErrorPrefix => 'Tuccḍa n tussda: ';
 
   @override
-  String get ticketSuccessMessage => 'Izen yettwazna akken iwata. Amaslayan n Taminy Elite ad k-d-isiwel dara.';
+  String get ticketSuccessMessage => 'Izen yettwazna akken iwata. Amaslayan n Tameeni Elite ad k-d-isiwel dara.';
 
   @override
   String get faq1Question => 'Amek i tettubeddu ifariyen n tedrimt?';
@@ -733,7 +736,7 @@ class AppLocalizationsKab extends AppLocalizations {
   String get faq2Question => 'Zemreɣ ad sbeddeɣ yiswi n tefrat-iw?';
 
   @override
-  String get faq2Answer => 'Ih, imttekkiyen n Taminy Elite zemren ad suteren ibeddilen seg uselwi-nsen, mačči s uselway n yimaslayen-nneɣ.';
+  String get faq2Answer => 'Ih, imttekkiyen n Tameeni Elite zemren ad suteren ibeddilen seg uselwi-nsen, mačči s uselway n yimaslayen-nneɣ.';
 
   @override
   String get faq3Question => 'D acu annar n umaslayan?';
@@ -742,7 +745,7 @@ class AppLocalizationsKab extends AppLocalizations {
   String get faq3Answer => 'Amaslayan yessenqed usečču n uxaṭar gar umtekki d umsedday, yemmesten laman n Takaful.';
 
   @override
-  String get mediationMandateContent => 'D amaslayan n tedrimt n Taminy Elite, nedder deg unagraw yuran akken ad nsenqed laman d useɛdu amezwaru. Ur nelli s idrimen n yimsaɣ; nekni nesselway asečfu aɣbalu gar yimttekkiyen d yimseḍḍayen.';
+  String get mediationMandateContent => 'D amaslayan n tedrimt n Tameeni Elite, nedder deg unagraw yuran akken ad nsenqed laman d useɛdu amezwaru. Ur nelli s idrimen n yimsaɣ; nekni nesselway asečfu aɣbalu gar yimttekkiyen d yimseḍḍayen.';
 
   @override
   String get decreeFrameworkTitle => 'Lqanun 21-81';
@@ -1411,4 +1414,31 @@ class AppLocalizationsKab extends AppLocalizations {
 
   @override
   String get uploadDocuments => 'Upload Documents';
+
+  @override
+  String get statusPaid => 'Yettwassus';
+
+  @override
+  String get paymentReceiptTitle => 'Asenyir n Tussda';
+
+  @override
+  String get paymentReceiptSentToOperator => 'Asenyir yettwazna ɣer umsedday akken iwata';
+
+  @override
+  String get paymentReceiptNumber => 'Uṭṭun n Usenyir';
+
+  @override
+  String get paymentDate => 'Azemz n Tussda';
+
+  @override
+  String get paymentConfirmedByClient => 'Tussda tettwasenqed s umsaɣ';
+
+  @override
+  String get downloadReceipt => 'Sder Asenyir';
+
+  @override
+  String get paymentVerified => 'Tussda Tettwasenqed ✓';
+
+  @override
+  String get phoneNumberAlreadyTaken => 'This phone number is already registered';
 }

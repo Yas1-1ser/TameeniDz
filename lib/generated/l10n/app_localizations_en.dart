@@ -9,6 +9,9 @@ class AppLocalizationsEn extends AppLocalizations {
   AppLocalizationsEn([String locale = 'en']) : super(locale);
 
   @override
+  String get allOperators => 'All Operators';
+
+  @override
   String get recentRequests => 'Recent Requests';
 
   @override
@@ -86,10 +89,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get selected => 'Selected';
 
   @override
-  String get appTitle => 'Taminy Elite';
+  String get appTitle => 'Tameeni Elite';
 
   @override
-  String get welcome => 'Welcome to Taminy Elite';
+  String get welcome => 'Welcome to Tameeni Elite';
 
   @override
   String get login => 'Login';
@@ -185,7 +188,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get totalPremiumsCollected => 'Total Premiums Collected';
 
   @override
-  String get commissionTaminyElite => 'Taminy Elite Commission (4%)';
+  String get commissionTaminyElite => 'Tameeni Elite Commission (4%)';
 
   @override
   String get transactionCount => 'Transaction Count';
@@ -535,7 +538,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get adminRoleSubtitle => 'Three-factor portal';
 
   @override
-  String get footerText => 'Taminy Elite — Digital Takaful Platform\nCompliant with Decree 21-81';
+  String get footerText => 'Tameeni Elite — Digital Takaful Platform\nCompliant with Decree 21-81';
 
   @override
   String get operatorPortal => 'Operator Portal';
@@ -550,7 +553,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get loginAction => 'Login';
 
   @override
-  String get adminPortalTitle => 'Taminy Elite';
+  String get adminPortalTitle => 'Tameeni Elite';
 
   @override
   String get adminPortalSubtitle => 'Trusted Digital Takaful Platform\nCompliant with Decree 21-81';
@@ -742,7 +745,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get faq3Answer => 'The mediator ensures ethical alignment between the participant and the operator, guarding the Sharia-compliant framework.';
 
   @override
-  String get mediationMandateContent => 'As an elite financial mediator, Taminy Elite operates within a strictly defined perimeter designed to ensure absolute impartiality and ethical transparency. We do not hold client funds; rather, we orchestrate the secure alignment of Takaful principles between participants and operators.\\n\\nOur role is fundamentally advisory and protective, ensuring that every contractual engagement meets rigorous institutional standards before execution. This separation of powers is central to our commitment to Sovereign Trust.';
+  String get mediationMandateContent => 'As an elite financial mediator, Tameeni Elite operates within a strictly defined perimeter designed to ensure absolute impartiality and ethical transparency. We do not hold client funds; rather, we orchestrate the secure alignment of Takaful principles between participants and operators.\\n\\nOur role is fundamentally advisory and protective, ensuring that every contractual engagement meets rigorous institutional standards before execution. This separation of powers is central to our commitment to Sovereign Trust.';
 
   @override
   String get decreeFrameworkTitle => 'Decree 21-81';
@@ -963,7 +966,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get existingAccountSubtitle => 'I have an existing account';
 
   @override
-  String get firstTimeSubtitle => 'First time using Taminy Elite';
+  String get firstTimeSubtitle => 'First time using Tameeni Elite';
 
   @override
   String get decree2181Compliance => 'Compliant with Decree 21-81';
@@ -1411,4 +1414,31 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get uploadDocuments => 'Upload Documents';
+
+  @override
+  String get statusPaid => 'Paid';
+
+  @override
+  String get paymentReceiptTitle => 'Payment Receipt';
+
+  @override
+  String get paymentReceiptSentToOperator => 'Receipt sent to operator successfully';
+
+  @override
+  String get paymentReceiptNumber => 'Receipt Number';
+
+  @override
+  String get paymentDate => 'Payment Date';
+
+  @override
+  String get paymentConfirmedByClient => 'Payment confirmed by client';
+
+  @override
+  String get downloadReceipt => 'Download Receipt';
+
+  @override
+  String get paymentVerified => 'Payment Verified ✓';
+
+  @override
+  String get phoneNumberAlreadyTaken => 'This phone number is already registered';
 }

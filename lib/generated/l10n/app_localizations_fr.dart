@@ -9,6 +9,9 @@ class AppLocalizationsFr extends AppLocalizations {
   AppLocalizationsFr([String locale = 'fr']) : super(locale);
 
   @override
+  String get allOperators => 'Tous les opérateurs';
+
+  @override
   String get recentRequests => 'Demandes récentes';
 
   @override
@@ -86,10 +89,10 @@ class AppLocalizationsFr extends AppLocalizations {
   String get selected => 'Sélectionné';
 
   @override
-  String get appTitle => 'Taminy Elite';
+  String get appTitle => 'Tameeni Elite';
 
   @override
-  String get welcome => 'Bienvenue sur Taminy Elite';
+  String get welcome => 'Bienvenue sur Tameeni Elite';
 
   @override
   String get login => 'Connexion';
@@ -185,7 +188,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get totalPremiumsCollected => 'Total des Primes Collectées';
 
   @override
-  String get commissionTaminyElite => 'Commission Taminy Elite (4%)';
+  String get commissionTaminyElite => 'Commission Tameeni Elite (4%)';
 
   @override
   String get transactionCount => 'Nombre de Transactions';
@@ -535,7 +538,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get adminRoleSubtitle => 'Portail à trois facteurs';
 
   @override
-  String get footerText => 'Taminy Elite — Plateforme Takaful Numérique\nConforme au Décret 21-81';
+  String get footerText => 'Tameeni Elite — Plateforme Takaful Numérique\nConforme au Décret 21-81';
 
   @override
   String get operatorPortal => 'Portail de l\'Opérateur';
@@ -550,7 +553,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get loginAction => 'Connexion';
 
   @override
-  String get adminPortalTitle => 'Taminy Elite';
+  String get adminPortalTitle => 'Tameeni Elite';
 
   @override
   String get adminPortalSubtitle => 'Plateforme Takaful Numérique de Confiance\nConforme au Décret 21-81';
@@ -742,7 +745,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get faq3Answer => 'Le médiateur garantit l\'alignement éthique entre le participant et l\'opérateur, en respectant le cadre conforme à la Charia.';
 
   @override
-  String get mediationMandateContent => 'En tant que médiateur financier d\'élite, Taminy Elite opère dans un périmètre strictement défini pour garantir une impartialité absolue et une transparence éthique. Nous ne détenons pas les fonds des clients ; nous orchestrons l\'alignement sécurisé des principes Takaful entre participants et opérateurs.';
+  String get mediationMandateContent => 'En tant que médiateur financier d\'élite, Tameeni Elite opère dans un périmètre strictement défini pour garantir une impartialité absolue et une transparence éthique. Nous ne détenons pas les fonds des clients ; nous orchestrons l\'alignement sécurisé des principes Takaful entre participants et opérateurs.';
 
   @override
   String get decreeFrameworkTitle => 'Décret 21-81';
@@ -963,7 +966,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get existingAccountSubtitle => 'J\'ai déjà un compte';
 
   @override
-  String get firstTimeSubtitle => 'Première fois sur Taminy Elite';
+  String get firstTimeSubtitle => 'Première fois sur Tameeni Elite';
 
   @override
   String get decree2181Compliance => 'Conforme au Décret 21-81';
@@ -1411,4 +1414,31 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get uploadDocuments => 'Télécharger les documents';
+
+  @override
+  String get statusPaid => 'Payé';
+
+  @override
+  String get paymentReceiptTitle => 'Reçu de Paiement';
+
+  @override
+  String get paymentReceiptSentToOperator => 'Reçu envoyé à l\'opérateur avec succès';
+
+  @override
+  String get paymentReceiptNumber => 'Numéro de Reçu';
+
+  @override
+  String get paymentDate => 'Date de Paiement';
+
+  @override
+  String get paymentConfirmedByClient => 'Paiement confirmé par le client';
+
+  @override
+  String get downloadReceipt => 'Télécharger le Reçu';
+
+  @override
+  String get paymentVerified => 'Paiement Vérifié ✓';
+
+  @override
+  String get phoneNumberAlreadyTaken => 'Ce numéro de téléphone est déjà enregistré';
 }

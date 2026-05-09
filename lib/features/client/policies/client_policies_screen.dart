@@ -7,6 +7,7 @@ import 'package:tameenidz/shared/enums/policy_status.dart';
 import '../../../core/theme/app_colors_extension.dart';
 import '../../../shared/widgets/email_verification_banner.dart';
 import '../../../shared/widgets/status_badge.dart';
+import '../../../shared/widgets/receipt_ticket.dart';
 import 'policy_providers.dart';
 import '../../shared/domain/models/policy_model.dart';
 import 'package:tameenidz/shared/widgets/portal_layout.dart';
@@ -204,16 +205,12 @@ class ClientPoliciesScreen extends ConsumerWidget {
                   if (policy.status == PolicyStatus.accepted)
                     Flexible(
                       child: ElevatedButton(
-                        onPressed: (policy.documentUrls == null || (policy.documentUrls as List).isEmpty)
-                            ? () => context.push('/client/policy-documents/${policy.id}')
-                            : () => context.push(
-                                  '/client/payment/${policy.id}',
-                                  extra: policy.amount,
-                                ),
+                        onPressed: () => context.push(
+                          '/client/payment/${policy.id}',
+                          extra: policy.amount,
+                        ),
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: (policy.documentUrls == null || (policy.documentUrls as List).isEmpty)
-                              ? const Color(0xFF2E7D32)
-                              : colors.primary,
+                          backgroundColor: colors.primary,
                           foregroundColor: colors.onPrimary,
                           elevation: 0,
                           shape: RoundedRectangleBorder(
@@ -225,9 +222,7 @@ class ClientPoliciesScreen extends ConsumerWidget {
                           ),
                         ),
                         child: Text(
-                          (policy.documentUrls == null || (policy.documentUrls as List).isEmpty)
-                              ? l10n.uploadDocuments
-                              : l10n.payNow,
+                          l10n.payNow,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: const TextStyle(fontWeight: FontWeight.w800),
@@ -236,7 +231,24 @@ class ClientPoliciesScreen extends ConsumerWidget {
                     )
                   else if (policy.paidAt != null)
                     TextButton.icon(
-                      onPressed: () {},
+                      onPressed: () {
+                        showModalBottomSheet(
+                          context: context,
+                          isScrollControlled: true,
+                          backgroundColor: Colors.transparent,
+                          builder: (context) => Padding(
+                            padding: EdgeInsets.only(
+                              bottom: MediaQuery.of(context).viewInsets.bottom,
+                            ),
+                            child: SafeArea(
+                              child: Padding(
+                                padding: const EdgeInsets.all(16.0),
+                                child: ReceiptTicket(policy: policy),
+                              ),
+                            ),
+                          ),
+                        );
+                      },
                       icon: const Icon(Icons.receipt_long, size: 18),
                       label: Text(
                         l10n.viewReceipt,

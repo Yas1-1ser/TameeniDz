@@ -23,7 +23,13 @@ class _OperatorPoliciesScreenState extends ConsumerState<OperatorPoliciesScreen>
   bool get _isAT => widget.company == 'algeria_takaful';
   Color get _accent => _isAT ? AppColors.primaryGreen : AppColors.alIttihadGreen;
 
-  final int _bottomNavIdx = 2;
+  int get _bottomNavIdx {
+    final location = GoRouterState.of(context).uri.toString();
+    if (location.contains('surplus')) return 1;
+    if (location.contains('policies')) return 2;
+    if (location.contains('settings') || location.contains('profile')) return 3;
+    return 0;
+  }
   String _searchQuery = '';
   PolicyStatus? _selectedStatus;
 
@@ -47,7 +53,6 @@ class _OperatorPoliciesScreenState extends ConsumerState<OperatorPoliciesScreen>
               child: RefreshIndicator(
                 onRefresh: () async {
                   ref.invalidate(_provider);
-                  await ref.read(_provider.future);
                 },
                 child: policiesAsync.when(
                   data: (policies) => _buildList(policies, l10n),
@@ -317,19 +322,12 @@ class _OperatorPoliciesScreenState extends ConsumerState<OperatorPoliciesScreen>
     switch (status) {
       case PolicyStatus.pending: return AppColors.pending;
       case PolicyStatus.accepted: return AppColors.accepted;
+      case PolicyStatus.paid: return const Color(0xFF0097A7);
       case PolicyStatus.rejected: return AppColors.rejected;
       case PolicyStatus.modificationRequested: return AppColors.modRequested;
     }
   }
 
-  String _getStatusLabel(PolicyStatus status, AppLocalizations l10n) {
-    switch (status) {
-      case PolicyStatus.pending: return l10n.statusPending;
-      case PolicyStatus.accepted: return l10n.statusAccepted;
-      case PolicyStatus.rejected: return l10n.statusRejected;
-      case PolicyStatus.modificationRequested: return l10n.statusModReq;
-    }
-  }
 
   Widget _buildBottomNav(BuildContext context, AppLocalizations l10n) {
     final colors = context.colors;

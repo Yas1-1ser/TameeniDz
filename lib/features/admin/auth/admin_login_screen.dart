@@ -95,7 +95,7 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
                             color: Colors.white,
                             fontSize: 28,
                             fontWeight: FontWeight.bold)),
-                    const Text('Taminy Elite',
+                    const Text('Tameeni Elite',
                         style: TextStyle(
                             color: Colors.white60,
                             fontSize: 14,

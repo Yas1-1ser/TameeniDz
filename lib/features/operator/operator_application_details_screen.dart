@@ -6,10 +6,10 @@ import 'package:tameenidz/generated/l10n/app_localizations.dart';
 import '../../core/constants/app_colors.dart';
 import '../../shared/enums/policy_status.dart';
 import '../../shared/widgets/status_badge.dart';
+import '../../shared/widgets/receipt_ticket.dart';
 import '../shared/providers/operator_providers.dart';
 import '../shared/data/policy_repository.dart';
 import '../shared/domain/models/policy_model.dart';
-import '../../core/providers/service_providers.dart';
 
 class OperatorApplicationDetailScreen extends ConsumerStatefulWidget {
   final String id;
@@ -103,18 +103,7 @@ class _OperatorApplicationDetailScreenState
       ),
       bottomNavigationBar: policyAsync.when(
         data: (policy) {
-          final userProfileAsync = ref.watch(userProfileProvider);
-          return userProfileAsync.when(
-            data: (profile) {
-              final isAdmin = profile?['role'] == 'admin';
-              if (isAdmin) {
-                return _buildAdminReadOnlyFooter(l10n);
-              }
-              return _buildBottomActions(policy, l10n);
-            },
-            loading: () => const SizedBox.shrink(),
-            error: (_, __) => _buildBottomActions(policy, l10n),
-          );
+          return _buildBottomActions(policy, l10n);
         },
         loading: () => const SizedBox.shrink(),
         error: (_, __) => const SizedBox.shrink(),
@@ -165,53 +154,50 @@ class _OperatorApplicationDetailScreenState
 
           // Timestamps
           _buildAuditSection(policy, l10n),
-          const SizedBox(height: 32),
+          const SizedBox(height: 24),
 
-          // Decision Notes Field
-          Consumer(
-            builder: (context, ref, _) {
-              final userProfileAsync = ref.watch(userProfileProvider);
-              return userProfileAsync.when(
-                data: (profile) {
-                  final isAdmin = profile?['role'] == 'admin';
-                  if (isAdmin) return const SizedBox.shrink();
+          // Payment Receipt (only visible after client pays)
+          if (policy.paidAt != null) ...[
+            _buildPaymentReceiptCard(policy, l10n),
+            const SizedBox(height: 24),
+            if (policy.receiptUrl != null) ...[
+              _buildSectionTitle('Manual Receipt Proof'),
+              const SizedBox(height: 12),
+              _buildUploadedReceiptPhoto(policy.receiptUrl!),
+              const SizedBox(height: 24),
+            ],
+          ],
 
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        l10n.decisionNotes,
-                        style: const TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold,
-                          color: AppColors.onSurface,
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      TextField(
-                        controller: _reasonCtrl,
-                        maxLines: 3,
-                        decoration: InputDecoration(
-                          hintText: l10n.enterDecisionReason,
-                          filled: true,
-                          fillColor: AppColors.surface,
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
-                            borderSide: BorderSide(color: AppColors.outlineVariant),
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
-                            borderSide: BorderSide(color: AppColors.outlineVariant),
-                          ),
-                        ),
-                      ),
-                    ],
-                  );
-                },
-                loading: () => const SizedBox.shrink(),
-                error: (_, __) => const SizedBox.shrink(),
-              );
-            },
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                l10n.decisionNotes,
+                style: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.onSurface,
+                ),
+              ),
+              const SizedBox(height: 8),
+              TextField(
+                controller: _reasonCtrl,
+                maxLines: 3,
+                decoration: InputDecoration(
+                  hintText: l10n.enterDecisionReason,
+                  filled: true,
+                  fillColor: AppColors.surface,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide(color: AppColors.outlineVariant),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide(color: AppColors.outlineVariant),
+                  ),
+                ),
+              ),
+            ],
           ),
           const SizedBox(height: 100), // Space for bottom bar
         ],
@@ -488,7 +474,37 @@ class _OperatorApplicationDetailScreenState
     );
   }
 
+  Widget _buildPaymentReceiptCard(PolicyModel policy, AppLocalizations l10n) {
+
+    return ReceiptTicket(policy: policy);
+  }
+
   Widget _buildBottomActions(PolicyModel policy, AppLocalizations l10n) {
+    // Paid: show a special confirmation footer
+    if (policy.status == PolicyStatus.paid) {
+      return Container(
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+        decoration: BoxDecoration(
+          color: AppColors.surface,
+          border: Border(top: BorderSide(color: AppColors.outlineVariant)),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(Icons.verified_rounded, color: Color(0xFF0097A7), size: 20),
+            const SizedBox(width: 8),
+            Text(
+              l10n.paymentVerified,
+              style: const TextStyle(
+                color: Color(0xFF0097A7),
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
     if (policy.status != PolicyStatus.pending) {
       return Container(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
@@ -548,6 +564,46 @@ class _OperatorApplicationDetailScreenState
               color: AppColors.accepted,
               icon: Icons.check_rounded,
               onPressed: () => _decide(PolicyStatus.accepted, l10n),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildUploadedReceiptPhoto(String url) {
+    return Container(
+      width: double.infinity,
+      decoration: BoxDecoration(
+        color: AppColors.surface,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: AppColors.outlineVariant),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          ClipRRect(
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+            child: Image.network(
+              url,
+              fit: BoxFit.contain,
+              height: 300,
+              errorBuilder: (_, __, ___) => Container(
+                height: 100,
+                color: AppColors.surfaceContainerLow,
+                child: const Icon(Icons.image_not_supported_rounded),
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(12),
+            child: TextButton.icon(
+              onPressed: () {},
+              icon: Icon(Icons.fullscreen_rounded, color: _accentColor),
+              label: Text(
+                'View Full Image',
+                style: TextStyle(color: _accentColor, fontWeight: FontWeight.bold),
+              ),
             ),
           ),
         ],
@@ -631,23 +687,5 @@ class _OperatorApplicationDetailScreenState
         setState(() => _loading = false);
       }
     }
-  }
-
-  Widget _buildAdminReadOnlyFooter(AppLocalizations l10n) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
-      decoration: BoxDecoration(
-        color: AppColors.surface,
-        border: Border(top: BorderSide(color: AppColors.outlineVariant)),
-      ),
-      child: Text(
-        l10n.adminReadOnlyView,
-        textAlign: TextAlign.center,
-        style: const TextStyle(
-          color: AppColors.onSurfaceVariant,
-          fontWeight: FontWeight.bold,
-        ),
-      ),
-    );
   }
 }

@@ -15,11 +15,13 @@ class StatusBadge extends StatelessWidget {
     final Map<PolicyStatus, (Color, String)> config = {
       PolicyStatus.pending: (colors.pending, l10n.statusPending),
       PolicyStatus.accepted: (colors.accepted, l10n.statusAccepted),
+      PolicyStatus.paid: (const Color(0xFF0097A7), l10n.statusPaid), // teal
       PolicyStatus.rejected: (colors.rejected, l10n.statusRejected),
       PolicyStatus.modificationRequested: (colors.modRequested, l10n.statusModReq),
     };
     
-    final (color, label) = config[status]!;
+    final entry = config[status] ?? (colors.onSurface, status.name);
+    final (color, label) = entry;
     
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),

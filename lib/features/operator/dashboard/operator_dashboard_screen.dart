@@ -12,6 +12,8 @@ import '../../../shared/widgets/status_badge.dart';
 import '../../shared/domain/models/policy_model.dart';
 import '../../shared/providers/operator_providers.dart';
 import '../../../shared/widgets/email_verification_banner.dart';
+import '../../../core/realtime/realtime_manager.dart';
+import '../../../core/realtime/realtime_status_badge.dart';
 
 class OperatorDashboardScreen extends ConsumerStatefulWidget {
   final String company;
@@ -25,15 +27,98 @@ class OperatorDashboardScreen extends ConsumerStatefulWidget {
 
 class _OperatorDashboardScreenState
     extends ConsumerState<OperatorDashboardScreen> {
-  final int _bottomNavIdx = 0;
+  int get _bottomNavIdx {
+    final location = GoRouterState.of(context).uri.toString();
+    if (location.contains('surplus')) return 1;
+    if (location.contains('policies')) return 2;
+    if (location.contains('settings') || location.contains('profile')) return 3;
+    return 0;
+  }
   String _activeFilter = 'all';
+  late final RealtimeManager _realtimeManager;
+
+  @override
+  void initState() {
+    super.initState();
+    _realtimeManager = RealtimeManager(
+      supabase: Supabase.instance.client,
+      channelName: 'public:operator_dashboard_${widget.company}',
+      onSetupChannel: (channel) {
+        channel.onPostgresChanges(
+          event: PostgresChangeEvent.all,
+          schema: 'public',
+          table: 'policies',
+          filter: PostgresChangeFilter(
+            type: PostgresChangeFilterType.eq,
+            column: 'operator_id',
+            value: widget.company,
+          ),
+          callback: (payload) {
+            ref.invalidate(_provider);
+            
+            // Show notification logic
+            if (mounted) {
+              final applicant = payload.newRecord['applicant_full_name'] ?? 'Client';
+              
+              if (payload.eventType == PostgresChangeEvent.insert) {
+                 ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Row(
+                      children: [
+                        const Icon(Icons.new_releases_rounded, color: Colors.white),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: Text(
+                            'New Policy Request from $applicant',
+                            style: const TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                      ],
+                    ),
+                    backgroundColor: _accent,
+                    behavior: SnackBarBehavior.floating,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                    margin: const EdgeInsets.all(16),
+                  ),
+                );
+              } else if (payload.newRecord['status'] == 'paid') {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Row(
+                      children: [
+                        const Icon(Icons.check_circle_rounded, color: Colors.white),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: Text(
+                            'Payment Received from $applicant',
+                            style: const TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                      ],
+                    ),
+                    backgroundColor: const Color(0xFF0097A7),
+                    behavior: SnackBarBehavior.floating,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                    margin: const EdgeInsets.all(16),
+                  ),
+                );
+              }
+            }
+          },
+        );
+      },
+    );
+    _realtimeManager.connect();
+  }
+
+  @override
+  void dispose() {
+    _realtimeManager.dispose();
+    super.dispose();
+  }
 
   bool get _isAT => widget.company == 'algeria_takaful';
 
-  String _nameEn(BuildContext context) =>
-      _isAT
-          ? AppLocalizations.of(context)!.algeriaTakaful
-          : AppLocalizations.of(context)!.alIttihad;
 
   Color get _accent =>
       _isAT ? AppColors.primaryGreen : AppColors.alIttihadGreen;
@@ -54,6 +139,12 @@ class _OperatorDashboardScreenState
       portalSubtitle: l10n.dashboard,
       topHeader: 'PORTAL',
       accentColor: _accent,
+      appBarActions: [
+        RealtimeStatusBadge(
+          stateStream: _realtimeManager.stateStream,
+          onRetry: _realtimeManager.connect,
+        ),
+      ],
       menuItems: [
         (
           Icons.dashboard_rounded,
@@ -94,52 +185,6 @@ class _OperatorDashboardScreenState
     );
   }
 
-  Widget _buildBrandHeader(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 20),
-      decoration: BoxDecoration(
-        color: _accent.withValues(alpha: 0.1),
-        border: Border(
-          bottom: BorderSide(color: _accent.withValues(alpha: 0.2)),
-        ),
-      ),
-      child: Row(
-        children: [
-          Icon(Icons.business_center_rounded, color: _accent, size: 16),
-          const SizedBox(width: 8),
-          Text(
-            _isAT
-                ? l10n.algeriaTakaful.toUpperCase()
-                : l10n.alIttihad.toUpperCase(),
-            style: TextStyle(
-              fontSize: 12,
-              fontWeight: FontWeight.w900,
-              color: _accent,
-              letterSpacing: 1.2,
-            ),
-          ),
-          const Spacer(),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-            decoration: BoxDecoration(
-              color: _accent,
-              borderRadius: BorderRadius.circular(4),
-            ),
-            child: const Text(
-              'PORTAL',
-              style: TextStyle(
-                fontSize: 10,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
 
   Widget _buildHeader(BuildContext context, AppLocalizations l10n) {
     final colors = context.colors;
@@ -461,6 +506,16 @@ class _OperatorDashboardScreenState
                   ),
                 ),
               ),
+              const SizedBox(width: 8),
+              if (app.status == PolicyStatus.paid)
+                const Padding(
+                  padding: EdgeInsets.only(right: 8),
+                  child: Icon(
+                    Icons.receipt_long_rounded,
+                    size: 16,
+                    color: Color(0xFF0097A7),
+                  ),
+                ),
               Icon(
                 isRtl ? Icons.arrow_back_ios_new_rounded : Icons.arrow_forward_ios_rounded,
                 size: 14,
@@ -474,6 +529,7 @@ class _OperatorDashboardScreenState
     );
   }
 
+
   Color _getStatusColor(PolicyStatus status) {
     switch (status) {
       case PolicyStatus.pending:
@@ -484,19 +540,8 @@ class _OperatorDashboardScreenState
         return AppColors.rejected;
       case PolicyStatus.modificationRequested:
         return AppColors.modRequested;
-    }
-  }
-
-  String _getStatusLabel(PolicyStatus status, AppLocalizations l10n) {
-    switch (status) {
-      case PolicyStatus.pending:
-        return l10n.statusPending;
-      case PolicyStatus.accepted:
-        return l10n.statusAccepted;
-      case PolicyStatus.rejected:
-        return l10n.statusRejected;
-      case PolicyStatus.modificationRequested:
-        return l10n.statusModReq;
+      case PolicyStatus.paid:
+        return const Color(0xFF0097A7);
     }
   }
 

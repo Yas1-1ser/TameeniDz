@@ -22,6 +22,7 @@ class _ClientLoginScreenState extends ConsumerState<ClientLoginScreen> {
   final _passwordCtrl = TextEditingController();
   bool _loading = false;
   bool _isEmailMode = true;
+  bool _obscurePassword = true;
   String? _errorMessage;
 
   @override
@@ -191,10 +192,23 @@ class _ClientLoginScreenState extends ConsumerState<ClientLoginScreen> {
                             const SizedBox(height: 8),
                             TextFormField(
                               controller: _passwordCtrl,
-                              obscureText: true,
+                              obscureText: _obscurePassword,
                               decoration: InputDecoration(
                                 hintText: '••••••••',
                                 prefixIcon: const Icon(Icons.lock_outline),
+                                suffixIcon: IconButton(
+                                  icon: Icon(
+                                    _obscurePassword
+                                        ? Icons.visibility_off_outlined
+                                        : Icons.visibility_outlined,
+                                    color: context.colors.slate500,
+                                  ),
+                                  onPressed: () {
+                                    setState(() {
+                                      _obscurePassword = !_obscurePassword;
+                                    });
+                                  },
+                                ),
                               ),
                               validator: (v) {
                                 if (v == null || v.isEmpty) {

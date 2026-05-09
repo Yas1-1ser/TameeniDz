@@ -18,7 +18,13 @@ class OperatorSurplusScreen extends ConsumerStatefulWidget {
 }
 
 class _OperatorSurplusScreenState extends ConsumerState<OperatorSurplusScreen> {
-  final int _bottomNavIdx = 1;
+  int get _bottomNavIdx {
+    final location = GoRouterState.of(context).uri.toString();
+    if (location.contains('surplus')) return 1;
+    if (location.contains('policies')) return 2;
+    if (location.contains('settings') || location.contains('profile')) return 3;
+    return 0;
+  }
 
   bool get _isAT => widget.company == 'algeria_takaful';
   Color get _accent => _isAT ? AppColors.primaryGreen : AppColors.alIttihadGreen;

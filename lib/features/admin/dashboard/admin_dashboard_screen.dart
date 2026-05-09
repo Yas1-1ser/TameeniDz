@@ -21,7 +21,15 @@ class AdminDashboardScreen extends ConsumerStatefulWidget {
 }
 
 class _AdminDashboardScreenState extends ConsumerState<AdminDashboardScreen> {
-  static const int _navIdx = 0; // Dashboard is index 0
+  int get _bottomNavIdx {
+    final location = GoRouterState.of(context).uri.toString();
+    if (location.contains('commission')) return 1;
+    if (location.contains('audit')) return 2;
+    if (location.contains('settings')) return 4;
+    return 0;
+  }
+  
+  String _operatorFilter = 'all'; // 'all', 'algeria_takaful', 'al_ittihad'
   late final RealtimeManager _realtimeManager;
 
   @override
@@ -75,7 +83,7 @@ class _AdminDashboardScreenState extends ConsumerState<AdminDashboardScreen> {
 
     // Build the bottom navigation bar for mobile
     final bottomNavBar = BottomNavigationBar(
-      currentIndex: _navIdx,
+      currentIndex: _bottomNavIdx,
       onTap: (idx) {
         final targetIdx = idx == 3 ? 4 : idx;
         context.go(menuItems[targetIdx].$3);
@@ -105,7 +113,7 @@ class _AdminDashboardScreenState extends ConsumerState<AdminDashboardScreen> {
     );
 
     return PortalLayout(
-      selectedIndex: _navIdx,
+      selectedIndex: _bottomNavIdx,
       menuItems: menuItems,
       portalTitle: isMobile ? l10n.dashboard : l10n.adminPortal,
       portalSubtitle: l10n.shariaInsurance,
@@ -221,18 +229,40 @@ class _AdminDashboardScreenState extends ConsumerState<AdminDashboardScreen> {
                   ),
                 ),
                 const SizedBox(height: 32),
+                
+                // ── Operator Separation Filter ─────────────────────────
+                Container(
+                  padding: const EdgeInsets.all(4),
+                  decoration: BoxDecoration(
+                    color: colors.surfaceContainerHigh,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      _buildFilterChip('all', l10n.allOperators, Icons.business_rounded),
+                      _buildFilterChip('algeria_takaful', 'ALGERIA TAKAFUL', Icons.shield_rounded),
+                      _buildFilterChip('al_ittihad', 'AL-ITTIHAD', Icons.verified_user_rounded),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 32),
                 policiesAsync.when(
                   data: (policies) {
+                    final filteredPolicies = _operatorFilter == 'all' 
+                        ? policies 
+                        : policies.where((p) => p.operatorId == _operatorFilter).toList();
+
                     final activeCount =
-                        policies
-                            .where((p) => p.status == PolicyStatus.accepted)
+                        filteredPolicies
+                            .where((p) => p.status == PolicyStatus.accepted || p.status == PolicyStatus.paid)
                             .length;
-                    final totalPremium = policies.fold<double>(
+                    final totalPremium = filteredPolicies.fold<double>(
                       0.0,
                       (double sum, p) => sum + p.amount,
                     );
                     final pendingCount =
-                        policies
+                        filteredPolicies
                             .where(
                               (p) =>
                                   p.status == PolicyStatus.pending ||
@@ -241,6 +271,8 @@ class _AdminDashboardScreenState extends ConsumerState<AdminDashboardScreen> {
                             )
                             .length;
 
+                    final opName = _operatorFilter == 'all' ? l10n.allOperators : (_operatorFilter == 'algeria_takaful' ? 'ALGERIA TAKAFUL' : 'AL-ITTIHAD');
+                    
                     return Row(
                       children: [
                         Expanded(
@@ -249,7 +281,7 @@ class _AdminDashboardScreenState extends ConsumerState<AdminDashboardScreen> {
                             title: l10n.totalActivePolicies,
                             value: activeCount.toString(),
                             subtitle:
-                                "$pendingCount ${l10n.requireImmediateReview}",
+                                "$pendingCount ${l10n.requireImmediateReview} • $opName",
                             icon: Icons.verified_user_rounded,
                             color: colors.primary,
                           ),
@@ -261,7 +293,7 @@ class _AdminDashboardScreenState extends ConsumerState<AdminDashboardScreen> {
                             title: l10n.totalPremiumsCollectedDzd,
                             value: NumberFormat.compact().format(totalPremium),
                             subtitle:
-                                "+15% ${l10n.fromLastMonth}", // Mock trend
+                                "+15% ${l10n.fromLastMonth} • $opName", // Mock trend
                             icon: Icons.payments_rounded,
                             color: AppColors.subscriberFund,
                           ),
@@ -823,7 +855,12 @@ class _AdminDashboardScreenState extends ConsumerState<AdminDashboardScreen> {
           const SizedBox(height: 16),
           policiesAsync.when(
             data: (policies) {
-              if (policies == null || (policies as List).isEmpty) {
+              // Filter by operator
+              final filteredPolicies = _operatorFilter == 'all'
+                  ? policies as List
+                  : (policies as List).where((p) => p.operatorId == _operatorFilter).toList();
+
+              if (filteredPolicies.isEmpty) {
                 return Center(
                   child: Padding(
                     padding: const EdgeInsets.all(32),
@@ -839,7 +876,7 @@ class _AdminDashboardScreenState extends ConsumerState<AdminDashboardScreen> {
               }
 
               // Sort by date descending
-              final sortedPolicies = List.from(policies as List)
+              final sortedPolicies = List.from(filteredPolicies)
                 ..sort((a, b) => b.submittedAt.compareTo(a.submittedAt));
               final displayPolicies = sortedPolicies.take(5).toList();
 
@@ -878,10 +915,7 @@ class _AdminDashboardScreenState extends ConsumerState<AdminDashboardScreen> {
       ),
       child: InkWell(
         onTap: () {
-          // Navigate to details (reusing operator detail screen for now as it's perfectly suited)
-          final routePrefix =
-              policy.operatorId == 'algeria_takaful' ? '/at' : '/ai';
-          context.push('$routePrefix/application/${policy.id}');
+          context.push('/admin/application/${policy.id}');
         },
         child: Row(
           children: [
@@ -922,6 +956,22 @@ class _AdminDashboardScreenState extends ConsumerState<AdminDashboardScreen> {
                       fontWeight: FontWeight.w600,
                     ),
                   ),
+                  const SizedBox(height: 4),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                    decoration: BoxDecoration(
+                      color: (policy.operatorId == 'algeria_takaful' ? AppColors.primaryGreen : AppColors.alIttihadGreen).withValues(alpha: 0.1),
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                    child: Text(
+                      policy.operatorId == 'algeria_takaful' ? 'ALGERIA TAKAFUL' : 'AL-ITTIHAD',
+                      style: TextStyle(
+                        fontSize: 9,
+                        fontWeight: FontWeight.bold,
+                        color: policy.operatorId == 'algeria_takaful' ? AppColors.primaryGreen : AppColors.alIttihadGreen,
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -949,9 +999,14 @@ class _AdminDashboardScreenState extends ConsumerState<AdminDashboardScreen> {
         color = AppColors.goldAccent;
         label = l10n.statusModReq;
         break;
-      default:
+      case PolicyStatus.pending:
         color = AppColors.subscriberFund;
         label = l10n.statusPending;
+        break;
+      case PolicyStatus.paid:
+        color = const Color(0xFF0097A7);
+        label = l10n.statusPaid;
+        break;
     }
 
     return Container(
@@ -966,6 +1021,49 @@ class _AdminDashboardScreenState extends ConsumerState<AdminDashboardScreen> {
           fontSize: 10,
           fontWeight: FontWeight.w900,
           color: color,
+        ),
+      ),
+    );
+  }
+  Widget _buildFilterChip(String value, String label, IconData icon) {
+    final isSelected = _operatorFilter == value;
+    final colors = context.colors;
+
+    return GestureDetector(
+      onTap: () => setState(() => _operatorFilter = value),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        decoration: BoxDecoration(
+          color: isSelected ? colors.surface : Colors.transparent,
+          borderRadius: BorderRadius.circular(10),
+          boxShadow:
+              isSelected
+                  ? [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.05),
+                      blurRadius: 4,
+                      offset: const Offset(0, 2),
+                    ),
+                  ]
+                  : null,
+        ),
+        child: Row(
+          children: [
+            Icon(
+              icon,
+              size: 16,
+              color: isSelected ? colors.primary : colors.onSurfaceVariant,
+            ),
+            const SizedBox(width: 8),
+            Text(
+              label,
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: isSelected ? FontWeight.bold : FontWeight.w600,
+                color: isSelected ? colors.onSurface : colors.onSurfaceVariant,
+              ),
+            ),
+          ],
         ),
       ),
     );

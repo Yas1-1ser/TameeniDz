@@ -1,5 +1,6 @@
 {
   "@@locale": "ar",
+  "allOperators": "جميع المشغلين",
   "recentRequests": "الطلبات الأخيرة",
   "noRequestsFound": "لم يتم العثور على طلبات",
   "decisionNotes": "ملاحظات القرار / الأسباب",
@@ -593,5 +594,15 @@
   "localCertificate": "الشهادة المحلية",
   "uploadCarIdentityHint": "ارفع بطاقة تعريف السيارة",
   "uploadLocalCertificateHint": "ارفع شهادة التأمين المحلية",
-  "uploadDocuments": "رفع الوثائق"
+  "uploadDocuments": "رفع الوثائق",
+  "statusPaid": "تم الدفع",
+  "paymentReceiptTitle": "إيصال الدفع",
+  "paymentReceiptSentToOperator": "تم إرسال الإيصال إلى المشغل بنجاح",
+  "paymentReceiptNumber": "رقم الإيصال",
+  "paymentDate": "تاريخ الدفع",
+  "paymentMethod": "طريقة الدفع",
+  "paymentConfirmedByClient": "تأكيد الدفع من العميل",
+  "downloadReceipt": "تحميل الإيصال",
+  "paymentVerified": "تم التحقق من الدفع ✓",
+  "phoneNumberAlreadyTaken": "رقم الهاتف هذا مسجل بالفعل"
 }
