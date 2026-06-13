@@ -89,12 +89,22 @@ class SupabaseService {
   // --- Admin ---
 
   Future<List<PlanModel>> getPlans() async {
-    final response = await _client
-        .from('plans')
-        .select('*, operators(name_ar, name_en)')
-        .order('premium_amount', ascending: true);
-
-    return (response as List).map((json) => PlanModel.fromJson(json)).toList();
+    // FIXED: wrapped in try/catch — if the 'operators' FK or table is missing,
+    // PostgREST returns a 400; fall back to a plain select so the screen doesn't crash.
+    try {
+      final response = await _client
+          .from('plans')
+          .select('*, operators(name_ar, name_en)')
+          .order('premium_amount', ascending: true);
+      return (response as List).map((json) => PlanModel.fromJson(json)).toList();
+    } on PostgrestException catch (_) {
+      // FIXED: fallback – fetch without join if operators table/FK not configured
+      final response = await _client
+          .from('plans')
+          .select()
+          .order('premium_amount', ascending: true);
+      return (response as List).map((json) => PlanModel.fromJson(json)).toList();
+    }
   }
 
   Stream<List<PolicyModel>> streamAllPolicies() {

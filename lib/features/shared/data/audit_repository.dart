@@ -5,13 +5,15 @@ import '../domain/models/audit_model.dart';
 
 final auditRepositoryProvider = Provider<AuditRepository>((ref) {
   final client = ref.watch(supabaseProvider);
-  return AuditRepository(client);
+  final privilegedClient = ref.watch(privilegedSupabaseProvider);
+  return AuditRepository(client, privilegedClient);
 });
 
 class AuditRepository {
   final SupabaseClient _client;
+  final SupabaseClient _privilegedClient;
 
-  AuditRepository(this._client);
+  AuditRepository(this._client, this._privilegedClient);
 
   Stream<List<AuditModel>> streamAuditLogs() {
     return _client
@@ -19,5 +21,9 @@ class AuditRepository {
         .stream(primaryKey: ['id'])
         .order('created_at', ascending: false)
         .map((list) => list.map((json) => AuditModel.fromJson(json)).toList());
+  }
+
+  Future<void> createLog(Map<String, dynamic> data) async {
+    await _privilegedClient.from('audit_logs').insert(data);
   }
 }

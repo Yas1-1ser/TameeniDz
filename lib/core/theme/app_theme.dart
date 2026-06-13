@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../constants/app_colors.dart';
+import 'app_colors.dart';
 import 'app_colors_extension.dart';
 
 class AppTheme {
@@ -10,25 +10,26 @@ class AppTheme {
       seedColor: AppColors.primaryGreen,
       primary: AppColors.primaryGreen,
       secondary: AppColors.goldAccent,
-      surface: AppColors.surface,
+      surface: AppColors.beigeCard,
       onPrimary: Colors.white,
       onSurface: AppColors.darkText,
       onSurfaceVariant: AppColors.onSurfaceVariant,
     ),
-    scaffoldBackgroundColor: AppColors.background,
-    fontFamily: 'Manrope', // Updated to premium font
-    dividerColor: AppColors.outlineVariant,
+    scaffoldBackgroundColor: AppColors.beigeBg,
+    fontFamily: 'Manrope',
+    dividerColor: AppColors.warmDivider,
     appBarTheme: const AppBarTheme(
       backgroundColor: AppColors.primaryGreen,
       foregroundColor: Colors.white,
       elevation: 0,
       centerTitle: true,
+      surfaceTintColor: Colors.transparent,
     ),
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
         backgroundColor: AppColors.primaryGreen,
         foregroundColor: Colors.white,
-        elevation: 0, // Premium flat look
+        elevation: 0,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         minimumSize: const Size.fromHeight(56),
         textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
@@ -36,15 +37,15 @@ class AppTheme {
     ),
     inputDecorationTheme: InputDecorationTheme(
       filled: true,
-      fillColor: AppColors.surfaceContainerLow,
+      fillColor: AppColors.beigeCard,
       contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
-        borderSide: BorderSide.none, // No-Line rule
+        borderSide: BorderSide.none,
       ),
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
-        borderSide: BorderSide.none,
+        borderSide: const BorderSide(color: AppColors.warmDivider, width: 1),
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
@@ -53,35 +54,35 @@ class AppTheme {
       hintStyle: const TextStyle(color: AppColors.slate500, fontSize: 14),
     ),
     cardTheme: CardTheme(
-      elevation: 0, // Tonal layering rule
+      elevation: 0,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      color: AppColors.surface,
+      color: AppColors.beigeCard,
     ),
     bottomNavigationBarTheme: const BottomNavigationBarThemeData(
-      backgroundColor: AppColors.surfaceContainerLowest,
+      backgroundColor: AppColors.beigeDeep,
       selectedItemColor: AppColors.primaryGreen,
       unselectedItemColor: AppColors.slate500,
+      elevation: 0,
     ),
     navigationBarTheme: NavigationBarThemeData(
-      backgroundColor: AppColors.surfaceContainerLowest,
+      backgroundColor: AppColors.beigeDeep,
       indicatorColor: AppColors.primaryGreen.withValues(alpha: 0.12),
       iconTheme: WidgetStateProperty.resolveWith((states) {
         return IconThemeData(
-          color:
-              states.contains(WidgetState.selected)
-                  ? AppColors.primaryGreen
-                  : AppColors.slate500,
+          color: states.contains(WidgetState.selected)
+              ? AppColors.primaryGreen
+              : AppColors.slate500,
         );
       }),
     ),
     navigationRailTheme: const NavigationRailThemeData(
-      backgroundColor: AppColors.surfaceContainerLowest,
+      backgroundColor: AppColors.beigeDeep,
       selectedIconTheme: IconThemeData(color: AppColors.primaryGreen),
       selectedLabelTextStyle: TextStyle(color: AppColors.primaryGreen),
       unselectedIconTheme: IconThemeData(color: AppColors.slate500),
       unselectedLabelTextStyle: TextStyle(color: AppColors.slate500),
     ),
-    drawerTheme: const DrawerThemeData(backgroundColor: AppColors.surface),
+    drawerTheme: const DrawerThemeData(backgroundColor: AppColors.beigeDeep),
     listTileTheme: const ListTileThemeData(
       iconColor: AppColors.slate500,
       textColor: AppColors.onSurface,
@@ -115,12 +116,13 @@ class AppTheme {
     ),
     scaffoldBackgroundColor: AppColors.backgroundDark,
     fontFamily: 'Manrope',
-    dividerColor: AppColors.outlineDark,
+    dividerColor: AppColors.dividerDark,
     appBarTheme: const AppBarTheme(
       backgroundColor: AppColors.surfaceDark,
       foregroundColor: AppColors.onSurfaceDark,
       elevation: 0,
       centerTitle: true,
+      surfaceTintColor: Colors.transparent,
     ),
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
@@ -141,11 +143,11 @@ class AppTheme {
       ),
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
-        borderSide: BorderSide.none,
+        borderSide: const BorderSide(color: AppColors.dividerDark, width: 1),
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
-        borderSide: const BorderSide(color: AppColors.primaryGreen, width: 1.5),
+        borderSide: const BorderSide(color: AppColors.primaryGreenDark, width: 1.5),
       ),
       hintStyle: const TextStyle(color: AppColors.onSurfaceVariantDark, fontSize: 14),
     ),
@@ -155,32 +157,32 @@ class AppTheme {
       color: AppColors.surfaceDark,
     ),
     bottomNavigationBarTheme: const BottomNavigationBarThemeData(
-      backgroundColor: AppColors.surfaceDark,
-      selectedItemColor: AppColors.inversePrimary,
+      backgroundColor: AppColors.surfaceContainerDark,
+      selectedItemColor: AppColors.primaryGreenDark,
       unselectedItemColor: AppColors.onSurfaceVariantDark,
+      elevation: 0,
     ),
     navigationBarTheme: NavigationBarThemeData(
-      backgroundColor: AppColors.surfaceDark,
+      backgroundColor: AppColors.surfaceContainerDark,
       indicatorColor: AppColors.inversePrimary.withValues(alpha: 0.16),
       iconTheme: WidgetStateProperty.resolveWith((states) {
         return IconThemeData(
-          color:
-              states.contains(WidgetState.selected)
-                  ? AppColors.inversePrimary
-                  : AppColors.onSurfaceVariantDark,
+          color: states.contains(WidgetState.selected)
+              ? AppColors.inversePrimary
+              : AppColors.onSurfaceVariantDark,
         );
       }),
     ),
     navigationRailTheme: const NavigationRailThemeData(
-      backgroundColor: AppColors.surfaceDark,
-      selectedIconTheme: IconThemeData(color: AppColors.inversePrimary),
-      selectedLabelTextStyle: TextStyle(color: AppColors.inversePrimary),
+      backgroundColor: AppColors.surfaceContainerDark,
+      selectedIconTheme: IconThemeData(color: AppColors.primaryGreenDark),
+      selectedLabelTextStyle: TextStyle(color: AppColors.primaryGreenDark),
       unselectedIconTheme: IconThemeData(color: AppColors.onSurfaceVariantDark),
       unselectedLabelTextStyle: TextStyle(
         color: AppColors.onSurfaceVariantDark,
       ),
     ),
-    drawerTheme: const DrawerThemeData(backgroundColor: AppColors.surfaceDark),
+    drawerTheme: const DrawerThemeData(backgroundColor: AppColors.surfaceContainerDark),
     listTileTheme: const ListTileThemeData(
       iconColor: AppColors.onSurfaceVariantDark,
       textColor: AppColors.onSurfaceDark,

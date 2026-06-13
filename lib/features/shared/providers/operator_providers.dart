@@ -29,6 +29,7 @@ final aiPoliciesStreamProvider = StreamProvider<List<PolicyModel>>((ref) {
   return ref.watch(policyRepositoryProvider).streamPoliciesByOperator('al_ittihad');
 });
 
-final policyDetailStreamProvider = StreamProvider.family<PolicyModel, String>((ref, id) {
+/// FIXED: Explicitly set the provider type to PolicyModel? to allow nullable stream
+final policyDetailStreamProvider = StreamProvider.family<PolicyModel?, String>((ref, id) {
   return ref.watch(policyRepositoryProvider).streamPolicyById(id);
 });

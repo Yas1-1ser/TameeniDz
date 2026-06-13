@@ -1,9 +1,12 @@
+import 'package:tameenidz/features/shared/widgets/page_entry_animation.dart';
+import 'package:tameenidz/core/theme/app_colors.dart';
+import 'package:tameenidz/core/theme/app_colors_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import '../../../core/constants/app_colors.dart';
 import '../../../generated/l10n/app_localizations.dart';
+import 'package:tameenidz/core/utils/auth_exception_handler.dart';
 
 /// Screen shown after the user clicks the password-reset link in their email.
 /// Supabase automatically creates a session for the user — we just need to
@@ -49,7 +52,10 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
       await Future.delayed(const Duration(seconds: 2));
       if (mounted) context.go('/client');
     } on AuthException catch (e) {
-      setState(() => _errorMessage = e.message);
+      if (mounted) {
+        final locale = Localizations.localeOf(context).languageCode;
+        setState(() => _errorMessage = AuthExceptionHandler.translate(e, locale));
+      }
     } catch (e) {
       setState(() => _errorMessage = e.toString());
     } finally {
@@ -63,14 +69,14 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
 
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      body: SafeArea(
+      body: PageEntryAnimation(child: SafeArea(
         child: Center(
           child: SingleChildScrollView(
             padding: const EdgeInsets.symmetric(horizontal: 28),
             child: _success ? _buildSuccessView(l10n) : _buildFormView(l10n),
           ),
         ),
-      ),
+      )),
     );
   }
 
@@ -104,7 +110,7 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
         SizedBox(height: 12),
         Text(
           l10n.redirectingToHome,
-          style: TextStyle(color: AppColors.slate500),
+          style: TextStyle(color: context.colors.slate500),
           textAlign: TextAlign.center,
         ),
         SizedBox(height: 24),
@@ -142,14 +148,14 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
             style: TextStyle(
               fontSize: 24,
               fontWeight: FontWeight.bold,
-              color: AppColors.darkText,
+              color: context.colors.darkText,
             ),
             textAlign: TextAlign.center,
           ),
           SizedBox(height: 8),
           Text(
             l10n.resetPasswordSubtitle,
-            style: TextStyle(color: AppColors.slate500),
+            style: TextStyle(color: context.colors.slate500),
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 32),
@@ -202,7 +208,7 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
                 borderRadius: BorderRadius.circular(12),
               ),
               filled: true,
-              fillColor: AppColors.surface,
+              fillColor: context.colors.surface,
             ),
             validator: (v) {
               if (v == null || v.isEmpty) return 'Required';
@@ -230,7 +236,7 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
                 borderRadius: BorderRadius.circular(12),
               ),
               filled: true,
-              fillColor: AppColors.surface,
+              fillColor: context.colors.surface,
             ),
             validator: (v) {
               if (v == null || v.isEmpty) return 'Required';
@@ -253,12 +259,12 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
             ),
             child:
                 _loading
-                    ? const SizedBox(
+                    ? SizedBox(
                       height: 20,
                       width: 20,
                       child: CircularProgressIndicator(
                         strokeWidth: 2,
-                        color: Colors.white,
+                        color: context.colors.surface,
                       ),
                     )
                     : Text(
@@ -276,7 +282,7 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
             onPressed: () => context.pop(),
             child: Text(
               l10n.backToLogin,
-              style: TextStyle(color: AppColors.slate500),
+              style: TextStyle(color: context.colors.slate500),
             ),
           ),
         ],

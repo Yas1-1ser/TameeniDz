@@ -1,0 +1,113 @@
+<USER_REQUEST>
+cat > /home/claude/lib_extracted/lib/features/operator/algeria_takaful/claims/at_claims_screen.dart << 'DART'
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart' as intl;
+import 'package:fl_chart/fl_chart.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:tameenidz/core/theme/premium_tokens.dart';
+import 'package:tameenidz/features/shared/widgets/page_entry_animation.dart';
+import 'package:tameenidz/features/shared/widgets/portal_layout.dart';
+import 'package:tameenidz/features/shared/widgets/status_badge.dart';
+import 'package:tameenidz/features/shared/widgets/immutable_timestamp.dart';
+import 'package:tameenidz/features/shared/enums/policy_status.dart';
+import 'package:tameenidz/generated/l10n/app_localizations.dart';
+
+class AtClaimsScreen extends ConsumerStatefulWidget {
+  const AtClaimsScreen({super.key});
+
+  @override
+  ConsumerState<AtClaimsScreen> createState() => _AtClaimsScreenState();
+}
+
+class _AtClaimsScreenState extends ConsumerState<AtClaimsScreen>
+    with SingleTickerProviderStateMixin {
+  late TabController _tabController;
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: 3, vsync: this);
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
+
+  PolicyStatus _mapStatus(String? status) {
+    if (status == 'accepted' || status == 'approved' || status == 'approved_paid') {
+      return PolicyStatus.accepted;
+    }
+    if (status == 'rejected') return PolicyStatus.rejected;
+    if (status == 'paid') return PolicyStatus.paid;
+    if (status == 'modificationRequested') return PolicyStatus.modificationRequested;
+    return PolicyStatus.pending;
+  }
+
+  Future<void> _updateStatus(String id, String newStatus, AppLocalizations l10n) async {
+    try {
+      await Supabase.instance.client
+          .from('client_poli
+<truncated 45214 bytes>
+          ),
+                    const SizedBox(width: 12),
+                    AnimatedContainer(
+                      duration: const Duration(milliseconds: 220),
+                      padding: const EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        color: active
+                            ? AppColors.goldAccent.withValues(alpha: 0.14)
+                            : Colors.transparent,
+                        shape: BoxShape.circle,
+                        border: Border.all(
+                          color: AppColors.goldAccent.withValues(
+                            alpha: active ? 0.5 : 0.25,
+                          ),
+                        ),
+                      ),
+                      child: Icon(
+                        isRtl
+                            ? Icons.arrow_back_ios_new_rounded
+                            : Icons.arrow_forward_ios_rounded,
+                        size: 16,
+                        color: active
+                            ? widget.accentColor
+                            : AppColors.goldAccent,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    )
+        .animate()
+        .fadeIn(
+          duration: 450.ms,
+          delay: Duration(milliseconds: widget.entranceDelay),
+        )
+        .slideY(
+          begin: 0.14,
+          end: 0,
+          duration: 450.ms,
+          delay: Duration(milliseconds: widget.entranceDelay),
+          curve: Curves.easeOutCubic,
+        )
+        .then(delay: 180.ms)
+        .shimmer(
+          duration: 1000.ms,
+          color: AppColors.goldAccent.withValues(alpha: 0.15),
+        );
+  }
+}
+
+// ── Help card ──────────────────────────────────────────
+<truncated 5736 bytes>
+
+NOTE: The output was truncated because it was too long. Use a more targeted query or a smaller range to get the information you need.

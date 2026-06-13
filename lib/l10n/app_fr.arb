@@ -3,15 +3,15 @@
   "allOperators": "Tous les opérateurs",
   "recentRequests": "Demandes récentes",
   "noRequestsFound": "Aucune demande trouvée",
-  "decisionNotes": "Notes de décision / Raisons",
-  "enterDecisionReason": "Veuillez entrer une raison pour cette décision...",
+  "decisionNotes": "Notes / Raison de la Décision",
+  "enterDecisionReason": "Saisissez la raison de la décision ou de la modification...",
   "statusUpdateSuccess": "Statut mis à jour avec succès",
-  "statusUpdateError": "Échec de la mise à jour du statut",
-  "latestActivitiesAdmin": "Dernières Activités du Système",
+  "statusUpdateError": "Erreur lors de la mise à jour du statut",
+  "latestActivitiesAdmin": "Dernières Activités",
   "adminReadOnlyView": "Vue Administrateur : Lecture seule",
   "statusPending": "En attente",
   "statusAccepted": "Accepté",
-  "statusRejected": "Rejeté",
+  "statusRejected": "Refusé",
   "statusModReq": "Mod. Req.",
   "comingSoon": "Prochainement",
   "enterCode": "Entrez le code de vérification",
@@ -107,7 +107,7 @@
   "supportHeaderSubtitle": "Assistance dédiée à nos participants d'élite. Nos médiateurs spécialisés sont disponibles pour garantir que votre expérience reste fluide.",
   "liveChat": "Chat en Direct",
   "priorityCall": "Appel Prioritaire",
-  "submitRequest": "Soumettre une Demande",
+  "submitRequest": "Soumettre la demande",
   "subject": "Sujet",
   "message": "Message",
   "submitTicket": "Envoyer le Ticket",
@@ -146,7 +146,9 @@
   "welcomeClient": "Bienvenue, {name}",
   "@welcomeClient": {
     "placeholders": {
-      "name": { "type": "String" }
+      "name": {
+        "type": "String"
+      }
     }
   },
   "preferences": "Préférences",
@@ -172,10 +174,12 @@
   "insurancePlan": "Plan d'assurance",
   "plansNav": "Plans",
   "employeePortal": "Portail des employés",
-  "algeriaTakaful": "Algérie Takaful",
+  "algeriaTakaful": "Algeria Takaful - Assurance 100% Halal",
   "alIttihad": "Al-Ittihad",
   "fundsSeparateNotice": "Ces fonds sont complètement séparés des fonds des actionnaires selon le Décret 21-81",
   "totalSurplus": "Excédent total",
+  "policyholdersSurplusLegend": "Compte des Assurés (Excédent Coopératif)",
+  "shareholdersManagementFeeLegend": "Compte des Actionnaires (Frais de Gestion)",
   "beneficiaryCount": "Nombre de bénéficiaires",
   "distributionLog": "Journal des distributions",
   "addDistribution": "Ajouter une distribution",
@@ -195,7 +199,7 @@
   "latestAuditLogs": "Dernières entrées du journal d'audit",
   "viewAll": "Voir tout",
   "noLogsYet": "Aucun journal pour le moment",
-  "splashKeywords": "Takaful Numérique • Conforme à la Charia • Sécurisé",
+  "splashKeywords": "Assurance de confiance · Simple et Intelligent · Algérie",
   "selectAccountTypeToProceed": "Sélectionnez votre type de compte pour continuer",
   "clientRoleSubtitle": "Postuler pour des polices Takaful",
   "operatorRole": "Opérateur",
@@ -235,7 +239,9 @@
   "passwordStrength": "Force du mot de passe : {strength}",
   "@passwordStrength": {
     "placeholders": {
-      "strength": { "type": "String" }
+      "strength": {
+        "type": "String"
+      }
     }
   },
   "weak": "Faible",
@@ -248,11 +254,13 @@
   "selectedPlan": "Sélectionné : {plan}",
   "@selectedPlan": {
     "placeholders": {
-      "plan": { "type": "String" }
+      "plan": {
+        "type": "String"
+      }
     }
   },
   "decreeComplianceNotice": "Tous les plans sont conformes au Décret 21-81 et aux principes du Takaful islamique",
-  "noPlansAvailable": "Aucun plan disponible pour le moment",
+  "noPlansAvailable": "Aucun plan disponible actuellement",
   "coverageAmount": "Montant de Couverture",
   "tabarruRate": "Taux Tabarru'",
   "claimsDuration": "Durée de Traitement des Sinistres",
@@ -261,8 +269,12 @@
   "paymentSuccessSubtitle": "{amount} DZD via {method}",
   "@paymentSuccessSubtitle": {
     "placeholders": {
-      "amount": { "type": "String" },
-      "method": { "type": "String" }
+      "amount": {
+        "type": "String"
+      },
+      "method": {
+        "type": "String"
+      }
     }
   },
   "backToDashboard": "Retour au Tableau de Bord",
@@ -281,9 +293,6 @@
   "decreeFrameworkDescription": "Conformité totale avec le cadre juridique fondateur régissant la médiation à haute valeur nette et l'orchestration financière islamique.",
   "statusLabel": "STATUT",
   "lastReviewLabel": "DERNIÈRE RÉVISION",
-  "statusPending": "En attente",
-  "statusAccepted": "Accepté",
-  "statusRejected": "Rejeté",
   "statusModificationRequested": "Modification Requise",
   "policyHistory": "Historique des Polices",
   "noPoliciesFound": "Vous n'avez pas encore soumis de demandes de police.",
@@ -291,24 +300,29 @@
   "submittedOn": "Soumis le {date}",
   "@submittedOn": {
     "placeholders": {
-      "date": { "type": "String" }
+      "date": {
+        "type": "String"
+      }
     }
   },
   "newRequests": "Nouvelles Demandes",
   "processingRequests": "En Traitement",
   "completedToday": "Complétées Aujourd'hui",
-  "noRequestsFound": "Aucune demande trouvée",
   "applicationNumber": "Demande #{id}",
   "@applicationNumber": {
     "placeholders": {
-      "id": { "type": "String" }
+      "id": {
+        "type": "String"
+      }
     }
   },
   "subscriberInfo": "Informations de l'Abonné",
   "accountIdentifier": "ID Compte : {id}",
   "@accountIdentifier": {
     "placeholders": {
-      "id": { "type": "String" }
+      "id": {
+        "type": "String"
+      }
     }
   },
   "requestedAmount": "Montant Demandé",
@@ -317,15 +331,13 @@
   "lastUpdateDate": "Dernière mise à jour : {date}",
   "@lastUpdateDate": {
     "placeholders": {
-      "date": { "type": "String" }
+      "date": {
+        "type": "String"
+      }
     }
   },
-  "decisionNotes": "Notes / Raison de la Décision",
-  "enterDecisionReason": "Saisissez la raison de la décision ou de la modification...",
   "reviewDecision": "Décision de Révision",
   "decisionTaken": "Une décision a déjà été prise pour cette demande.",
-  "statusUpdateSuccess": "Statut mis à jour avec succès",
-  "statusUpdateError": "Erreur lors de la mise à jour du statut",
   "viewAction": "Voir",
   "addUser": "Ajouter un Utilisateur",
   "noUsersFound": "Aucun utilisateur trouvé",
@@ -365,7 +377,7 @@
   "ccpHint": "00XXXXXXXX",
   "next": "Suivant",
   "passwordHint": "Saisissez votre mot de passe",
-  "passwordTooShort": "Le mot de passe doit comporter au moins 8 caractères",
+  "passwordTooShort": "Le mot de passe doit contenir au moins 8 caractères",
   "passwordNeedUpper": "Le mot de passe doit contenir au moins une majuscule",
   "passwordNeedNumber": "Le mot de passe doit contenir au moins un chiffre",
   "passwordsDontMatch": "Les mots de passe ne correspondent pas",
@@ -388,7 +400,9 @@
   "resendAfter": "Renvoyer dans {time}",
   "@resendAfter": {
     "placeholders": {
-      "time": { "type": "String" }
+      "time": {
+        "type": "String"
+      }
     }
   },
   "invalidCode": "Code de vérification invalide",
@@ -398,7 +412,6 @@
   "resetPasswordTitle": "Réinitialiser le mot de passe",
   "resetPasswordSubtitle": "Entrez un nouveau mot de passe pour votre compte.",
   "newPassword": "Nouveau mot de passe",
-  "passwordTooShort": "Le mot de passe doit contenir au moins 8 caractères",
   "passwordsDoNotMatch": "Les mots de passe ne correspondent pas",
   "updatePassword": "Mettre à jour le mot de passe",
   "passwordUpdatedSuccess": "Mot de passe mis à jour avec succès !",
@@ -418,7 +431,9 @@
   "confirmationEmailSent": "Un lien de confirmation a été envoyé à votre e-mail.\nAprès confirmation, vous pourrez vous connecter au portail {company}.",
   "@confirmationEmailSent": {
     "placeholders": {
-      "company": { "type": "String" }
+      "company": {
+        "type": "String"
+      }
     }
   },
   "goToLogin": "Aller à la connexion",
@@ -435,23 +450,29 @@
   "exclusivePortalNote": "Ce portail est exclusivement réservé aux employés de {company} et ses données sont complètement isolées.",
   "@exclusivePortalNote": {
     "placeholders": {
-      "company": { "type": "String" }
+      "company": {
+        "type": "String"
+      }
     }
   },
   "wrongCompanyError": "Ce compte n'est pas associé à {company}.",
   "@wrongCompanyError": {
     "placeholders": {
-      "company": { "type": "String" }
+      "company": {
+        "type": "String"
+      }
     }
   },
-  "emailRequired": "L'e-mail est requis",
+  "emailRequired": "L'email est requis",
   "invalidEmailError": "E-mail invalide",
   "passwordTooShortError": "Mot de passe trop court",
   "totalSurplus2024": "Excédent total distribué 2024",
   "beneficiariesCount": "Nombre de bénéficiaires : {count}",
   "@beneficiariesCount": {
     "placeholders": {
-      "count": { "type": "String" }
+      "count": {
+        "type": "String"
+      }
     }
   },
   "policyholdersFund": "Fonds des assurés",
@@ -460,7 +481,9 @@
   "distributionDateLabel": "Date de distribution : {date}",
   "@distributionDateLabel": {
     "placeholders": {
-      "date": { "type": "String" }
+      "date": {
+        "type": "String"
+      }
     }
   },
   "strengthWeak": "Faible",
@@ -473,7 +496,9 @@
   "otpSentSubtitle": "Un code à 6 chiffres a été envoyé au\n{phone}",
   "@otpSentSubtitle": {
     "placeholders": {
-      "phone": { "type": "String" }
+      "phone": {
+        "type": "String"
+      }
     }
   },
   "performanceOverview": "Aperçu des Performances",
@@ -490,13 +515,16 @@
   "commissionsAdmin": "Commissions",
   "settingsAdmin": "Paramètres",
   "legalRecord": "Dossier Légal",
-  "latestActivitiesAdmin": "Dernières Activités",
   "commissionMonitoring": "Suivi des Commissions",
   "totalCommissionsMonthYear": "Commissions Totales {month} {year}",
   "@totalCommissionsMonthYear": {
     "placeholders": {
-      "month": { "type": "String" },
-      "year": { "type": "String" }
+      "month": {
+        "type": "String"
+      },
+      "year": {
+        "type": "String"
+      }
     }
   },
   "fromLastMonth": "Depuis le mois dernier",
@@ -504,7 +532,9 @@
   "commissionRatePct": "Taux: {rate}%",
   "@commissionRatePct": {
     "placeholders": {
-      "rate": { "type": "String" }
+      "rate": {
+        "type": "String"
+      }
     }
   },
   "dueCommission": "Commission Due",
@@ -527,13 +557,17 @@
   "policyNumberLabel": "Numéro de Police: {number}",
   "@policyNumberLabel": {
     "placeholders": {
-      "number": { "type": "String" }
+      "number": {
+        "type": "String"
+      }
     }
   },
   "monthlyPremiumLabel": "Prime Mensuelle: {amount} DZD",
   "@monthlyPremiumLabel": {
     "placeholders": {
-      "amount": { "type": "String" }
+      "amount": {
+        "type": "String"
+      }
     }
   },
   "myDocuments": "Mes Docs",
@@ -542,7 +576,9 @@
   "renewalDueIn": "Renouvellement dans {days} jours",
   "@renewalDueIn": {
     "placeholders": {
-      "days": { "type": "String" }
+      "days": {
+        "type": "String"
+      }
     }
   },
   "renewalReviewNote": "Veuillez vérifier votre police d'assurance habitation pour éviter une interruption.",
@@ -569,9 +605,1434 @@
   "paymentReceiptSentToOperator": "Reçu envoyé à l'opérateur avec succès",
   "paymentReceiptNumber": "Numéro de Reçu",
   "paymentDate": "Date de Paiement",
-  "paymentMethod": "Mode de Paiement",
   "paymentConfirmedByClient": "Paiement confirmé par le client",
   "downloadReceipt": "Télécharger le Reçu",
   "paymentVerified": "Paiement Vérifié ✓",
-  "phoneNumberAlreadyTaken": "Ce numéro de téléphone est déjà enregistré"
+  "phoneNumberAlreadyTaken": "Ce numéro de téléphone est déjà enregistré",
+  "selectLanguage": "Choisir la Langue",
+  "realtimeConnecting": "Connexion en cours...",
+  "realtimeLive": "En direct",
+  "realtimeRetrying": "Tentative de reconnexion...",
+  "realtimeTapToRetry": "Appuyer pour réessayer",
+  "getStarted": "Commencer",
+  "forgotPassword": "Mot de passe oublié ?",
+  "hoursAgo": "Hours Ago",
+  "passwordLabel": "Password Label",
+  "userPermissions": "User Permissions",
+  "sinceLaunch": "Since Launch",
+  "offerFamilyBundleDesc": "Offer Family Bundle Desc",
+  "active": "Active",
+  "totalWallet": "Total Wallet",
+  "addNewCustomer": "Add New Customer",
+  "systemSettings": "System Settings",
+  "shareLinkMessage": "Share Link Message",
+  "equipmentValue": "Equipment Value",
+  "startingPrice": "Starting Price",
+  "mechanic": "Mechanic",
+  "offerNewDriverTitle": "Offer New Driver Title",
+  "distanceKm": "{km} km",
+  "engineer": "Engineer",
+  "formulaExplanation1": "Formula Explanation1",
+  "documentsAppearHere": "Documents Appear Here",
+  "calculateCarInsurance": "Calculate Car Insurance",
+  "stepContribution": "Step Contribution",
+  "endDate": "End Date",
+  "formulaExplanation2": "Formula Explanation2",
+  "emergencyDesc": "Emergency Desc",
+  "solidarity": "Solidarity",
+  "checkout": "Checkout",
+  "theProcess": "Processus Takaful",
+  "notifications": "Notifications",
+  "roadsideAssistance": "Roadside Assistance",
+  "availableBalance": "Solde disponible",
+  "duration": "Duration",
+  "coverage": "Coverage",
+  "shield": "Shield",
+  "takafulConcept": "Concept de Takaful",
+  "whyLegalFramework": "Why Legal Framework",
+  "notificationClaimTitle": "Notification Claim Title",
+  "offerDeletedSuccess": "Offer Deleted Success",
+  "islamicPrinciples": "Islamic Principles",
+  "nearbyGarages": "Nearby Garages",
+  "offerRamadanTitle": "Offer Ramadan Title",
+  "plansManagement": "Plans Management",
+  "nightMode": "Night Mode",
+  "addOffer": "Add Offer",
+  "transparencyDesc": "Transparency Desc",
+  "offerRamadanDesc": "Offer Ramadan Desc",
+  "policyDetails": "Policy Details",
+  "customer": "Customer",
+  "exit": "Exit",
+  "bestValueUnmarked": "Best Value Unmarked",
+  "perYear": "Per Year",
+  "imageUploaded": "Image Uploaded",
+  "totalDocuments": "Total Documents",
+  "ownership": "Ownership",
+  "internationalStandards": "International Standards",
+  "stepPooling": "Step Pooling",
+  "notificationSystemTitle": "Notification System Title",
+  "totalSales": "Total Sales",
+  "premium": "Premium",
+  "downloadError": "Download Error",
+  "commerce": "Commerce",
+  "startDate": "Start Date",
+  "electric": "Electric",
+  "transparency": "Transparency",
+  "takafulConceptDesc": "Takaful Concept Desc",
+  "carBrokenDown": "Car Broken Down",
+  "actionCall": "Action Call",
+  "view": "View",
+  "aboutApp": "About App",
+  "paymentSuccessful": "Payment Successful",
+  "towing": "Towing",
+  "exampleValue": "Exemple: 2 000 000",
+  "selectDriverAge": "Select Driver Age",
+  "salesList": "Sales List",
+  "confirmDeleteTitle": "Confirm Delete Title",
+  "roleManagement": "Role Management",
+  "processingDurationDays": "Processing Duration Days",
+  "shariaSupervisionDesc": "Sharia Supervision Desc",
+  "lawyer": "Lawyer",
+  "offerFamilyBundleValidity": "Offer Family Bundle Validity",
+  "roadsideAssistanceTitle": "Roadside Assistance Title",
+  "securityConfiguration": "Security Configuration",
+  "shariaInsuranceSubtitle": "Sharia Insurance Subtitle",
+  "services": "Services",
+  "stepSurplusDesc": "Step Surplus Desc",
+  "addNewPlan": "Add New Plan",
+  "ratingWithStar": "Rating With Star",
+  "editOffer": "Edit Offer",
+  "renewalAlert24H": "Renewal Alert24 H",
+  "premiumDzd": "Premium Dzd",
+  "ownerNotSpecified": "Owner Not Specified",
+  "invalidMasterPasscode": "Invalid Master Passcode",
+  "honestyDesc": "Honesty Desc",
+  "createAdminAccountSubtitle": "Create Admin Account Subtitle",
+  "privacyPolicy": "Privacy Policy",
+  "offerNewDriverDesc": "Offer New Driver Desc",
+  "noSalesCurrently": "No Sales Currently",
+  "currency": "Currency",
+  "specialties": "Specialties",
+  "pending": "Pending",
+  "addNew": "Add New",
+  "notificationUserBody": "Notification User Body",
+  "visionDesc": "Vision Desc",
+  "errorLoadingDataTryLater": "Error Loading Data Try Later",
+  "copyright": "Copyright",
+  "pressForImmediateSos": "Press For Immediate Sos",
+  "mutualCooperation": "Mutual Cooperation",
+  "howTakafulWorks": "How Takaful Works",
+  "activityNature": "Activity Nature",
+  "policyholders": "Policyholders",
+  "yourProfit": "Your Profit",
+  "adminRegistration": "Admin Registration",
+  "offerNewDriverValidity": "Offer New Driver Validity",
+  "noDocumentsYet": "No Documents Yet",
+  "legalFramework": "Legal Framework",
+  "distributed": "Distributed",
+  "honesty": "Honesty",
+  "shariaSupervision": "Sharia Supervision",
+  "yearUnit": "Ans",
+  "productAccreditation": "Product Accreditation",
+  "registrationNumber": "Registration Number",
+  "manageOffers": "Manage Offers",
+  "requestFreeQuote": "Request Free Quote",
+  "planName": "Plan Name",
+  "offerRamadanValidity": "Offer Ramadan Validity",
+  "insuranceLawDesc": "Insurance Law Desc",
+  "annualInsurancePrice": "Annual Insurance Price",
+  "category": "Category",
+  "solidarityDesc": "Solidarity Desc",
+  "retained": "Retained",
+  "emergencyAssistance": "Emergency Assistance",
+  "callNow": "Call Now",
+  "chooseByWilayaAndSpecialty": "Choose By Wilaya And Specialty",
+  "dataBackup": "Data Backup",
+  "helpCenter": "Help Center",
+  "operatorTakaful": "Operator Takaful",
+  "recentSales": "Recent Sales",
+  "monthProfit": "Month Profit",
+  "offerFamilyBundleTitle": "Offer Family Bundle Title",
+  "myCommissionRate": "My Commission Rate",
+  "premiumRate": "Premium Rate",
+  "featureComingSoon": "Feature Coming Soon",
+  "stepSurplus": "Step Surplus",
+  "shareMyLink": "Share My Link",
+  "auditAnnual": "Audit Annual",
+  "amount": "Amount",
+  "appDiscountLabel": "App Discount Label",
+  "driverAge": "Driver Age",
+  "formulaExplanation3": "Formula Explanation3",
+  "aboutUs": "About Us",
+  "noClaimsYet": "No Claims Yet",
+  "proceedToCheckout": "Proceed To Checkout",
+  "directCallToTowing": "Direct Call To Towing",
+  "contractor": "Contractor",
+  "hourAgo": "Hour Ago",
+  "renewalAlertDays": "Renewal Alert Days",
+  "promotions": "Promotions",
+  "activityLogs": "Activity Logs",
+  "tires": "Tires",
+  "bestValueMarked": "Best Value Marked",
+  "enterEquipmentValue": "Veuillez saisir la valeur de l'équipement",
+  "myClaims": "My Claims",
+  "errorLoadingData": "Error Loading Data",
+  "surplusPercent": "Surplus Percent",
+  "stepProtection": "Step Protection",
+  "shariaCompliant": "Sharia Compliant",
+  "notificationUserTitle": "Notification User Title",
+  "industry": "Industry",
+  "fileNewClaim": "File New Claim",
+  "battery": "Battery",
+  "noTowingTrucksAvailable": "No Towing Trucks Available",
+  "saveOffer": "Save Offer",
+  "yesterday": "Yesterday",
+  "enterGoodsValue": "Veuillez saisir la valeur des marchandises",
+  "todayProfit": "Today Profit",
+  "basis": "Basis",
+  "garageUnknown": "Garage Unknown",
+  "registeredAt": "Registered At",
+  "errorLoadingDocuments": "Error Loading Documents",
+  "noGaragesInThisArea": "No Garages In This Area",
+  "availablePlans": "Available Plans",
+  "allTimeProfit": "All Time Profit",
+  "viewOnMap": "View On Map",
+  "offersManagement": "Offers Management",
+  "insuranceRateNotice": "Insurance Rate Notice",
+  "salesTabTitle": "Sales Tab Title",
+  "whoWeAre": "Who We Are",
+  "howIsPriceCalculated": "How Is Price Calculated",
+  "rafik": "Rafik",
+  "accountStatus": "Account Status",
+  "appName": "App Name",
+  "doctor": "Doctor",
+  "shareholders": "Shareholders",
+  "download": "Download",
+  "internationalStandardsDesc": "International Standards Desc",
+  "rafikCalculatorTitle": "Rafik Calculator Title",
+  "verifiedGarages": "Verified Garages",
+  "commercialProfit": "Commercial Profit",
+  "expiresIn": "Expires In",
+  "selectProfessionType": "Select Profession Type",
+  "discountLabel": "Discount Label",
+  "takafulVsConventional": "Takaful Vs Conventional",
+  "orderSummary": "Order Summary",
+  "quoteResult": "Quote Result",
+  "goodsValue": "Goods Value",
+  "equalityDesc": "Equality Desc",
+  "pickImageHint": "Pick Image Hint",
+  "noOffersYet": "No Offers Yet",
+  "notificationSystemBody": "Notification System Body",
+  "activate": "Activate",
+  "isBestValue": "Is Best Value",
+  "insuranceLaw": "Insurance Law",
+  "offerSavedSuccess": "Offer Saved Success",
+  "none": "None",
+  "completed": "Completed",
+  "stepContributionDesc": "Step Contribution Desc",
+  "startingFrom": "Starting From",
+  "lastMonth": "Last Month",
+  "monthlyInsurancePrice": "Monthly Insurance Price",
+  "lastAccidentDateOptional": "Last Accident Date Optional",
+  "adminRegisteredSuccessfully": "Admin Registered Successfully",
+  "required": "Required",
+  "verified": "Verified",
+  "iconType": "Icon Type",
+  "insuranceDocument": "Insurance Document",
+  "masterPasscode": "Master Passcode",
+  "masterPasscodeHint": "Master Passcode Hint",
+  "planSavedSuccessfully": "Plan Saved Successfully",
+  "minutesAgo": "Minutes Ago",
+  "paymentSuccessMessage": "Payment Success Message",
+  "description": "Description",
+  "tireChange": "Tire Change",
+  "addNewOffer": "Add New Offer",
+  "enterRegistrationNumber": "Enter Registration Number",
+  "withdraw": "Retirer",
+  "ourVision": "Our Vision",
+  "adminClaims": "Admin Claims",
+  "confirmDeleteContent": "Confirm Delete Content",
+  "agentDashboard": "Agent Dashboard",
+  "termsAndConditions": "Terms And Conditions",
+  "exitConfirmMessage": "Exit Confirm Message",
+  "algeriaUnited": "Algeria United",
+  "professionType": "Profession Type",
+  "userDetails": "User Details",
+  "notificationClaimBody": "Notification Claim Body",
+  "offerNameAr": "Offer Name Ar",
+  "stepPoolingDesc": "Step Pooling Desc",
+  "systemNotifications": "System Notifications",
+  "equality": "Equality",
+  "selectActivityNature": "Select Activity Nature",
+  "stepProtectionDesc": "Step Protection Desc",
+  "tabarruPercent": "Tabarru Percent",
+  "loadingDocument": "Loading Document",
+  "fuel": "Fuel",
+  "enterCarValueDzd": "Enter Car Value Dzd",
+  "delete": "Delete",
+  "completePayment": "Complete Payment",
+  "noData": "Aucune donnée",
+  "contactUs": "Contactez-nous",
+  "faq": "FAQ",
+  "claims": "Sinistres",
+  "getAQuote": "Obtenir un devis",
+  "noNotifications": "Aucune notification",
+  "noClaims": "Aucune réclamation",
+  "yourMessage": "Votre message",
+  "sendMessage": "Envoyer",
+  "generalError": "Une erreur est survenue: {error}",
+  "@generalError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "unauthenticatedErrorDetail": "TODO: translate: المستخدم غير مسجل",
+  "fileReadError": "TODO: translate: تعذّر قراءة بيانات الملف",
+  "filePathError": "TODO: translate: مسار الملف غير متوفر",
+  "protectionPacks": "Packs de Protection",
+  "availableOffers": "Offres Disponibles",
+  "addToCompare": "Ajouter au Comparateur",
+  "removeFromCompare": "Retirer du Comparateur",
+  "comparisonList": "Liste de Comparaison",
+  "startComparison": "Démarrer la Comparaison Maintenant",
+  "maxPlansComparison": "Vous pouvez comparer un maximum de 3 plans",
+  "noPlansSelected": "Aucun plan sélectionné pour la comparaison",
+  "selectAtLeastTwo": "Sélectionnez au moins deux plans pour comparer",
+  "protectionPackSubtitle": "Des formules d'assurance complètes assurant une protection totale pour vous et votre famille selon les principes du Takaful.",
+  "add": "Ajouter",
+  "remove": "Retirer",
+  "halalTakafulInsurance": "Assurance Takaful 100% Halal",
+  "myPlans": "Mes Plans",
+  "emergency": "Urgence",
+  "calculateNow": "Calculer Maintenant ←",
+  "roadsideServices": "Assistance Routière",
+  "roadsideSubtitle": "Nous vous connectons aux meilleures solutions d'assurance et services routiers en un seul endroit",
+  "takafulTitle": "Plateforme Takaful.. Coopération et Sécurité",
+  "takafulDescription": "Nous mettons à votre disposition une application numérique qui vous connecte directement au système d'assurance islamique (Takaful). Notre objectif est de faciliter la gestion de vos cotisations dans le fonds de coopération mutuelle avec professionnalisme et transparence totale selon les principes de la Charia.",
+  "howTakafulWorksAction": "Comment fonctionne le Takaful ? ←",
+  "seeAll": "Voir Tout",
+  "fromPrice": "À partir de {price}",
+  "@fromPrice": {
+    "placeholders": {
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+  "takafulHalalNotice": "Assurance Takaful 100% Halal",
+  "rafikCalculator": "🔢 Calculateur Rafik",
+  "rafikSubtitle": "Entrez la valeur de votre voiture et calculez votre prime automatiquement\n(Tarif = 0,4% de la valeur de la voiture)",
+  "modernPacksCompetitivePrices": "Des packs modernes à des prix compétitifs",
+  "editUser": "Edit User",
+  "deleteUserConfirmation": "Delete User Confirmation",
+  "deleteUser": "Delete User",
+  "planAutoRC": "Responsabilité Civile Automobile (RC)",
+  "planHome": "Assurance Habitation",
+  "performanceStats": "Statistiques de Performance",
+  "monthlySubscriptions": "Cotisations Mensuelles",
+  "totalSubscriptions": "Total des Cotisations",
+  "paidSubscriptions": "Cotisations Payées",
+  "claimsVsSurplus": "Sinistres vs Surplus",
+  "insurancePacksAndServices": "Produits et Services Takaful",
+  "quoteRequirements": "Conditions de Demande de Devis",
+  "whyLegal": "Pourquoi sommes-nous légaux ?",
+  "takafulPhilosophy": "Takaful.. Protection dans l'esprit de coopération",
+  "documentId": "ID du document",
+  "subscriberData": "Données du souscripteur",
+  "insuranceDetails": "Détails de la couverture d'assurance",
+  "attachedDocuments": "Documents joints",
+  "noDocumentsAttached": "Aucun document joint à cette demande",
+  "attachedDocument": "Document joint",
+  "viewFile": "Voir le fichier",
+  "regulatoryDecision": "Détails et notes de la décision réglementaire",
+  "regulatoryDecisionHint": "Écrivez une raison pour l'approbation, le rejet ou la demande de modification ici...",
+  "receiptPhoto": "Reçu de preuve de paiement manuel",
+  "fullSizeView": "Aperçu en taille réelle",
+  "paidVerified": "Paiement de l'abonnement vérifié avec succès",
+  "operatorDecisionMade": "Une décision finale a été prise sur cette demande par l'opérateur",
+  "requestModification": "Demander une modification",
+  "enterReasonFirst": "Veuillez d'abord saisir un motif de rejet ou de modification !",
+  "requestUpdateSuccess": "Statut de la demande Takaful mis à jour avec succès",
+  "operatorPortalTitle": "Portail Opérateur",
+  "noAccountYet": "Vous n'avez pas de compte ?",
+  "createAccount": "Créer un compte",
+  "subscribeNow": "Souscrire",
+  "roadsideAppTitle": "Services d'Assistance Routière & Réparation",
+  "certifiedGaragesDirectory": "Annuaire des Ateliers Agréés",
+  "searchGarageHint": "Rechercher par nom d'atelier ou wilaya...",
+  "gpsScanningMessage": "Lecture de votre position GPS et localisation du dépanneur le plus proche...",
+  "locationDeterminedSuccess": "Position localisée! Le dépanneur le plus proche est disponible",
+  "distanceAway": "À {distance} km",
+  "@distanceAway": {
+    "placeholders": {
+      "distance": {
+        "type": "String"
+      }
+    }
+  },
+  "callDirectlyNow": "Appeler Directement Maintenant",
+  "takafulDefinitionHeader": "Introduction au Système Takaful & Services",
+  "appSubscriberDiscount": "{discount}% de réduction pour les abonnés",
+  "@appSubscriberDiscount": {
+    "placeholders": {
+      "discount": {
+        "type": "String"
+      }
+    }
+  },
+  "callItemButton": "Appeler",
+  "sosTitle": "Secours en un Clic",
+  "sosSubtitle": "Appuyez pour demander une assistance d'urgence instantanée",
+  "fallbackTruckName": "Tonton Ahmed Réparation & Remorquage Rapide",
+  "noGaragesFound": "Aucun atelier trouvé correspondant aux options de filtrage.",
+  "errorLoadingGarages": "Une erreur est survenue lors du chargement des ateliers agréés. Veuillez vérifier votre connexion internet.",
+  "callingPerson": "Appel de {name}...",
+  "@callingPerson": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "callConfirmationPrompt": "Voulez-vous appeler {name} au {phone} ?",
+  "@callConfirmationPrompt": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "phone": {
+        "type": "String"
+      }
+    }
+  },
+  "specialtyMechanic": "Mécanique Générale",
+  "specialtyElectrician": "Électricien Auto",
+  "specialtyTires": "Réparation Pneus",
+  "specialtyDefault": "Maintenance Agréée",
+  "callingDirect": "Appel Direct",
+  "provinceAlgiers": "Alger",
+  "provinceOran": "Oran",
+  "provinceConstantine": "Constantine",
+  "provinceBlida": "Blida",
+  "provinceBoumerdes": "Boumerdès",
+  "wilayaFilterPrefix": "Wilaya: ",
+  "specialtyFilterPrefix": "Spécialité: ",
+  "filterAll": "Tout",
+  "specialtyMechanicFilter": "Mécanique",
+  "specialtyElectricianFilter": "Électricité",
+  "specialtyTiresFilter": "Pneus",
+  "addressLabel": "Adresse complète",
+  "adminDashboardProfit": "Section Bénéfices (frais d'agence)",
+  "adminDashboardSales": "Liste des ventes (Nom – Société – Montant)",
+  "adminDashboardWallet": "Portefeuille (solde total de tous les abonnés)",
+  "agriIndus": "Activités Agricoles & Industrielles (Agricole & Industriel)",
+  "agriIndusDesc": "Assurance pour équipements, récoltes, usines et machines lourdes",
+  "agriIndusPrice": "Prix : soumis à une étude technique spéciale (selon la taille de l'installation)",
+  "agriIndusTargets": "Agriculteurs, exploitants agricoles et propriétaires d'usines",
+  "autoInsurance": "Assurance Automobile (Automobile)",
+  "carValueLabel": "Valeur du véhicule (DZD)",
+  "cargoDesc": "Protection des marchandises transportées (route, mer, air) contre dommages ou perte",
+  "cargoStartingPrice": "Prix : selon la valeur de la cargaison et le trajet",
+  "cargoTargets": "Sociétés d'import/export et distributeurs",
+  "cargoTransport": "Assurance Transport de Marchandises",
+  "categoryAuto": "Automobile",
+  "categoryHealth": "Santé",
+  "categoryHome": "Habitation",
+  "categoryTravel": "Voyage",
+  "commercialDesc": "Protection des boutiques et entrepôts (incendie, vol, bris de glace, dommages électriques)",
+  "commercialInsurance": "Assurance des Activités Commerciales",
+  "commercialStartingPrice": "À partir de 80 000 DZD (multirisque commercial)",
+  "commercialTargets": "Propriétaires de boutiques, supermarchés et restaurants",
+  "commissionEarned": "Commission gagnée",
+  "decree2181Desc": "La constitution du Takaful en Algérie (séparation financière, fenêtre Takaful, décision du ministère des Finances)",
+  "decree2181Title": "Décret exécutif n° 21-81",
+  "destinationLabel": "Destination du voyage",
+  "discountBadge": "🏅 {percent}% de réduction",
+  "durationDaysLabel": "Durée du voyage (jours)",
+  "emergencySosBtn": "Bouton d'urgence (SOS Dépannage)",
+  "estimatedPremiumLabel": "Prime estimée (0,4%)",
+  "fastShariaCompensations": "Compensations rapides et conformes à la charia",
+  "fieldRequired": "Ce champ est obligatoire",
+  "findRepairman": "Répertoire de garages certifiés",
+  "garageCardDetails": "Fiche garage : note, localisation et badge de réduction",
+  "goodsNatureLabel": "Nature des marchandises",
+  "halalCooperativeInsurance": "Assurance coopérative halal 100% conforme à la charia islamique",
+  "individualsAndCompanies": "Particuliers et entreprises (véhicules touristiques et utilitaires)",
+  "lastAccidentDateLabel": "Date du dernier accident (Optionnel)",
+  "legalFrameworkTitle": "Cadre Légal et Charia",
+  "multirisquePro": "Activités Professionnelles & Artisanales (Multirisque Pro)",
+  "multirisqueProDesc": "Assurance complète pour les locaux et équipements professionnels",
+  "multirisqueProStartingPrice": "À partir de 250 000 DZD (multirisque professionnel)",
+  "multirisqueProTargets": "Propriétaires d'ateliers et professions libérales",
+  "pendingDesc": "Nous avons reçu votre réclamation et elle est en cours d'examen initial. Nous vous contacterons bientôt.",
+  "planTravel": "Assurance Voyage",
+  "planDisaster": "Assurance Catastrophe",
+  "planLife": "Assurance Vie",
+  "planComprehensive": "Assurance Tous Risques",
+  "planPartial": "Assurance Partielle",
+  "rcStartingFrom": "Responsabilité Civile (RC) : à partir de 3 000 DZD",
+  "rcpDesc": "Protège les professionnels contre les erreurs commises dans l'exercice de leur activité",
+  "rcpLabel": "Responsabilité Civile Professionnelle (RCP)",
+  "rcpStartingPrice": "À partir de 20 000 DZD",
+  "rcpTargets": "Médecins, avocats, ingénieurs et artisans",
+  "residenceTypeLabel": "Type de résidence",
+  "routeLabel": "Itinéraire / Trajet",
+  "salesTable": "Tableau des ventes",
+  "shariaNationalSupervision": "Sous la supervision du Conseil Charia National",
+  "shariaSupervisionNational": "Supervision Charia Nationale",
+  "socialTakaful": "Takaful Social",
+  "sosFeatureSpeed": "Pour la rapidité : assistance d'urgence en un seul clic",
+  "subscribersFund": "Fonds des abonnés",
+  "takafulDefinition": "Le Takaful est un système d'assurance islamique basé sur le principe de solidarité ; chacun contribue à un fonds commun pour indemniser les personnes touchées. Nous ne profitons pas de vos risques, mais gérons votre coopération de manière professionnelle et transparente selon la charia.",
+  "takafulDefinitionTitle": "Qu'est-ce que l'assurance Takaful ?",
+  "tousRisquesPlusRC": "Assurance Tous Risques + Responsabilité Civile (RC)",
+  "trStartingFrom": "Tous Risques : à partir de 40 000 DZD",
+  "wakalaPrinciple": "Principe d'agence (Al-Wakala)",
+  "walletSubtitle": "Solde cumulatif total de tous les abonnés",
+  "whyWeAreLegal": "Pourquoi sommes-nous légalement conformes ?",
+  "claimsRequests": "Demandes d'indemnisation",
+  "claimProcessingSubtitle": "Traitement des demandes soumises par les assurés",
+  "claimsChartTitle": "Évolution de la valeur des indemnisations (en milliers DZD)",
+  "claimAcceptedMsg": "Demande d'indemnisation acceptée avec succès",
+  "claimRejectedMsg": "Demande d'indemnisation rejetée",
+  "claimUpdateError": "Erreur lors de la mise à jour de la demande",
+  "claimErrorOccurred": "Une erreur est survenue",
+  "claimsSubmittedViaApp": "Via l'application",
+  "claimRequestWizardTitle": "Demande d'indemnisation",
+  "generalClaim": "Indemnisation générale",
+  "clientDocuments": "Documents du client",
+  "nationalIdCard": "Carte d'identité nationale",
+  "proofOfResidence": "Certificat de résidence",
+  "openDocLink": "Ouvrir le lien du document",
+  "closeDialog": "Fermer",
+  "rejectClaim": "Rejeter la demande",
+  "takafulClient": "Client Takaful",
+  "alIttihadClient": "Client Al-Ittihad",
+  "requiredDocsCount": "{count} documents requis",
+  "insuranceRequest": "Demande d'Assurance",
+  "selectInsuranceService": "Sélectionnez le service d'assurance approprié",
+  "policyholderInfo": "Informations du preneur d'assurance",
+  "requestedInsuranceAmount": "Montant d'assurance demandé (DZD)",
+  "enterAmountDzd": "Entrez le montant en Dinars Algériens",
+  "requiredDocsForService": "Documents requis pour ce service",
+  "maxFileSizeHint": "Taille maximale de 5 Mo par fichier (PDF ou images)",
+  "mustUploadAllDocs": "Tous les documents doivent être téléchargés pour continuer",
+  "insuranceRequestSuccess": "Demande d'assurance envoyée avec succès",
+  "insuranceSuccessDesc": "L'équipe examinera votre demande d'assurance et vous informera de la décision d'approbation dans les plus brefs délais. Vous pouvez suivre l'état de votre demande dans 'Mes Contrats'.",
+  "trackMyRequests": "Suivre mes demandes",
+  "nextUploadDocs": "Suivant: Télécharger les documents",
+  "uploading": "Téléchargement...",
+  "sendInsuranceRequest": "Soumettre la demande d'assurance",
+  "pleaseFillAllFieldsCorrectly": "Veuillez remplir correctement toutes les données personnelles",
+  "fileTooLarge": "La taille du fichier dépasse la limite (5 Mo)",
+  "pdfImageLimit": "PDF / Image (Max 5 Mo)",
+  "quoteRequest": "Demande de Devis",
+  "sendQuoteRequest": "Soumettre la demande de devis",
+  "quoteSuccessDesc": "La demande de devis sera étudiée par les experts de l'institution, et nous vous contacterons dans les plus brefs délais.",
+  "quoteRequestSuccess": "Demande de devis envoyée avec succès",
+  "claimRequest": "Demande d'indemnisation",
+  "claimSubtitle": "Indemnisation des dommages causés par les accidents",
+  "claimStep1": "Documents de l'accident",
+  "claimStep2": "Détails de l'accident",
+  "claimStep3": "Confirmation",
+  "officialRequiredDocs": "Documents officiels requis",
+  "drivingLicenseBothSides": "Permis de conduire (recto-verso)",
+  "carteGriseLabel": "Carte Grise",
+  "friendlyReportOptional": "Constat à l'amiable (Optionnel)",
+  "carPhotosCount": "Photos du véhicule — {count}/4 photos",
+  "carPhotosHint": "Photographiez le véhicule sous les quatre angles pour accélérer le traitement",
+  "tapToAdd": "Appuyez pour ajouter",
+  "accidentInfo": "Informations sur l'accident",
+  "associatedPolicy": "Contrat associé",
+  "accidentDate": "Date de l'accident",
+  "accidentLocation": "Lieu de l'accident",
+  "pleaseEnterLocation": "Veuillez entrer le lieu de l'accident",
+  "locationHint": "Ville, quartier, rue...",
+  "accidentDescription": "Description de l'accident",
+  "pleaseEnterDescription": "Veuillez écrire une description détaillée (au moins 20 caractères)",
+  "descriptionHint": "Expliquez en détail ce qui s'est passé...",
+  "takePhoto": "Prendre une photo",
+  "fromGallery": "Depuis la galerie",
+  "stage1": "Étape 1",
+  "fileReceived": "Dossier reçu",
+  "stage2": "Étape 2",
+  "expertAssignment": "Expert désigné (Nom + Tél + Localisation)",
+  "stage3": "Étape 3",
+  "directRepairOrder": "Ordre de réparation direct (Code QR ou numéro d'accès à l'atelier)",
+  "trackingStages": "Étapes de suivi",
+  "claimSuccessDesc": "La demande d'indemnisation a été enregistrée avec succès. Un expert sera désigné dans les plus brefs délais, puis vous recevrez une notification d'ordre de réparation.",
+  "backToHome": "Retour à l'accueil",
+  "previous": "Précédent",
+  "uploadedCheck": "Téléchargé ✓",
+  "front": "Avant",
+  "backPhoto": "Arrière",
+  "rightSide": "Côté Droit",
+  "leftSide": "Côté Gauche",
+  "claimRequestSuccess": "Demande d'indemnisation soumise avec succès",
+  "nextIncidentDetails": "Suivant: Détails de l'accident",
+  "sending": "Envoi...",
+  "sendClaimRequest": "Soumettre la demande",
+  "insuranceRequests": "Demandes d'assurance",
+  "claimRequests": "Demandes d'indemnisation",
+  "newInsuranceRequest": "Nouvelle demande d'assurance",
+  "newClaimRequest": "Nouvelle demande d'indemnisation",
+  "noInsuranceRequests": "Aucune demande d'assurance",
+  "statusReceived": "Reçu",
+  "statusInsurancePending": "En cours d'examen",
+  "stageReceived": "Reçu",
+  "stageExpertAssigned": "Expert",
+  "stageRepairAuthorised": "Réparation",
+  "unknown": "Inconnu",
+  "requestAcceptedTitle": "Votre demande a été acceptée !",
+  "policyReadyForPayment": "La police {planName} est prête pour le paiement.",
+  "@policyReadyForPayment": {
+    "placeholders": {
+      "planName": {
+        "type": "String"
+      }
+    }
+  },
+  "notifiedWhenApproved": "Vous serez notifié dès que l'opérateur {companyName} approuve.",
+  "@notifiedWhenApproved": {
+    "placeholders": {
+      "companyName": {
+        "type": "String"
+      }
+    }
+  },
+  "unspecified": "Non spécifié",
+  "supermarket": "Supermarché",
+  "restaurant": "Restaurant",
+  "apartment": "Appartement",
+  "villa": "Villa",
+  "singleFamilyHome": "Maison individuelle",
+  "digitalClaimRequest": "Demande d'indemnisation numérique",
+  "requiredDocuments": "Documents requis",
+  "vehicleRegistrationDocument": "Carte grise (document du véhicule)",
+  "friendlyConstatOptional": "Constat amiable (facultatif)",
+  "damagePhotosCount": "Photos des dommages ({count}/4)",
+  "@damagePhotosCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "addPhoto": "Ajouter une photo",
+  "carPhotoInstructions": "Prenez des photos de la voiture sous 4 angles différents (avant, arrière, droite, gauche)",
+  "accidentInformation": "Informations sur l'accident",
+  "relatedPolicy": "Police associée",
+  "cityNeighborhoodStreet": "Ville, quartier, rue...",
+  "pleaseEnterAccidentLocation": "Veuillez saisir le lieu de l'accident",
+  "pleaseEnterDetailedDescription": "Veuillez rédiger une description détaillée (au moins 20 caractères)",
+  "explainWhatHappened": "Expliquez ce qui s'est passé en détail...",
+  "claimTrackingStages": "Étapes de suivi de la réclamation",
+  "fileReceivedAfterUpload": "Dossier reçu (après téléchargement)",
+  "expertAssignedDetails": "Expert assigné (Affiche le nom, le téléphone et l'emplacement de l'expert)",
+  "pleaseUploadRequiredDocs": "Veuillez télécharger au moins le permis de conduire et la carte grise",
+  "uploadedSuccessfully": "Téléchargé ✓",
+  "max4DamagePhotos": "Maximum 4 photos des dommages",
+  "claimReceivedSuccessfully": "Demande d'indemnisation reçue avec succès ✓",
+  "errorWithParam": "Erreur : {error}",
+  "@errorWithParam": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "fileSizeExceedsLimit": "La taille du fichier dépasse la limite de 5 Mo",
+  "pleaseUploadRequiredDocsForReassessment": "Veuillez télécharger les documents requis pour la réévaluation - {planName}",
+  "@pleaseUploadRequiredDocsForReassessment": {
+    "placeholders": {
+      "planName": {
+        "type": "String"
+      }
+    }
+  },
+  "maxFileSize5MB": "La taille maximale du fichier est de 5 Mo (PDF ou images)",
+  "uploadedPreviouslyChooseToEdit": "Téléchargé précédemment, choisissez un fichier à modifier",
+  "pleaseChooseAFile": "Veuillez choisir un fichier",
+  "saveAndResubmit": "Enregistrer et soumettre à nouveau",
+  "modifyDocumentsRequest": "Demande de modification de document",
+  "pleaseReuploadDocsAsRequested": "Veuillez télécharger à nouveau ou modifier les documents requis comme demandé par l'administration.",
+  "editAndResubmitDocs": "Modifier et soumettre à nouveau les documents",
+  "sosEmergencyTitle": "L'urgence en un clic",
+  "sosServiceSubtitle": "Notre application numérique vous connecte instantanément au plus grand réseau de services de dépannage et d'ateliers agréés dans votre wilaya pour une intervention rapide et sécurisée.",
+  "done": "Fait!",
+  "sos": "SOS",
+  "directCall": "Appel direct",
+  "wilayaLabel": "Wilaya",
+  "specialtyLabel": "Spécialité",
+  "failedToLoadGarages": "Échec du chargement des garages. Vérifiez votre connexion.",
+  "@discountBadge": {
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "@distanceKm": {
+    "placeholders": {
+      "km": {
+        "type": "num"
+      }
+    }
+  },
+  "dummyEmergencyStation": "Station d'urgence — Abu Khalid",
+  "dummyTowingService": "Remorquage et dépannage",
+  "wilaya1": "Adrar",
+  "wilaya2": "Chlef",
+  "wilaya3": "Laghouat",
+  "wilaya4": "Oum El Bouaghi",
+  "wilaya5": "Batna",
+  "wilaya6": "Bejaia",
+  "wilaya7": "Biskra",
+  "wilaya8": "Bechar",
+  "wilaya9": "Blida",
+  "wilaya10": "Bouira",
+  "wilaya11": "Tamanrasset",
+  "wilaya12": "Tebessa",
+  "wilaya13": "Tlemcen",
+  "wilaya14": "Tiaret",
+  "wilaya15": "Tizi Ouzou",
+  "wilaya16": "Algiers",
+  "wilaya17": "Djelfa",
+  "wilaya18": "Jijel",
+  "wilaya19": "Setif",
+  "wilaya20": "Saida",
+  "wilaya21": "Skikda",
+  "wilaya22": "Sidi Bel Abbes",
+  "wilaya23": "Annaba",
+  "wilaya24": "Guelma",
+  "wilaya25": "Constantine",
+  "wilaya26": "Medea",
+  "wilaya27": "Mostaganem",
+  "wilaya28": "M'Sila",
+  "wilaya29": "Mascara",
+  "wilaya30": "Ouargla",
+  "wilaya31": "Oran",
+  "wilaya32": "El Bayadh",
+  "wilaya33": "Illizi",
+  "wilaya34": "Bordj Bou Arreridj",
+  "wilaya35": "Boumerdes",
+  "wilaya36": "El Tarf",
+  "wilaya37": "Tindouf",
+  "wilaya38": "Tissemsilt",
+  "wilaya39": "El Oued",
+  "wilaya40": "Khenchela",
+  "wilaya41": "Souk Ahras",
+  "wilaya42": "Tipaza",
+  "wilaya43": "Mila",
+  "wilaya44": "Ain Defla",
+  "wilaya45": "Naama",
+  "wilaya46": "Ain Temouchent",
+  "wilaya47": "Ghardaia",
+  "wilaya48": "Relizane",
+  "uploadGrayCardSuccess": "Carte grise téléchargée",
+  "grayCardImage": "Image de la carte grise",
+  "exampleCarValue": "Exemple : 2000000",
+  "enterCarValue": "Veuillez saisir la valeur du véhicule",
+  "estimatedPremium": "Tarif estimatif (0.4%) : {amount} DZD",
+  "@estimatedPremium": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "insuranceDurationLabel": "Durée de l'assurance",
+  "sixMonths": "6 Mois",
+  "oneYear": "1 An",
+  "selectInsuranceDuration": "Veuillez choisir la durée de l'assurance",
+  "equipmentValueLabel": "Valeur de l'équipement (DZD)",
+  "goodsValueLabel": "Valeur des marchandises (DZD)",
+  "artisan": "Artisan",
+  "registrationNumberLabel": "Numéro d'inscription professionnelle",
+  "passportPhotoLabel": "Photo du passeport",
+  "travelDestinationLabel": "Destination de voyage",
+  "exampleDestination": "Exemple : France, Tunisie, Arabie Saoudite",
+  "enterDestination": "Veuillez saisir la destination",
+  "travelDurationLabel": "Durée du voyage (jours)",
+  "enterDuration": "Veuillez saisir la durée",
+  "individualHouse": "Maison individuelle",
+  "selectResidenceType": "Veuillez choisir le type de résidence",
+  "fullAddressLabel": "Adresse complète",
+  "enterAddress": "Veuillez saisir l'adresse",
+  "enterGoodsNature": "Veuillez saisir la nature des marchandises",
+  "cargoGoodsValueLabel": "Valeur de la cargaison (DZD)",
+  "enterCargoValue": "Veuillez saisir la valeur",
+  "enterRoute": "Veuillez saisir l'itinéraire",
+  "facilityTypeLabel": "Type d'établissement / d'exploitation",
+  "enterFacilityType": "Veuillez saisir le type d'établissement",
+  "facilitySizeLabel": "Taille de l'établissement / Superficie",
+  "exampleFacilitySize": "Exemple : 500 m² ou 10 hectares",
+  "enterFacilitySize": "Veuillez saisir la taille",
+  "takafulPackage": "Pack Takaful",
+  "wallet": "Portefeuille",
+  "awaitingFinalApproval": "En attente de l'approbation finale",
+  "quoteRequestDetails": "Détails de la demande de devis",
+  "chooseService": "Choisissez le service",
+  "serviceChosen": "Service choisi",
+  "submitQuoteRequest": "Soumettre la demande",
+  "donationRate": "Taux de Donation",
+  "settlement": "Règlement",
+  "change": "Changer",
+  "requestData": "Données de la demande",
+  "alIttihadTakaful": "Al Ittihad - Takaful Intégral",
+  "alRafikPlan": "Al-Rafik",
+  "rafikInsuranceIttihad": "Assurance Al-Rafik de Al Ittihad",
+  "pleaseCompleteData": "Veuillez compléter les données (Âge du conducteur + Photo carte grise)",
+  "requiredInfoToSubscribe": "Informations requises pour souscrire :",
+  "greyCardUploaded": "Carte grise téléchargée",
+  "greyCardImage": "Photo carte grise",
+  "legalCompliancePortalSubtitle": "Portail de conformité légale et charia",
+  "wakalaPrincipleDesc": "La société est un agent gérant le fonds pour des frais connus",
+  "shariaOversightTitle": "Surveillance Charia",
+  "shariaOversightDesc": "Aucun contrat n'est émis sans le visa du Conseil National de la Charia",
+  "subscribersFundTitle": "Fonds des souscripteurs",
+  "subscribersFundDesc": "Les fonds sont utilisés exclusivement pour indemniser les personnes concernées",
+  "socialTakafulTitle": "Takaful Social",
+  "socialTakafulDesc": "L'objectif est la coopération, pas le profit",
+  "regulatoryLawsTitle": "Lois Réglementaires",
+  "lawOrder9507": "Ordonnance n° 95-07 (modifiée et complétée)",
+  "lawDecree2181": "Décret Exécutif n° 21-81",
+  "lawFinanceMinistry2021": "Arrêté du Ministère des Finances (2021)",
+  "agentLoginDesc": "Connectez-vous à votre portail agent pour gérer les polices et demandes",
+  "whoWeAreTitle": "Qui sommes-nous",
+  "atCompanyTitle": "Compagnie d'Assurance Algeria Takaful",
+  "atCompanyDesc": "Algeria Takaful est la première compagnie d'assurance takaful publique en Algérie, établie selon les préceptes de la charia islamique et opérant sous l'agrément officiel du Ministère des Finances. Nous proposons divers produits d'assurance incluant l'automobile, l'entreprise, la responsabilité civile professionnelle et autres, tout en garantissant une transparence totale et la séparation entre les fonds des souscripteurs et ceux des actionnaires.",
+  "atLocation": "Alger",
+  "atLicensed": "Agréée Officiellement",
+  "atPhilosophyTitle": "Takaful.. La Protection dans un Esprit de Coopération",
+  "atPhilosophyDesc": "Un système basé sur la solidarité mutuelle où les membres contribuent à un fonds dédié à l'indemnisation de ceux d'entre eux qui sont touchés, et les excédents réalisés sont distribués aux souscripteurs.",
+  "servicesTitle": "Nos Services d'Assurance",
+  "serviceCarTitle": "Assurance Automobile",
+  "serviceCarDesc": "RC à partir de 3.000 DZD\nTR à partir de 40.000 DZD",
+  "serviceCivilTitle": "Responsabilité Civile",
+  "serviceCivilDesc": "À partir de 20.000 DZD",
+  "serviceHomeTitle": "Assurance Habitation",
+  "serviceHomeDesc": "À partir de 80.000 DZD",
+  "serviceProfTitle": "Activités Professionnelles",
+  "serviceProfDesc": "À partir de 250.000 DZD",
+  "serviceCargoTitle": "Transport de Marchandises",
+  "serviceCargoDesc": "Selon la valeur de la marchandise",
+  "serviceAgriTitle": "Activités Agricoles",
+  "serviceAgriDesc": "Étude technique spéciale",
+  "protectionPlansTitle": "Formules de Protection Takaful",
+  "docsGuideTitle": "Guide des Documents Requis",
+  "docCars": "Pour les Voitures",
+  "docCarsDesc": "Carte Grise + Permis de Conduire",
+  "docCompanies": "Pour les Entreprises",
+  "docCompaniesDesc": "Registre de Commerce + Liste des Équipements",
+  "docTravelers": "Pour les Voyageurs",
+  "docTravelersDesc": "Copie du Passeport + Détails de la Destination",
+  "atLegalDesc": "Algeria Takaful opère conformément au Décret Exécutif 21-81 régissant l'activité takaful, afin de garantir les plus hauts niveaux de transparence et de sécurité à nos souscripteurs.",
+  "statsExp": "Années d'Expérience",
+  "statsSubscribers": "Souscripteurs",
+  "statsSatisfaction": "Satisfaction Client",
+  "aiCompanyTitle": "Compagnie d'Assurance Al Ittihad",
+  "aiCompanyDesc": "Al Ittihad est une compagnie d'assurance traditionnelle leader en Algérie, établie sous l'agrément officiel du Ministère des Finances. Nous offrons une large gamme de produits d'assurance incluant l'automobile, les biens, l'entreprise, la responsabilité civile et autres, avec un engagement envers les plus hauts standards de qualité et de transparence au service de nos clients.",
+  "aiPhilosophyTitle": "Assurance.. Protection avec Expertise et Responsabilité",
+  "aiPhilosophyDesc": "Nous nous appuyons sur le système d'assurance traditionnel basé sur les contrats d'indemnisation mutuelle, garantissant une couverture complète à nos clients avec un engagement de transparence et d'efficacité dans le traitement des dossiers.",
+  "servicePropertyTitle": "Assurance des Biens",
+  "servicePropertyDesc": "À partir de 80.000 DZD",
+  "serviceEnterpriseTitle": "Assurance Entreprise",
+  "serviceEnterpriseDesc": "À partir de 250.000 DZD",
+  "serviceAgriRiskTitle": "Risques Agricoles",
+  "serviceAgriRiskDesc": "Étude technique spéciale",
+  "protectionPlansIttihadTitle": "Formules de Protection",
+  "legalFrameworkIttihadTitle": "Cadre Réglementaire et Légal",
+  "aiLegalDesc": "Al Ittihad opère conformément à l'Ordonnance 95-07 relative aux assurances et à la Loi 06-04 modifiée et complétée, garantissant les plus hauts niveaux de transparence et de sécurité à nos clients.",
+  "statsClients": "Clients",
+  "myRequests": "Mes Demandes",
+  "myPersonalDocuments": "Documents Personnels",
+  "personalDocsViewOnly": "Ce sont les documents que vous avez soumis lors de l'inscription. Consultation uniquement.",
+  "confirmRefuseOffer": "Êtes-vous sûr de refuser cette offre ? Cette action est irréversible.",
+  "aiTotalRequests": "Total des demandes",
+  "aiApproved": "Approuvé",
+  "aiSurplusNav": "Excédent",
+  "aiPaidPolicies": "Payées",
+  "aiRejectedPolicies": "Rejetées",
+  "aiDashboardSubtitle": "Takaful complet pour particuliers et entreprises",
+  "aiPolicy": "Police",
+  "aiNewPolicyRequest": "Nouvelle demande de police de {applicant}",
+  "@aiNewPolicyRequest": {
+    "placeholders": {
+      "applicant": {
+        "type": "Object"
+      }
+    }
+  },
+  "aiNoRequests": "Aucune demande pour le moment",
+  "aiLoadError": "Erreur lors du chargement des données : {error}",
+  "@aiLoadError": {
+    "placeholders": {
+      "error": {
+        "type": "Object"
+      }
+    }
+  },
+  "aiClaimsVsSurplusTooltip": "{count} police",
+  "@aiClaimsVsSurplusTooltip": {
+    "placeholders": {
+      "count": {
+        "type": "Object"
+      }
+    }
+  },
+  "aiMonthlySubscriptions": "Abonnements mensuels",
+  "aiQuoteRequest": "Demande de devis",
+  "aiMonthlyRequests": "Demandes mensuelles",
+  "aiStatusDistribution": "Répartition des statuts de demande",
+  "aiPaidStatus": "Payé",
+  "aiRequestTooltip": "{count} demande",
+  "@aiRequestTooltip": {
+    "placeholders": {
+      "count": {
+        "type": "Object"
+      }
+    }
+  },
+  "monthJanuary": "Janvier",
+  "monthFebruary": "Février",
+  "monthMarch": "Mars",
+  "monthApril": "Avril",
+  "monthMay": "Mai",
+  "monthJune": "Juin",
+  "monthJuly": "Juillet",
+  "monthAugust": "Août",
+  "monthSeptember": "Septembre",
+  "monthOctober": "Octobre",
+  "monthNovember": "Novembre",
+  "monthDecember": "Décembre",
+  "aiRoadsideTitle": "Assistance routière et ateliers",
+  "aiTowingService": "Remorquage express — Disponible 24h/24",
+  "aiEmergencyCallSubtitle": "Appelez immédiatement pour une aide urgente 24h/24",
+  "aiWorkshopNakhba": "Atelier Al-Nakhba — Ouled Fayet, Alger",
+  "aiWorkshopAmane": "Atelier Al-Aman — Bab Ezzouar, Alger",
+  "aiCertifiedWorkshops": "Ateliers mécaniques agréés",
+  "aiTowingServices": "Services de remorquage de véhicules",
+  "aiEmergency3030": "Urgence 3030",
+  "aiIttihaddTowing": "Remorquage sécurisé Al-Ittihad — Couverture nationale",
+  "aiHotlineTitle": "Hotline d'urgence unifiée",
+  "aiWorkshopPhone": "Téléphone : {phone}",
+  "@aiWorkshopPhone": {
+    "placeholders": {
+      "phone": {
+        "type": "Object"
+      }
+    }
+  },
+  "aiPoliciesTitle": "Demandes de polices d'assurance",
+  "aiPoliciesSubtitle": "Réviser, modifier et auditer les demandes de souscription entrantes",
+  "aiManagePolicies": "Gérer les polices d'assurance",
+  "aiCompanyPortalTitle": "Al-Ittihad Algérie",
+  "aiNewInsuranceRequests": "Nouvelles demandes d'assurance",
+  "aiSearchHint": "Rechercher par nom du client ou numéro d'ID...",
+  "aiLoadErrorShort": "Erreur de chargement : {error}",
+  "@aiLoadErrorShort": {
+    "placeholders": {
+      "error": {
+        "type": "Object"
+      }
+    }
+  },
+  "aiSubscriberRequestDetails": "Détails de la demande de l'abonné",
+  "aiAlgeriaUnitedFull": "Algérie Unie (Al-Ittihad)",
+  "aiRequestCode": "Code de demande : {code}",
+  "@aiRequestCode": {
+    "placeholders": {
+      "code": {
+        "type": "Object"
+      }
+    }
+  },
+  "aiSubscriberPersonalInfo": "Informations personnelles de l'abonné",
+  "aiIdentityAndContactInfo": "Informations d'identité et de contact vérifiées",
+  "aiServiceDetails": "Détails du service demandé",
+  "aiUnspecifiedService": "Service non spécifié",
+  "aiEstimatedAmountAndDate": "Montant estimé et date",
+  "aiAmountLabel": "Montant :",
+  "aiRequestDate": "Date de la demande :",
+  "aiAttachedDocuments": "Documents joints",
+  "aiNoDocumentsUploaded": "Aucun document téléchargé.",
+  "aiClickToPreview": "Appuyer pour prévisualiser",
+  "aiDocumentOpenError": "Erreur lors de l'ouverture du document : {error}",
+  "@aiDocumentOpenError": {
+    "placeholders": {
+      "error": {
+        "type": "Object"
+      }
+    }
+  },
+  "aiFinalQuoteLabel": "Devis final (DA) :",
+  "aiFinalQuoteHint": "Entrez le montant final du devis",
+  "aiOperatorDecisionLabel": "Décision de l'opérateur et remarques :",
+  "aiDecisionNotesHint": "Écrivez les notes d'acceptation ou de rejet ici...",
+  "aiWriteReasonNote": "Veuillez écrire the reason in the notes",
+  "aiValidQuoteRequired": "Veuillez entrer un devis valide avant d'accepter",
+  "aiOffersTitle": "Gérer les offres promotionnelles",
+  "aiAddOffer": "Ajouter une nouvelle offre promotionnelle",
+  "aiEditOffer": "Modifier les détails de l'offre",
+  "aiOfferName": "Nom de l'offre promotionnelle",
+  "aiPremiumValue": "Prime d'abonnement (DA)",
+  "aiCoverageLimit": "Plafond de couverture financière des indemnités",
+  "aiTabarruRate": "Taux du fonds de donation (%)",
+  "aiSurplusRate": "Taux de l'excédent distribué (%)",
+  "aiClaimsDurationDays": "Durée de règlement des sinistres (jours)",
+  "aiIconCode": "Icône de l'offre promotionnelle",
+  "aiIconShield": "Bouclier de protection",
+  "aiIconVerified": "Certifié et vérifié",
+  "aiIconRafik": "Le compagnon assistant (Rafik)",
+  "aiBestValueOffer": "Offre recommandée (Meilleure valeur)",
+  "aiSaveOffer": "Enregistrer l'offre promotionnelle",
+  "aiOfferSavedSuccess": "Offre promotionnelle enregistrée avec succès",
+  "aiFieldRequired": "Ce champ est requis et obligatoire pour l'opérateur",
+  "aiDeleteOffer": "Supprimer l'offre",
+  "aiConfirmDeleteOffer": "Êtes-vous sûr de vouloir supprimer définitivement cette offre ?",
+  "aiOfferDeletedSuccess": "Offre supprimée avec succès",
+  "aiOfferSaveError": "Erreur lors de l'enregistrement : {error}",
+  "@aiOfferSaveError": {
+    "placeholders": {
+      "error": {
+        "type": "Object"
+      }
+    }
+  },
+  "aiOfferUpdateError": "Erreur lors de la mise à jour : {error}",
+  "@aiOfferUpdateError": {
+    "placeholders": {
+      "error": {
+        "type": "Object"
+      }
+    }
+  },
+  "aiOfferDeleteError": "Erreur lors de la suppression : {error}",
+  "@aiOfferDeleteError": {
+    "placeholders": {
+      "error": {
+        "type": "Object"
+      }
+    }
+  },
+  "aiOfferMarkedBestValue": "Offre marquée comme meilleure valeur",
+  "aiOfferUnmarkedBestValue": "Meilleure valeur désélectionnée",
+  "aiTabarruSuggestedRate": "Taux de donation suggéré pour l'abonné",
+  "aiClaimsDurationValue": "{count} jours",
+  "@aiClaimsDurationValue": {
+    "placeholders": {
+      "count": {
+        "type": "Object"
+      }
+    }
+  },
+  "aiGenericError": "Erreur : {error}",
+  "@aiGenericError": {
+    "placeholders": {
+      "error": {
+        "type": "Object"
+      }
+    }
+  },
+  "aiOperatorName": "Opérateur système",
+  "aiSurplusDistribution": "Distribution des excédents",
+  "aiQuarterlyDistributionLog": "Journal de distribution trimestrielle",
+  "aiNoSurplusData": "Aucune donnée sur les excédents",
+  "aiPolicyholdersSurplus": "Excédent des assurés (90%)",
+  "aiManagementShare": "Part de la société de gestion (10%)",
+  "aiSurplusAnalytics": "Analytique des excédents",
+  "aiTotalCoopInsuranceSurplus": "Total des excédents distribués de l'assurance coopérative",
+  "aiNotificationsTitle": "Notifications Al-Ittihad Assurance",
+  "aiMarkAllRead": "Tout marquer comme lu",
+  "aiNoNotifications": "Aucune notification pour le moment",
+  "aiNow": "À l'instant",
+  "aiMinutesAgo": "Il y a {count} minutes",
+  "@aiMinutesAgo": {
+    "placeholders": {
+      "count": {
+        "type": "Object"
+      }
+    }
+  },
+  "aiHoursAgo": "Il y a {count} heures",
+  "@aiHoursAgo": {
+    "placeholders": {
+      "count": {
+        "type": "Object"
+      }
+    }
+  },
+  "aiDaysAgo": "Il y a {count} jours",
+  "@aiDaysAgo": {
+    "placeholders": {
+      "count": {
+        "type": "Object"
+      }
+    }
+  },
+  "aiNotificationsLoadError": "Erreur lors du chargement des notifications : {error}",
+  "@aiNotificationsLoadError": {
+    "placeholders": {
+      "error": {
+        "type": "Object"
+      }
+    }
+  },
+  "withdrawRequestUnderReview": "La demande de retrait est en cours d'examen",
+  "withdrawAmountHint": "Montant à retirer",
+  "ccpNumberHint": "Numéro de compte courant (CCP)",
+  "withdrawSecurityNote": "Tous les retraits sont examinés par le système financier pour garantir la conformité au décret 21-81.",
+  "adminResetSystemConfirm": "Êtes-vous sûr de vouloir effacer toutes les données ? Tous les utilisateurs (sauf les administrateurs), les polices, les réclamations et les journaux seront définitivement supprimés. Cette action est irréversible.",
+  "adminWipeAll": "Tout effacer",
+  "adminResetSystemSuccess": "Réinitialisation du système réussie.",
+  "adminDangerZone": "Zone de danger",
+  "adminResetSystemTitle": "Réinitialiser le système (Effacement complet)",
+  "noPlansFound": "Aucun plan disponible pour le moment",
+  "adminOperatorCompanyLabel": "Opérateur / Entreprise",
+  "adminPlanCodeLabel": "Code du plan (ex: TRANSPORT_PRO)",
+  "adminPlanNameArabicLabel": "Nom du plan (Arabe)",
+  "adminNameArabicHint": "Nom en arabe",
+  "adminStartingPriceLabel": "Prix de départ (DA)",
+  "adminDisplayAndStyleSection": "Affichage & Icône",
+  "adminIconTypeLabel": "Type d'icône",
+  "adminShortDescriptionArabicLabel": "Brève description (arabe)",
+  "adminPlanDescriptionHint": "Description du plan...",
+  "markAllAsRead": "Tout marquer comme lu",
+  "errorLoadingNotifications": "Une erreur s'est produite lors du chargement des notifications",
+  "noNotificationsAvailable": "Aucune notification pour le moment",
+  "mockClient1": "Ahmed Mohamed",
+  "mockClient2": "Omar Khaled",
+  "adminTotalSubscriptionsCollected": "Total des abonnements collectés",
+  "adminPolicyDistribution": "Répartition des polices",
+  "categoryProperties": "Propriétés",
+  "adminSalesListTitle": "Liste des ventes",
+  "adminNoSalesRegistered": "Aucune vente enregistrée pour le moment",
+  "paymentReceiptLabel": "Reçu de paiement",
+  "noDocumentsAvailableForRequest": "Aucun document disponible pour cette demande.",
+  "chooseDocumentToPreview": "Sélectionnez le document à prévisualiser",
+  "algeriaUnitedTitle": "L'Union Algérienne",
+  "takafulForIndividualsAndCompanies": "Takaful complet pour particuliers et entreprises",
+  "newPolicyRequestFrom": "Nouvelle demande de police de {name}",
+  "errorLoadingDataWithDetails": "Erreur de chargement des données : {error}",
+  "noRequestsCurrently": "Aucune demande actuellement",
+  "filterPending": "En attente",
+  "filterApproved": "Approuvé",
+  "filterPaid": "Payée",
+  "filterRejected": "Refusée",
+  "alIttihadAlgerian": "L'Union Algérienne",
+  "surplusDistributionSubtitle": "Distribution des excédents",
+  "quarterlyDistributionLog": "Registre de distribution trimestriel",
+  "totalCooperativeInsuranceSurplus": "Total des excédents d'assurance coopérative distribués",
+  "surplusChartAnalysis": "Analyse graphique des excédents",
+  "noSurplusData": "Aucune donnée d'excédent disponible",
+  "policyholdersSurplus90": "Excédent des souscripteurs (90%)",
+  "managementFee10": "Part de la société de gestion (10%)",
+  "insurancePoliciesRequests": "Demandes de polices d'assurance",
+  "reviewAndAuditRequests": "Examiner, modifier et auditer les demandes de souscription",
+  "searchByNameOrId": "Rechercher par nom du client ou numéro d'identification...",
+  "newInsuranceRequests": "Nouvelles demandes d'assurance",
+  "policyManagementSubtitle": "Gestion des polices d'assurance",
+  "offersManagementSubtitle": "Gestion des offres promotionnelles",
+  "errorDuringUpdate": "Erreur lors de la mise à jour : {error}",
+  "confirmDeletion": "Confirmer la suppression",
+  "confirmDeleteOffer": "Êtes-vous sûr de vouloir supprimer cette offre définitivement ?",
+  "deleteOffer": "Supprimer l'offre",
+  "errorDuringDeletion": "Erreur lors de la suppression : {error}",
+  "editOfferData": "Modifier les données de l'offre",
+  "offerNameLabel": "Nom de l'offre promotionnelle",
+  "premiumAmountLabel": "Montant de la prime d'abonnement (DA)",
+  "tabarruRateLabel": "Taux de donation proposé pour l'abonné",
+  "coverageLimitLabel": "Plafond de couverture financière des indemnisations",
+  "donationFundRateLabel": "Taux du fonds de donation (%)",
+  "surplusDistributionRateLabel": "Taux d'excédent distribué (%)",
+  "claimSettlementDurationLabel": "Durée de règlement des sinistres (en jours)",
+  "offerIconLabel": "Icône de l'offre promotionnelle",
+  "shieldProtection": "Bouclier de protection",
+  "verifiedCertified": "Vérifié et certifié",
+  "rafikAssistant": "Assistant Rafik",
+  "recommendedBestValueOffer": "Offre recommandée (meilleure valeur pour l'abonné)",
+  "saveOfferData": "Enregistrer les données de l'offre promotionnelle",
+  "errorDuringSave": "Erreur lors de l'enregistrement : {error}",
+  "daysUnit": "{count} jours",
+  "alIttihadInsuranceNotifications": "Notifications d'assurance Al-Ittihad",
+  "markAllRead": "Tout marquer comme lu",
+  "noNotificationsCurrently": "Aucune notification actuellement",
+  "timeNow": "Maintenant",
+  "timeMinutesAgo": "il y a {count} minutes",
+  "timeHoursAgo": "il y a {count} heures",
+  "timeDaysAgo": "il y a {count} jours",
+  "checkEmailForConfirmation": "Veuillez vérifier votre e-mail pour confirmer votre compte.",
+  "myWallet": "Mon portefeuille",
+  "accumulatedCommissionBalance": "Solde des commissions accumulées",
+  "requestProfitWithdrawal": "Demander un retrait des bénéfices",
+  "companyUnspecified": "Entreprise non spécifiée",
+  "statusApprovedSale": "Approuvé",
+  "statusPaidSale": "Payé",
+  "statusUnderReview": "En cours de révision",
+  "whyWeAreLegalTitle": "Pourquoi sommes-nous légaux ?",
+  "order9507": "Ordonnance 95-07",
+  "order9507Desc": "La loi mère des assurances en Algérie",
+  "financeMinistryDecision": "Décision du Ministère des Finances 2021",
+  "financeMinistryDecisionDesc": "Régule les contrats et la distribution des excédents",
+  "nationalShariaBody": "Autorité Nationale de la Charia",
+  "nationalShariaBodyDesc": "Contrôle de la Charia sur chaque contrat",
+  "takafulProtectionCoopTitle": "Takaful.. Protection dans l'esprit de coopération",
+  "takafulPhilosophyDesc": "Un système d'assurance islamique basé sur le principe de solidarité — tous contribuent à un fonds unique pour indemniser les sinistrés. La société est un agent gérant le fonds moyennant des frais connus, non propriétaire des fonds des souscripteurs.",
+  "chipAgency": "Agence",
+  "chipShariaOversight": "Contrôle de la Charia",
+  "chipSubscribersFund": "Fonds des souscripteurs",
+  "chipSocialTakaful": "Takaful social",
+  "bestBadge": "⭐ Meilleur",
+  "settlementDuration": "Durée de règlement",
+  "coverageLabel": "Couverture",
+  "premiumLabel": "Prime",
+  "bestValueLabel": "Meilleure valeur",
+  "footerCopyright": "TameeniDz — Tous droits réservés © 2026",
+  "legalSection": "Juridique",
+  "halalTakafulNotice": "Assurance Takaful 100% halal conforme à la Charia islamique sous la supervision de l'Autorité Nationale de la Charia.",
+  "algeriaTakafulTitle": "Algérie Takaful",
+  "genericError": "Erreur : {error}",
+  "policyDocument": "Police",
+  "operatorSystemUser": "Opérateur système",
+  "clientLabel": "Client",
+  "requestQuote": "Demande de Devis",
+  "requestInsurance": "Demande d'Assurance",
+  "requestClaim": "Demande d'Indemnisation",
+  "notifTitleQuote": "Nouvelle demande de devis",
+  "notifBodyQuote": "Le client {clientName} a soumis une demande de devis pour le plan {planName} chez {operatorName}.",
+  "@notifBodyQuote": { "placeholders": { "clientName": {}, "planName": {}, "operatorName": {} } },
+  "notifTitleInsurance": "Nouvelle demande d'assurance",
+  "notifBodyInsurance": "Le client {clientName} a soumis une demande d'assurance pour le plan {planName} chez {operatorName}.",
+  "@notifBodyInsurance": { "placeholders": { "clientName": {}, "planName": {}, "operatorName": {} } },
+  "notifTitleClaim": "Nouvelle déclaration de sinistre",
+  "notifBodyClaim": "Le client {clientName} a déclaré un sinistre pour la police {planName} chez {operatorName}.",
+  "@notifBodyClaim": { "placeholders": { "clientName": {}, "planName": {}, "operatorName": {} } },
+
+  "claimDetailTitle": "Détails de la réclamation",
+  "takafulPortal": "Portail Algérie Takaful",
+  "ittihadPortal": "Portail Al-Ittihad Assurance",
+  "updateSuccess": "Mis à jour avec succès",
+  "pleaseEnterExpertName": "Veuillez saisir le nom de l'expert",
+  "pleaseEnterValidAmount": "Veuillez saisir un montant d'indemnisation valide",
+  "pleaseEnterRejectionReason": "Veuillez indiquer le motif du rejet",
+  "clientInfo": "Informations du client",
+  "defaultClientName": "Client",
+  "requestTypeLabel": "Type de demande : {type}",
+  "submissionDate": "Date de soumission :",
+  "incidentDate": "Date de l'incident :",
+  "incidentLocation": "Lieu de l'incident :",
+  "incidentDescription": "Description de l'incident",
+  "noDescription": "Pas de description",
+  "attachedDocumentsCount": "Documents joints ({count})",
+  "claimProcessStages": "Étapes de traitement du dossier",
+  "assignExpert": "Désigner un expert",
+  "enterExpertNameHint": "Saisir le nom de l'expert désigné",
+  "assignExpertAndStartInspection": "Désigner l'expert et démarrer l'inspection",
+  "estimateDamageAmount": "Estimer le montant des dommages (DZD)",
+  "enterEstimatedAmountHint": "Saisir le montant estimé des dommages",
+  "reviewNotes": "Notes de révision",
+  "writeNotesHint": "Rédigez vos notes sur le dossier ici...",
+  "claimAccepted": "Réclamation acceptée",
+  "approvedAmount": "Montant approuvé",
+  "compensationAmount": "Montant d'indemnisation :",
+  "notes": "Notes :",
+  "claimRejected": "Réclamation rejetée",
+  "rejectionReason": "Motif du rejet",
+  "notesLabel": "Notes :",
+  "rejectFile": "Rejeter le dossier",
+  "acceptAndIssueRepairOrder": "Accepter et émettre l'ordre de réparation",
+  "acceptCompensation": "Accepter l'indemnisation",
+  "stageFileReceived": "Dossier reçu",
+  "stageDocumentsReceived": "Documents reçus",
+  "stageAssignExpert": "Désigner un expert",
+  "stageDamageInspection": "Expert en constat de dommages",
+  "stageRepairOrder": "Ordre de réparation",
+  "stageRepairDirect": "Indemnisation et réparation directe",
+  "statusPendingLabel": "En attente",
+  "statusUnderReview": "En cours d'examen",
+  "statusAcceptedLabel": "Accepté",
+  "statusRejectedLabel": "Rejeté",
+  "docDrivingLicense": "Permis de conduire",
+  "docGreyCard": "Carte grise",
+  "docFriendlyInspection": "Constat amiable",
+  "docRcCard": "Carte RC",
+  "docCarPhoto": "Photo du véhicule {number}",
+  "docDamagePhoto": "Photo des dommages {number}",
+
+  "claimTypeAccident": "Accident de la route",
+  "claimTypeGeneral": "Demande générale",
+  "claimTypeTheft": "Vol",
+  "claimTypeFire": "Incendie",
+  "requestInfo": "Informations de la demande",
+  "assignedExpert": "Expert désigné",
+  "approvedCompensationAmount": "Montant d'indemnisation approuvé",
+  "inProgress": "En cours",
+  "compensationAmountDzd": "{amount} DZD",
+
+  "subscriberInfoFromRegistration": "Informations de l'abonné (inscription originale)",
+  "systemRegisteredData": "Données enregistrées dans le système",
+  "takafulPlanDetails": "Détails du plan Takaful",
+  "unspecifiedPlan": "Plan non spécifié",
+  "coverageAndAmount": "Spécifications de couverture et montant",
+  "premiumColon": "Prime :",
+  "submissionDateColon": "Date de soumission :",
+  "attachedDocumentsAndFiles": "Documents et fichiers joints",
+  "noDocsAttached": "Aucun document joint.",
+  "docLabel": "Document",
+  "previewFile": "Aperçu du fichier",
+  "finalPolicyDocument": "Police d'assurance finale",
+  "clickToUploadPolicy": "Cliquez pour télécharger la police (PDF)",
+  "finalQuoteLabel": "Devis final (DZD) :",
+  "enterFinalQuoteHint": "Entrez le montant final du devis",
+  "reviewAndDecisionNotes": "Notes de révision et décision :",
+  "writeAcceptRejectNotes": "Écrivez le motif d'acceptation, de rejet ou de modification ici...",
+  "rejectBtn": "Rejeter",
+  "modificationBtn": "Demander modification",
+  "acceptBtn": "Accepter la demande",
+  "issuePolicyBtn": "Émettre la police",
+  "pleaseWriteNotesFirst": "Veuillez écrire les notes avant de rejeter ou demander une modification",
+  "pleaseEnterValidQuote": "Veuillez saisir un devis valide avant d'accepter",
+  "pleaseUploadFinalPolicy": "Veuillez télécharger la police d'assurance finale",
+  "insurancePortalTitle": "Demandes de polices d'assurance",
+  "insurancePortalSubtitle": "Examiner et traiter les demandes de souscription entrantes",
+  "searchByNameOrIdHint": "Rechercher par nom du client ou numéro d'identification...",
+  "newInsuranceRequestsFilter": "Nouvelles demandes d'assurance",
+  "dataLoadingError": "Erreur de chargement des données : {error}",
+  "amountDzd": "{amount} DZD",
+  "requestTypeQuote": "Demande de devis",
+  "requestTypeInsurance": "Demande d'assurance",
+  "statusIssued": "Police émise",
+  "accumulatedCommissions": "Solde cumulé des commissions",
+  "requestWithdrawal": "Demande de retrait",
+  "withdrawalAmount": "Montant du retrait (DZD)",
+  "ccpAccountNumber": "Numéro de compte CCP",
+  "withdrawalRequestSent": "Demande de retrait envoyée avec succès !",
+  "offerRefusedSuccess": "Offre refusée avec succès",
+  "insufficientBalance": "Solde insuffisant pour ce retrait",
+  "operatorTakafulTitle": "Algérie Takaful",
+  "operatorTakafulSubtitle": "Solutions d'assurance Takaful conformes à la Charia",
+  "operatorIttihadTitle": "Algérie Al-Ittihad",
+  "operatorIttihadSubtitle": "Forfaits de protection modernes à prix compétitifs",
+  "salesTable": "Tableau des ventes",
+  "dahabiaCard": "Carte Dahabia",
+  "bankTransfer": "Virement bancaire",
+  "oneYear": "1 An",
+  "servicesOffered": "Services proposés",
+  "towingService": "Service de remorquage",
+  "partnerDiscount": "Réduction partenaire",
+  "discountPercentage": "{percent}% de réduction pour les membres Tameeni",
+  "@discountPercentage": { "placeholders": { "percent": { "type": "String" } } },
+  "phoneNumber": "Numéro de téléphone",
+  "province": "Wilaya",
+  "specialty": "Spécialité",
+  "distance": "Distance",
+  "couldNotOpenFile": "Impossible d'ouvrir ce fichier",
+  "statusUpdatedSuccess": "Statut de la demande mis à jour avec succès",
+  "zoomReceipt": "Agrandir le reçu",
+  "adminActions": "Actions administrateur",
+  "addNoteHint": "Ajouter une note pour l'utilisateur (motif de refus ou documents manquants)...",
+  "rejectPermanently": "Rejeter définitivement",
+  "requestsToday": "Demandes aujourd'hui",
+  "totalPoliciesCount": "Total polices: {count}",
+  "appBrandName": "Tameeni Élite",
+  "platformCommission": "Commission plateforme (4,5% du client)",
+  "adminShareLabel": "Admin: {amount} {currency}",
+  "operatorsShareLabel": "Opérateurs: {amount} {currency}",
+  "newClientsCount": "Nouveaux clients: {count} (100% admin)",
+  "returningClientsCount": "Récurrents: {count} (50/50)",
+  "fromClientRate": "{rate}% du client",
+  "newFullAdmin": "Nouveau: 100% admin | Ancien: 50/50",
+  "requestsAndNin": "Demandes & NIN (commission admin)",
+  "returningClient": "Client récurrent (50/50)",
+  "newClient": "Nouveau client (100% admin)",
+  "sinceLastMonth": "+12% depuis le mois dernier",
+  "atAiShare": "AT/AI: {amount} {currency}",
+  "auditSubtitle": "Journal des opérations avec date et heure (secondes) • Passerelle de paiement liée",
+  "clear": "Effacer",
+  "allTypes": "Tous les types",
+  "payments": "Paiements",
+  "allPortals": "Tous les portails",
+  "operatorLabel": "Opérateur (AT/AI)",
+  "alerts": "Alertes",
+  "trackContractExpiry": "Suivez les dates d'expiration de vos contrats",
+  "activeAlertCount": "({count}) alerte active",
+  "allMyContracts": "Tous mes contrats",
+  "generalNotifications": "Notifications générales",
+  "markAllAsRead": "Tout marquer comme lu",
+  "noAlertsCurrently": "Aucune alerte pour le moment",
+  "enablePushNotifications": "Activer les notifications push",
+  "autoAlertBefore15Days": "Alerte automatique 15 jours avant l'expiration",
+  "enable": "Activer",
+  "urgentAlert": "Alerte urgente",
+  "daysRemaining": "{days} jours restants",
+  "contractExpiresIn15Days": "Votre contrat d'assurance expire dans 15 jours",
+  "expiryDateLabel": "Date d'expiration : {date}",
+  "expired": "Expiré",
+  "daysUnit": "{days} jours",
+  "algerTakaful": "Algérie Takaful",
+  "alIttihad": "Al Ittihad",
+  "maxImageSize5mb": "Taille max de l'image : 5 Mo",
+  "imageSizeExceeds5mb": "La taille de l'image dépasse la limite maximale de 5 Mo",
+  "manualPaymentProof": "Preuve de paiement manuel",
+  "uploadReceiptInstruction": "Si vous avez payé par virement ou CCP, téléchargez la photo du reçu ici.",
+  "uploadReceiptPhoto": "Télécharger la photo du reçu",
+  "changePhoto": "Changer la photo",
+  "processingPayment": "Traitement en cours...",
+  "confirmDeletion": "Confirmer la suppression",
+  "deleteOfferConfirm": "Êtes-vous sûr de vouloir supprimer définitivement cette offre ?",
+  "deleteOffer": "Supprimer l'offre",
+  "offerDeleted": "Offre supprimée avec succès",
+  "errorDuringDeletion": "Erreur lors de la suppression : {error}",
+  "bestValueSet": "Offre marquée comme meilleure valeur",
+  "bestValueUnset": "Meilleure valeur retirée",
+  "errorDuringUpdate": "Erreur lors de la mise à jour : {error}",
+  "addNewOffer": "Ajouter une nouvelle offre promotionnelle",
+  "editOfferData": "Modifier les données de l'offre",
+  "offerName": "Nom de l'offre promotionnelle",
+  "premiumAmount": "Montant de la prime (DZD)",
+  "suggestedTabarruRate": "Taux de donation suggéré",
+  "coverageLimit": "Limite de couverture des sinistres",
+  "donationFundRate": "Taux du fonds de donation (%)",
+  "surplusDistributionRate": "Taux de distribution du surplus (%)",
+  "claimsDurationDays": "Durée de règlement des sinistres (jours)",
+  "offerIcon": "Icône de l'offre promotionnelle",
+  "shieldProtection": "Protection Bouclier",
+  "certifiedVerified": "Certifié et Vérifié",
+  "rafiqAssistant": "Assistant Rafiq",
+  "recommendedBestValue": "Offre recommandée (meilleure valeur)",
+  "saveOfferData": "Enregistrer les données de l'offre",
+  "offerSaved": "Offre enregistrée avec succès",
+  "errorDuringSave": "Erreur lors de l'enregistrement : {error}",
+  "fieldRequired": "Ce champ est obligatoire",
+  "claimsDurationLabel": "Règlement des sinistres",
+  "bestValue": "Meilleure valeur",
+  "errorGeneric": "Erreur : {error}",
+  "errorOpeningFile": "Erreur d'ouverture du fichier : {error}",
+  "aiPortalTitle": "Algérie Ittihadd",
+  "aiOffersSubtitle": "Gérer les offres promotionnelles",
+  "atPortalTitle": "Algérie Takaful",
+  "systemOperator": "Opérateur système",
+  "checkEmailConfirm": "Veuillez vérifier votre e-mail pour confirmer votre compte.",
+  "goToLogin": "Aller à la connexion",
+  "appDiscountLabel": "{percent}% de réduction pour les abonnés",
+  "takafulPlan": "Plan Takaful",
+  "whyLegal": "Pourquoi sommes-nous légaux ?",
+  "order9507": "Ordonnance 95-07",
+  "order9507Desc": "La loi mère de l'assurance en Algérie",
+  "decree2181": "Décret 21-81",
+  "decree2181Desc": "Constitution du takaful, séparation financière et fenêtre takaful",
+  "financeMinistry2021": "Décision du Ministère des Finances 2021",
+  "financeMinistry2021Desc": "Régule les contrats et la distribution des surplus",
+  "nationalShariahBody": "Organe national de la Charia",
+  "nationalShariahBodyDesc": "Contrôle chariaque sur chaque contrat",
+  "takafulPhilosophy": "Takaful.. protection dans un esprit de coopération",
+  "takafulDescription": "Un système d'assurance islamique basé sur le principe de solidarité — tous contribuent à un fonds unique pour indemniser les sinistrés. La société agit comme agent gérant le fonds pour des frais connus, et n'est pas propriétaire des fonds des souscripteurs.",
+  "chipAgency": "Agence",
+  "chipShariahOversight": "Contrôle Chariaque",
+  "chipSubscribersFund": "Fonds des Souscripteurs",
+  "chipSocialTakaful": "Takaful Social",
+  "accountCreatedSuccess": "Compte créé avec succès !"
 }

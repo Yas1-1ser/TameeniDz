@@ -1,10 +1,12 @@
+import 'package:tameenidz/features/shared/widgets/page_entry_animation.dart';
+import 'package:tameenidz/core/theme/app_colors.dart';
+import 'package:tameenidz/core/theme/app_colors_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:tameenidz/generated/l10n/app_localizations.dart';
-import '../../../core/constants/app_colors.dart';
-import '../../../shared/widgets/email_verification_banner.dart';
+import '../../../../features/shared/widgets/email_verification_banner.dart';
 import 'legal_providers.dart';
 import '../../shared/data/legal_repository.dart';
 
@@ -14,9 +16,9 @@ class LegalHubScreen extends ConsumerWidget {
   Future<void> _handleDownload(BuildContext context, WidgetRef ref) async {
     final scaffoldMessenger = ScaffoldMessenger.of(context);
     final repo = ref.read(legalRepositoryProvider);
-    
+
     final url = await repo.getDossierDownloadUrl();
-    
+
     if (url != null) {
       final uri = Uri.parse(url);
       if (await canLaunchUrl(uri)) {
@@ -62,109 +64,169 @@ class LegalHubScreen extends ConsumerWidget {
           ),
         ),
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            const EmailVerificationBanner(),
-            // Premium Elite Header
-            Container(
-              width: double.infinity,
-              padding: EdgeInsets.fromLTRB(24, 32, 24, 40),
-              decoration: BoxDecoration(
-                color: AppColors.primaryGreen,
-                borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(32),
-                  bottomRight: Radius.circular(32),
+      body: PageEntryAnimation(
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              const EmailVerificationBanner(),
+              // Premium Elite Header
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.fromLTRB(24, 32, 24, 40),
+                decoration: const BoxDecoration(
+                  color: AppColors.primaryGreen,
+                  borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(32),
+                    bottomRight: Radius.circular(32),
+                  ),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      l10n.legalComplianceHub,
+                      style: TextStyle(
+                        fontFamily: 'Manrope',
+                        fontSize: 32,
+                        fontWeight: FontWeight.w800,
+                        color: context.colors.surface,
+                        letterSpacing: -0.02,
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    Text(
+                      l10n.legalCompliancePortalSubtitle,
+                      style: const TextStyle(
+                        fontFamily: 'Manrope',
+                        fontSize: 15,
+                        height: 1.6,
+                        color: Colors.white70,
+                      ),
+                    ),
+                  ],
                 ),
               ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    l10n.legalComplianceHub,
-                    style: const TextStyle(
-                      fontFamily: 'Manrope',
-                      fontSize: 32,
-                      fontWeight: FontWeight.w800,
-                      color: Colors.white,
-                      letterSpacing: -0.02,
-                    ),
-                  ),
-                  const SizedBox(height: 12),
-                  Text(
-                    l10n.legalHeaderSubtitle,
-                    style: const TextStyle(
-                      fontFamily: 'Manrope',
-                      fontSize: 15,
-                      height: 1.6,
-                      color: Colors.white70,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(24.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  ElevatedButton.icon(
-                    onPressed: () => _handleDownload(context, ref),
-                    icon: const Icon(Icons.picture_as_pdf, size: 18),
-                    label: Text(l10n.downloadDossier),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.primaryDark,
-                      foregroundColor: Colors.white,
-                      elevation: 0,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 24,
-                        vertical: 16,
-                      ),
-                      textStyle: const TextStyle(
-                        fontFamily: 'Manrope',
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 40),
-
-                  // Bento Grid
-                  _buildMediationMandate(l10n),
-                  const SizedBox(height: 24),
-                  _buildDecreeCard(l10n),
-                  const SizedBox(height: 24),
-
-                  sectionsAsync.when(
-                    data:
-                        (sections) => Column(
-                          children:
-                              sections
-                                  .map(
-                                    (s) => Padding(
-                                      padding: const EdgeInsets.only(
-                                        bottom: 24,
-                                      ),
-                                      child: _buildPillarCard(
-                                        icon: _getIcon(s.iconName),
-                                        title: s.title,
-                                        description: s.content,
-                                      ),
-                                    ),
-                                  )
-                                  .toList(),
+              Padding(
+                padding: const EdgeInsets.all(24.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    ElevatedButton.icon(
+                      onPressed: () => _handleDownload(context, ref),
+                      icon: const Icon(Icons.picture_as_pdf, size: 18),
+                      label: Text(l10n.downloadDossier),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.primaryDark,
+                        foregroundColor: Colors.white,
+                        elevation: 0,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
                         ),
-                    loading:
-                        () => const Center(child: CircularProgressIndicator()),
-                    error: (err, stack) => Text('Error: $err'),
-                  ),
-                ],
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 24,
+                          vertical: 16,
+                        ),
+                        textStyle: const TextStyle(
+                          fontFamily: 'Manrope',
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 40),
+
+                    // Bento Grid
+                    _buildMediationMandate(context, l10n),
+                    const SizedBox(height: 24),
+                    _buildDecreeCard(context, l10n),
+                    const SizedBox(height: 32),
+
+                    Text(
+                      l10n.whyWeAreLegal,
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.primaryGreen,
+                        fontFamily: 'Cairo',
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    _buildPillarCard(
+                      context,
+                      icon: Icons.gavel,
+                      title: l10n.wakalaPrinciple,
+                      description: l10n.wakalaPrincipleDesc,
+                    ),
+                    const SizedBox(height: 16),
+                    _buildPillarCard(
+                      context,
+                      icon: Icons.verified_user,
+                      title: l10n.shariaOversightTitle,
+                      description: l10n.shariaOversightDesc,
+                    ),
+                    const SizedBox(height: 16),
+                    _buildPillarCard(
+                      context,
+                      icon: Icons.all_inclusive,
+                      title: l10n.subscribersFundTitle,
+                      description: l10n.subscribersFundDesc,
+                    ),
+                    const SizedBox(height: 16),
+                    _buildPillarCard(
+                      context,
+                      icon: Icons.people,
+                      title: l10n.socialTakafulTitle,
+                      description: l10n.socialTakafulDesc,
+                    ),
+                    const SizedBox(height: 32),
+
+                    Text(
+                      l10n.regulatoryLawsTitle,
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.primaryGreen,
+                        fontFamily: 'Cairo',
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    _buildLawCard(context, l10n.lawOrder9507),
+                    const SizedBox(height: 12),
+                    _buildLawCard(context, l10n.lawDecree2181),
+                    const SizedBox(height: 12),
+                    _buildLawCard(context, l10n.lawFinanceMinistry2021),
+                    const SizedBox(height: 40),
+
+                    sectionsAsync.when(
+                      data:
+                          (sections) => Column(
+                            children:
+                                sections
+                                    .map(
+                                      (s) => Padding(
+                                        padding: const EdgeInsets.only(
+                                          bottom: 24,
+                                        ),
+                                        child: _buildPillarCard(
+                                          context,
+                                          icon: _getIcon(s.iconName),
+                                          title: s.title,
+                                          description: s.content,
+                                        ),
+                                      ),
+                                    )
+                                    .toList(),
+                          ),
+                      loading:
+                          () =>
+                              const Center(child: CircularProgressIndicator()),
+                      error: (err, stack) => Text('Error: $err'),
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -183,17 +245,19 @@ class LegalHubScreen extends ConsumerWidget {
     }
   }
 
-  Widget _buildMediationMandate(AppLocalizations l10n) {
+  Widget _buildMediationMandate(BuildContext context, AppLocalizations l10n) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: context.colors.surface,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColors.outlineVariant), // outline-variant
+        border: Border.all(
+          color: context.colors.outlineVariant,
+        ), // outline-variant
         boxShadow: [
           BoxShadow(
             color: AppColors.primaryTint, // 5% primary tint
             blurRadius: 4,
-            offset: Offset(0, 2),
+            offset: const Offset(0, 2),
           ),
         ],
       ),
@@ -202,7 +266,7 @@ class LegalHubScreen extends ConsumerWidget {
         children: [
           Container(
             height: 4,
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               color: AppColors.goldAccent, // Gold Accent
               borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
             ),
@@ -223,7 +287,7 @@ class LegalHubScreen extends ConsumerWidget {
                         ), // soft green background
                         borderRadius: BorderRadius.circular(12),
                       ),
-                      child: Icon(
+                      child: const Icon(
                         Icons.balance,
                         color: AppColors.primaryGreen,
                         size: 24,
@@ -237,7 +301,7 @@ class LegalHubScreen extends ConsumerWidget {
                           fontFamily: 'Manrope',
                           fontSize: 24,
                           fontWeight: FontWeight.w700,
-                          color: AppColors.darkText, // Dark Text
+                          color: context.colors.darkText, // Dark Text
                         ),
                       ),
                     ),
@@ -250,7 +314,8 @@ class LegalHubScreen extends ConsumerWidget {
                     fontFamily: 'Manrope',
                     fontSize: 16,
                     height: 1.6,
-                    color: AppColors.onSurfaceVariant, // on-surface-variant
+                    color:
+                        context.colors.onSurfaceVariant, // on-surface-variant
                   ),
                 ),
               ],
@@ -261,13 +326,13 @@ class LegalHubScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildDecreeCard(AppLocalizations l10n) {
+  Widget _buildDecreeCard(BuildContext context, AppLocalizations l10n) {
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
         color: AppColors.primaryGreen, // Primary Green
         borderRadius: BorderRadius.circular(16),
-        boxShadow: [
+        boxShadow: const [
           BoxShadow(
             color: AppColors.primaryOverlay,
             blurRadius: 12,
@@ -280,7 +345,7 @@ class LegalHubScreen extends ConsumerWidget {
         children: [
           Row(
             children: [
-              Icon(
+              const Icon(
                 Icons.verified,
                 color: AppColors.onPrimaryContainerSoft,
                 size: 24,
@@ -289,11 +354,11 @@ class LegalHubScreen extends ConsumerWidget {
               Expanded(
                 child: Text(
                   l10n.decreeFrameworkTitle,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontFamily: 'Manrope',
                     fontSize: 20,
                     fontWeight: FontWeight.w700,
-                    color: Colors.white,
+                    color: context.colors.surface,
                   ),
                 ),
               ),
@@ -302,7 +367,7 @@ class LegalHubScreen extends ConsumerWidget {
           const SizedBox(height: 12),
           Text(
             l10n.decreeFrameworkDescription,
-            style: TextStyle(
+            style: const TextStyle(
               fontFamily: 'Manrope',
               fontSize: 15,
               height: 1.5,
@@ -321,7 +386,7 @@ class LegalHubScreen extends ConsumerWidget {
                 Expanded(
                   child: Text(
                     l10n.statusLabel,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontFamily: 'Manrope',
                       fontSize: 12,
                       fontWeight: FontWeight.w800,
@@ -342,7 +407,7 @@ class LegalHubScreen extends ConsumerWidget {
                   ),
                   child: Text(
                     l10n.activeAudited,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontFamily: 'Manrope',
                       fontSize: 12,
                       fontWeight: FontWeight.w700,
@@ -365,7 +430,7 @@ class LegalHubScreen extends ConsumerWidget {
                 Expanded(
                   child: Text(
                     l10n.lastReviewLabel,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontFamily: 'Manrope',
                       fontSize: 12,
                       fontWeight: FontWeight.w800,
@@ -374,13 +439,13 @@ class LegalHubScreen extends ConsumerWidget {
                     ),
                   ),
                 ),
-                const Text(
+                Text(
                   'Oct 14, 2023',
                   style: TextStyle(
                     fontFamily: 'Manrope',
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
-                    color: Colors.white,
+                    color: context.colors.surface,
                   ),
                 ),
               ],
@@ -391,7 +456,8 @@ class LegalHubScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildPillarCard({
+  Widget _buildPillarCard(
+    BuildContext context, {
     required IconData icon,
     required String title,
     required String description,
@@ -399,14 +465,14 @@ class LegalHubScreen extends ConsumerWidget {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: context.colors.surface,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColors.outlineVariant),
+        border: Border.all(color: context.colors.outlineVariant),
         boxShadow: [
           BoxShadow(
             color: AppColors.primaryTintLight,
             blurRadius: 4,
-            offset: Offset(0, 2),
+            offset: const Offset(0, 2),
           ),
         ],
       ),
@@ -416,10 +482,11 @@ class LegalHubScreen extends ConsumerWidget {
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: AppColors.surfaceContainerLow, // surface-container-low
+              color:
+                  context.colors.surfaceContainerLow, // surface-container-low
               borderRadius: BorderRadius.circular(8),
             ),
-            child: Icon(icon, color: AppColors.primaryGreen, size: 28),
+            child:  Icon(icon, color: AppColors.primaryGreen, size: 28),
           ),
           const SizedBox(height: 16),
           Text(
@@ -428,7 +495,7 @@ class LegalHubScreen extends ConsumerWidget {
               fontFamily: 'Manrope',
               fontSize: 20,
               fontWeight: FontWeight.w700,
-              color: AppColors.darkText,
+              color: context.colors.darkText,
             ),
           ),
           const SizedBox(height: 8),
@@ -438,7 +505,35 @@ class LegalHubScreen extends ConsumerWidget {
               fontFamily: 'Manrope',
               fontSize: 15,
               height: 1.5,
-              color: AppColors.onSurfaceVariant,
+              color: context.colors.onSurfaceVariant,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildLawCard(BuildContext context, String title) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: context.colors.surface,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: context.colors.outlineVariant),
+      ),
+      child: Row(
+        children: [
+          const Icon(Icons.description, color: AppColors.goldAccent),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Text(
+              title,
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.bold,
+                color: context.colors.darkText,
+                fontFamily: 'Cairo',
+              ),
             ),
           ),
         ],

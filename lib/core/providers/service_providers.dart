@@ -22,8 +22,12 @@ final firebaseAuthServiceProvider = Provider<FirebaseAuthService>((ref) {
 });
 
 final notificationServiceProvider = Provider<NotificationService>((ref) {
-  return NotificationService();
+  final service = NotificationService();
+  // BUG #9 FIX: Dispose service to cancel FCM streams
+  ref.onDispose(() => service.dispose());
+  return service;
 });
+
 final userProfileProvider = FutureProvider<Map<String, dynamic>?>((ref) async {
   final client = ref.watch(supabaseClientProvider);
   final userId = client.auth.currentUser?.id;

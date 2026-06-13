@@ -1,9 +1,11 @@
+import 'package:tameenidz/features/shared/widgets/page_entry_animation.dart';
+import 'package:tameenidz/core/theme/app_colors.dart';
+import 'package:tameenidz/core/theme/app_colors_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import '../../../core/constants/app_colors.dart';
-import '../../../core/theme/app_colors_extension.dart';
 import '../../../generated/l10n/app_localizations.dart';
-import '../../../shared/widgets/responsive_layout.dart';
+import '../../../../features/shared/widgets/responsive_layout.dart';
+import 'package:tameenidz/features/shared/widgets/language_picker_button.dart';
 
 /// Shown after the user picks "Client" on the role picker.
 /// Lets them choose between logging in (existing account) or registering.
@@ -12,237 +14,202 @@ class ClientAuthGateScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final isRtl = Directionality.of(context) == TextDirection.rtl;
+
     return Scaffold(
-      backgroundColor: context.colors.background,
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: ResponsiveWidthConstraint(
-            child: Column(
-              children: [
-                // ── Top bar ──────────────────────────────────────────
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 8,
-                  ),
-                  child: Row(
-                    children: [
-                      IconButton(
-                        icon: const Icon(Icons.arrow_back_rounded, size: 18),
-                        color: context.colors.darkText,
-                        onPressed: () => context.go('/role'),
-                      ),
-                    ],
-                  ),
-                ),
-
-                const SizedBox(height: 24),
-
-                // ── Logo ─────────────────────────────────────────────
-                Container(
-                  width: 64,
-                  height: 64,
-                  decoration: BoxDecoration(
-                    color: AppColors.primaryContainer.withAlpha(60),
-                    borderRadius: BorderRadius.circular(18),
-                  ),
-                  child: Icon(
-                    Icons.person_outline,
-                    color: AppColors.primaryGreen,
-                    size: 32,
-                  ),
-                ),
-                const SizedBox(height: 16),
-                Text(
-                  AppLocalizations.of(context)!.clientPortalTitle,
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.w700,
-                    color: context.colors.darkText,
-                  ),
-                ),
-                SizedBox(height: 6),
-                Text(
-                  AppLocalizations.of(context)!.client,
-                  style: TextStyle(
-                    fontSize: 13,
-                    color: context.colors.slate500,
-                    letterSpacing: 2,
-                  ),
-                ),
-
-                const SizedBox(height: 60),
-
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 28),
+      backgroundColor: context.colors.beigeBg,
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        leading: IconButton(
+          icon: Icon(
+            isRtl ? Icons.arrow_forward_rounded : Icons.arrow_back_rounded,
+            color: context.colors.darkText,
+            size: 22,
+          ),
+          onPressed: () => context.go('/role'),
+        ),
+        actions: const [
+          LanguagePickerButton(),
+          SizedBox(width: 16),
+        ],
+      ),
+      extendBodyBehindAppBar: true,
+      body: PageEntryAnimation(
+        child: SafeArea(
+          child: Center(
+            child: SingleChildScrollView(
+              child: ResponsiveWidthConstraint(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 28.0),
                   child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      // ── Login card ────────────────────────────────
-                      _AuthOptionCard(
-                        icon: Icons.login_rounded,
-                        title: AppLocalizations.of(context)!.login,
-                        subtitle:
-                            AppLocalizations.of(
-                              context,
-                            )!.existingAccountSubtitle,
-                        isPrimary: true,
-                        onTap: () => context.go('/client/login'),
-                      ),
-                      const SizedBox(height: 14),
+                      const SizedBox(height: 20),
 
-                      // ── Register card ─────────────────────────────
-                      _AuthOptionCard(
-                        icon: Icons.person_add_outlined,
-                        title: AppLocalizations.of(context)!.register,
-                        subtitle:
-                            AppLocalizations.of(context)!.firstTimeSubtitle,
-                        isPrimary: false,
-                        onTap: () => context.go('/register/step1'),
+                      // Top Logo Centerpiece (90x90)
+                      Container(
+                        width: 90,
+                        height: 90,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: context.colors.surface,
+                          border: Border.all(color: AppColors.goldAccent.withValues(alpha: 0.7), width: 2.5),
+                          boxShadow: [
+                            BoxShadow(
+                              color: AppColors.primaryGreen.withValues(alpha: 0.15),
+                              blurRadius: 18,
+                              spreadRadius: 2,
+                              offset: const Offset(0, 8),
+                            ),
+                          ],
+                        ),
+                        clipBehavior: Clip.antiAlias,
+                        child: Image.asset('assets/images/logotameen.jpg', fit: BoxFit.cover),
                       ),
-                    ],
-                  ),
-                ),
-
-                const SizedBox(height: 48),
-
-                // ── Decree badge ──────────────────────────────────────
-                Container(
-                  margin: const EdgeInsets.only(bottom: 32),
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 8,
-                  ),
-                  decoration: BoxDecoration(
-                    color: AppColors.goldAccent.withAlpha(15),
-                    borderRadius: BorderRadius.circular(20),
-                    border: Border.all(
-                      color: AppColors.goldAccent.withAlpha(60),
-                    ),
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(
-                        Icons.verified_outlined,
-                        size: 14,
-                        color: AppColors.goldAccent,
-                      ),
-                      SizedBox(width: 6),
+                      const SizedBox(height: 16),
                       Text(
-                        AppLocalizations.of(context)!.decree2181Compliance,
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: AppColors.goldAccent,
-                          fontWeight: FontWeight.w600,
+                        l10n.clientPortalTitle,
+                        style: const TextStyle(
+                          fontSize: 22,
+                          fontWeight: FontWeight.w900,
+                          color: AppColors.primaryGreen,
+                          fontFamily: 'Cairo',
                         ),
                       ),
+                      const SizedBox(height: 8),
+                      Container(
+                        width: 40,
+                        height: 2.5,
+                        decoration: BoxDecoration(
+                          color: AppColors.goldAccent,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                      SizedBox(height: 12),
+                      Text(
+                        l10n.client.toUpperCase(),
+                        style: TextStyle(
+                          fontSize: 13,
+                          color: context.colors.slate500,
+                          letterSpacing: 2,
+                          fontWeight: FontWeight.w800,
+                          fontFamily: 'Cairo',
+                        ),
+                      ),
+
+                      const SizedBox(height: 60),
+
+                      // Buttons Section
+                      Column(
+                        children: [
+                          // Login Button (Gradient CTA Pill)
+                          GestureDetector(
+                            onTap: () => context.go('/client/login'),
+                            child: Container(
+                              height: 56,
+                              decoration: BoxDecoration(
+                                gradient: const LinearGradient(
+                                  colors: [AppColors.primaryGreen, Color(0xFF247E53)],
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
+                                ),
+                                borderRadius: BorderRadius.circular(40),
+                                border: Border.all(
+                                  color: AppColors.goldAccent.withValues(alpha: 0.45),
+                                  width: 1.5,
+                                ),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: AppColors.primaryGreen.withValues(alpha: 0.30),
+                                    blurRadius: 18,
+                                    offset: const Offset(0, 7),
+                                  ),
+                                ],
+                              ),
+                              alignment: Alignment.center,
+                              child: Text(
+                                l10n.login,
+                                style:  TextStyle(
+                                  color: context.colors.surface,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                  fontFamily: 'Cairo',
+                                ),
+                              ),
+                            ),
+                          ),
+                          
+                          const SizedBox(height: 16),
+
+                          // Register Button (Outline Pill)
+                          GestureDetector(
+                            onTap: () => context.go('/register/step1'),
+                            child: Container(
+                              height: 56,
+                              decoration: BoxDecoration(
+                                color: Colors.transparent,
+                                borderRadius: BorderRadius.circular(40),
+                                border: Border.all(
+                                  color: AppColors.primaryGreen,
+                                  width: 1.5,
+                                ),
+                              ),
+                              alignment: Alignment.center,
+                              child: Text(
+                                l10n.register,
+                                style: const TextStyle(
+                                  color: AppColors.primaryGreen,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                  fontFamily: 'Cairo',
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+
+                      const SizedBox(height: 60),
+
+                      // Decree Badge
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
+                        decoration: BoxDecoration(
+                          color: AppColors.goldAccent.withValues(alpha: 0.10),
+                          borderRadius: BorderRadius.circular(20),
+                          border: Border.all(
+                            color: AppColors.goldAccent.withValues(alpha: 0.28),
+                          ),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const Icon(
+                              Icons.verified_user_rounded,
+                              size: 16,
+                              color: AppColors.goldAccent,
+                            ),
+                            const SizedBox(width: 8),
+                            Text(
+                              l10n.decree2181Compliance,
+                              style: const TextStyle(
+                                fontSize: 12,
+                                color: AppColors.goldAccent,
+                                fontWeight: FontWeight.bold,
+                                fontFamily: 'Cairo',
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 32),
                     ],
                   ),
                 ),
-              ],
+              ),
             ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _AuthOptionCard extends StatelessWidget {
-  const _AuthOptionCard({
-    required this.icon,
-    required this.title,
-    required this.subtitle,
-    required this.isPrimary,
-    required this.onTap,
-  });
-
-  final IconData icon;
-  final String title;
-  final String subtitle;
-  final bool isPrimary;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    final bgColor = isPrimary ? AppColors.primaryGreen : context.colors.surface;
-    final fgColor = isPrimary ? Colors.white : context.colors.darkText;
-    final subColor =
-        isPrimary ? Colors.white.withAlpha(180) : context.colors.slate500;
-    final borderColor =
-        isPrimary ? Colors.transparent : context.colors.outlineVariant;
-
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(16),
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 150),
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
-          decoration: BoxDecoration(
-            color: bgColor,
-            borderRadius: BorderRadius.circular(16),
-            border: Border.all(color: borderColor),
-            boxShadow:
-                isPrimary
-                    ? [
-                      BoxShadow(
-                        color: AppColors.primaryGreen.withAlpha(60),
-                        blurRadius: 16,
-                        offset: const Offset(0, 6),
-                      ),
-                    ]
-                    : [
-                      BoxShadow(
-                        color: Colors.black.withAlpha(10),
-                        blurRadius: 8,
-                        offset: const Offset(0, 2),
-                      ),
-                    ],
-          ),
-          child: Row(
-            children: [
-              Container(
-                width: 44,
-                height: 44,
-                decoration: BoxDecoration(
-                  color:
-                      isPrimary
-                          ? Colors.white.withAlpha(30)
-                          : AppColors.primaryGreen.withAlpha(20),
-                  shape: BoxShape.circle,
-                ),
-                child: Icon(icon, color: fgColor, size: 22),
-              ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      title,
-                      style: TextStyle(
-                        fontSize: 17,
-                        fontWeight: FontWeight.w600,
-                        color: fgColor,
-                      ),
-                    ),
-                    const SizedBox(height: 3),
-                    Text(
-                      subtitle,
-                      style: TextStyle(fontSize: 13, color: subColor),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(width: 10),
-              Icon(
-                Icons.arrow_forward_ios,
-                size: 15,
-                color: fgColor.withAlpha(180),
-              ),
-            ],
           ),
         ),
       ),

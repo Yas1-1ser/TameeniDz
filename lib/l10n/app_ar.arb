@@ -2,12 +2,12 @@
   "@@locale": "ar",
   "allOperators": "جميع المشغلين",
   "recentRequests": "الطلبات الأخيرة",
-  "noRequestsFound": "لم يتم العثور على طلبات",
-  "decisionNotes": "ملاحظات القرار / الأسباب",
-  "enterDecisionReason": "يرجى إدخال سبب لهذا القرار...",
+  "noRequestsFound": "لا توجد طلبات",
+  "decisionNotes": "ملاحظات / سبب القرار",
+  "enterDecisionReason": "أدخل سبب القرار أو طلب التعديل...",
   "statusUpdateSuccess": "تم تحديث الحالة بنجاح",
-  "statusUpdateError": "فشل في تحديث الحالة",
-  "latestActivitiesAdmin": "آخر أنشطة النظام",
+  "statusUpdateError": "خطأ في تحديث الحالة",
+  "latestActivitiesAdmin": "آخر النشاطات",
   "adminReadOnlyView": "عرض المسؤول: للقراءة فقط",
   "statusPending": "قيد الانتظار",
   "statusAccepted": "مقبول",
@@ -39,7 +39,19 @@
   "surplusDistribution": "توزيع الفائض",
   "claimsProcessing": "معالجة المطالبات",
   "selectPlan": "اختيار هذه الخطة",
-  "bestValue": "الأفضل قيمة",
+  "planAutoRC": "المسؤولية المدنية للسيارات",
+  "planAutoTR": "كل الأخطار للسيارات",
+  "planHome": "تأمين السكن",
+  "planTravel": "تأمين السفر",
+  "planDisaster": "تأمين الكوارث",
+  "planLife": "تأمين الحياة",
+  "planComprehensive": "التأمين الشامل",
+  "planPartial": "التأمين الجزئي",
+  "categoryAuto": "سيارات",
+  "categoryHome": "سكن",
+  "categoryTravel": "سفر",
+  "categoryHealth": "صحة",
+  "bestValue": "أفضل قيمة",
   "shariaApprovedNotice": "جميع الخطط المقدمة معتمدة من قبل هيئة الرقابة الشرعية. تلتزم الجزائر للتكافل بأعلى معايير الشفافية في إدارة صندوق التبرعين وتوزيع الفائض.",
   "comparePlansSubtitle": "قم باختيار الخطة التي تناسب احتياجاتك المؤسسية والتزامك الشرعي.",
   "hours": "ساعة",
@@ -53,6 +65,7 @@
   "activePolicies": "البوالص النشطة",
   "totalPremium": "إجمالي الأقساط",
   "commission": "عمولة المنصة",
+  "commissionEarned": "عمولة مكتسبة",
   "pendingRequests": "طلبات معلقة",
   "rejectedRequests": "طلبات مرفوضة",
   "allRequests": "كل الطلبات",
@@ -73,7 +86,7 @@
   "comparePlans": "مقارنة الخطط",
   "commissionMonitor": "مراقب العمولة — 4%",
   "totalPremiumsCollected": "إجمالي الأقساط المحصلة",
-  "commissionTaminyElite": "عمولة تأميني إيليت (4%)",
+  "commissionTaminyElite": "تأمني إيليت (4%)",
   "transactionCount": "عدد المعاملات",
   "commissionRuleNote": "العمولة: 4% ثابتة — مبرمجة على مستوى وظائف الحافة (Supabase)",
   "transactionHistory": "سجل المعاملات",
@@ -95,7 +108,7 @@
   "supportHeaderSubtitle": "مساعدة مخصصة للمشاركين المتميزين. وسطاؤنا المتخصصون متواجدون لضمان بقاء تجربتكم سلسة.",
   "liveChat": "دردشة مباشرة",
   "priorityCall": "اتصال ذو أولوية",
-  "submitRequest": "تقديم طلب",
+  "submitRequest": "إرسال الطلب",
   "subject": "الموضوع",
   "message": "الرسالة",
   "submitTicket": "إرسال التذكرة",
@@ -138,7 +151,9 @@
   "welcomeClient": "مرحباً، {name}",
   "@welcomeClient": {
     "placeholders": {
-      "name": { "type": "String" }
+      "name": {
+        "type": "String"
+      }
     }
   },
   "preferences": "التفضيلات",
@@ -164,10 +179,12 @@
   "insurancePlan": "خطة التأمين",
   "plansNav": "الخطط",
   "employeePortal": "بوابة الموظف",
-  "algeriaTakaful": "الجزائر للتكافل",
-  "alIttihad": "الاتحاد",
+  "algeriaTakaful": "جزائر تكافل — تأمين تكافلي",
+  "alIttihad": "الجزائر المتحدة",
   "fundsSeparateNotice": "هذه الأموال منفصلة تماماً عن أموال المساهمين وفقاً للمرسوم التنفيذي 21-81",
   "totalSurplus": "إجمالي الفائض",
+  "policyholdersSurplusLegend": "حساب المشتركين (الفائض التعاوني)",
+  "shareholdersManagementFeeLegend": "حساب المساهمين (رسوم الإدارة)",
   "beneficiaryCount": "عدد المستفيدين",
   "distributionLog": "سجل التوزيعات",
   "addDistribution": "إضافة توزيع",
@@ -187,7 +204,7 @@
   "latestAuditLogs": "أحدث سجلات المراجعة",
   "viewAll": "عرض الكل",
   "noLogsYet": "لا توجد سجلات بعد",
-  "splashKeywords": "تكافل رقمي • مطابق للشريعة • آمن",
+  "splashKeywords": "تأمين موثوق · ذكي وبسيط · الجزائر",
   "selectAccountTypeToProceed": "اختر نوع الحساب للمتابعة",
   "clientRoleSubtitle": "التقدم بطلب بوالص التكافل",
   "operatorRole": "مشغل",
@@ -206,7 +223,6 @@
   "adminLoginPrompt": "يرجى إدخال البيانات للوصول إلى لوحة التحكم",
   "adminPasswordLabel": "كلمة مرور المسؤول",
   "emailLabel": "عنوان البريد الإلكتروني",
-  "email": "البريد الإلكتروني",
   "role": "الدور",
   "credentialError": "يرجى إدخال البريد الإلكتروني وكلمة المرور",
   "notAdminError": "هذا الحساب ليس حساب مسؤول.",
@@ -224,7 +240,7 @@
   "invalidOtp": "رمز غير صالح أو منتهي الصلاحية.",
   "resendOtp": "إعادة إرسال الرمز",
   "resendFailed": "فشل إعادة الإرسال. حاول مرة أخرى.",
-  "passwordStrength": "قوة كلمة المرور",
+  "passwordStrength": "قوة كلمة المرور: {strength}",
   "weak": "ضعيفة",
   "fair": "متوسطة",
   "good": "جيدة",
@@ -235,21 +251,25 @@
   "selectedPlan": "المختارة: {plan}",
   "@selectedPlan": {
     "placeholders": {
-      "plan": { "type": "String" }
+      "plan": {
+        "type": "String"
+      }
     }
   },
   "decreeComplianceNotice": "جميع الخطط متوافقة مع المرسوم التنفيذي 21-81 ومبادئ التكافل الشرعي",
-  "noPlansAvailable": "لا توجد خطط متاحة حالياً",
-  "coverageAmount": "مبلغ التغطية",
+  "noPlansAvailable": "لا توجد باقات متاحة حالياً",
   "tabarruRate": "معدل التبرع",
   "claimsDuration": "مدة تسوية المطالبات",
-  "bestValue": "أفضل قيمة",
   "paymentSuccessTitle": "تم الدفع بنجاح",
   "paymentSuccessSubtitle": "{amount} د.ج عبر {method}",
   "@paymentSuccessSubtitle": {
     "placeholders": {
-      "amount": { "type": "String" },
-      "method": { "type": "String" }
+      "amount": {
+        "type": "String"
+      },
+      "method": {
+        "type": "String"
+      }
     }
   },
   "backToDashboard": "العودة للوحة التحكم",
@@ -268,9 +288,6 @@
   "decreeFrameworkDescription": "الامتثال الكامل للإطار القانوني التأسيسي الذي يحكم الوساطة عالية القيمة والتنظيم المالي الإسلامي.",
   "statusLabel": "الحالة",
   "lastReviewLabel": "آخر مراجعة",
-  "statusPending": "قيد المراجعة",
-  "statusAccepted": "مقبول",
-  "statusRejected": "مرفوض",
   "statusModificationRequested": "تعديل مطلوب",
   "policyHistory": "سجل البوالص",
   "noPoliciesFound": "لم تقم بتقديم أي طلبات بوالص تأمين بعد.",
@@ -278,24 +295,29 @@
   "submittedOn": "تم التقديم في {date}",
   "@submittedOn": {
     "placeholders": {
-      "date": { "type": "String" }
+      "date": {
+        "type": "String"
+      }
     }
   },
   "newRequests": "طلبات جديدة",
   "processingRequests": "قيد المعالجة",
   "completedToday": "مكتملة اليوم",
-  "noRequestsFound": "لا توجد طلبات",
   "applicationNumber": "طلب رقم {id}",
   "@applicationNumber": {
     "placeholders": {
-      "id": { "type": "String" }
+      "id": {
+        "type": "String"
+      }
     }
   },
   "subscriberInfo": "معلومات المشترك",
   "accountIdentifier": "معرّف الحساب: {id}",
   "@accountIdentifier": {
     "placeholders": {
-      "id": { "type": "String" }
+      "id": {
+        "type": "String"
+      }
     }
   },
   "requestedAmount": "المبلغ المطلوب",
@@ -304,15 +326,13 @@
   "lastUpdateDate": "آخر تحديث: {date}",
   "@lastUpdateDate": {
     "placeholders": {
-      "date": { "type": "String" }
+      "date": {
+        "type": "String"
+      }
     }
   },
-  "decisionNotes": "ملاحظات / سبب القرار",
-  "enterDecisionReason": "أدخل سبب القرار أو طلب التعديل...",
   "reviewDecision": "قرار المراجعة",
   "decisionTaken": "تم اتخاذ قرار مسبق بخصوص هذا الطلب.",
-  "statusUpdateSuccess": "تم تحديث الحالة بنجاح",
-  "statusUpdateError": "خطأ في تحديث الحالة",
   "viewAction": "عرض",
   "addUser": "إضافة مستخدم",
   "noUsersFound": "لا يوجد مستخدمون",
@@ -324,12 +344,7 @@
   "operatorRoleLabel": "مشغل",
   "clientRoleLabel": "عميل",
   "generalError": "حدث خطأ: {error}",
-  "@generalError": {
-    "placeholders": {
-      "error": { "type": "String" }
-    }
-  },
-  "unauthenticatedErrorDetail": "المستخدم غير مصادق عليه",
+  "unauthenticatedErrorDetail": "المستخدم غير مسجل",
   "fileReadError": "تعذّر قراءة بيانات الملف",
   "filePathError": "مسار الملف غير متوفر",
   "policyHistorySubtitle": "تتبع طلبات التكافل الخاصة بك وتوثيق البوالص.",
@@ -338,7 +353,7 @@
   "supportSubjectHint": "مثال: توضيح حول البوليصة",
   "supportMessageHint": "صف استفسارك بالتفصيل...",
   "enterDashboard": "الدخول إلى لوحة التحكم",
-  "invalidPhoneNumber": "الرجاء إدخال رقم هاتف صالح",
+  "invalidPhoneNumber": "الرجاء إدخل رقم هاتف صالح",
   "tooManyRequests": "طلبات كثيرة جداً. حاول مرة أخرى لاحقاً.",
   "networkError": "خطأ في الشبكة. يرجى التحقق من اتصالك.",
   "unexpectedAuthError": "حدث خطأ غير متوقع. حاول مرة أخرى.",
@@ -367,7 +382,6 @@
   "passwordsDontMatch": "كلمتا المرور غير متطابقتين",
   "accountCreateError": "فشل إنشاء الحساب. حاول مرة أخرى.",
   "createPasswordTitle": "إنشاء كلمة المرور",
-  "password": "كلمة المرور",
   "confirmPassword": "تأكيد كلمة المرور",
   "clientPortalTitle": "بوابة العميل",
   "existingAccountSubtitle": "لديّ حساب موجود",
@@ -384,7 +398,9 @@
   "resendAfter": "إعادة الإرسال خلال {time}",
   "@resendAfter": {
     "placeholders": {
-      "time": { "type": "String" }
+      "time": {
+        "type": "String"
+      }
     }
   },
   "invalidCode": "رمز التحقق غير صحيح",
@@ -394,7 +410,6 @@
   "resetPasswordTitle": "إعادة تعيين كلمة المرور",
   "resetPasswordSubtitle": "أدخل كلمة مرور جديدة لحسابك.",
   "newPassword": "كلمة المرور الجديدة",
-  "passwordTooShort": "يجب أن تتكون كلمة المرور من 8 أحرف على الأقل",
   "passwordsDoNotMatch": "كلمتا المرور غير متطابقتين",
   "updatePassword": "تحديث كلمة المرور",
   "passwordUpdatedSuccess": "تم تحديث كلمة المرور بنجاح!",
@@ -414,14 +429,16 @@
   "confirmationEmailSent": "تم إرسال رابط التأكيد إلى بريدك الإلكتروني.\nبعد التأكيد يمكنك تسجيل الدخول إلى بوابة {company}.",
   "@confirmationEmailSent": {
     "placeholders": {
-      "company": { "type": "String" }
+      "company": {
+        "type": "String"
+      }
     }
   },
   "goToLogin": "الذهاب إلى تسجيل الدخول",
   "alreadyHaveAccount": "لديك حساب بالفعل؟",
   "nameRequired": "الاسم مطلوب",
   "employeeIdRequired": "رقم الموظف مطلوب",
-  "passwordRequired": "كلمة المرور مطلوبة",
+  "passwordRequired": "يرجى إدخال كلمة المرور",
   "algeriaTakafulPortal": "بوابة الجزائر للتكافل",
   "alIttihadPortal": "بوابة الاتحاد للتكافل",
   "employeePortalSubtitle": "بوابة الموظف",
@@ -431,16 +448,21 @@
   "exclusivePortalNote": "هذه البوابة مخصصة حصرياً لموظفي {company} وبياناتها معزولة تمامًا",
   "@exclusivePortalNote": {
     "placeholders": {
-      "company": { "type": "String" }
+      "company": {
+        "type": "String"
+      }
     }
   },
   "wrongCompanyError": "هذا الحساب غير مرتبط بـ {company}.",
   "@wrongCompanyError": {
     "placeholders": {
-      "company": { "type": "String" }
+      "company": {
+        "type": "String"
+      }
     }
   },
-  "emailRequired": "البريد الإلكتروني مطلوب",
+  "emailRequired": "الرجاء إدخال البريد الإلكتروني",
+  "fieldRequired": "هذا الحقل مطلوب",
   "invalidEmailError": "بريد غير صحيح",
   "passwordTooShortError": "كلمة المرور قصيرة جداً",
   "wilaya": "الولاية",
@@ -460,16 +482,20 @@
   "otpSentSubtitle": "تم إرسال رمز مكون من 6 أرقام إلى\n{phone}",
   "@otpSentSubtitle": {
     "placeholders": {
-      "phone": { "type": "String" }
+      "phone": {
+        "type": "String"
+      }
     }
   },
   "verify": "تحقق",
-  "skipForDemo": "تخطي التحقق (للتجربة فقط)",
+  "skipForDemo": "تخطي التحقق (تجريبي)",
   "totalSurplus2024": "إجمالي الفائض الموزع 2024",
   "beneficiariesCount": "عدد المستفيدين: {count}",
   "@beneficiariesCount": {
     "placeholders": {
-      "count": { "type": "String" }
+      "count": {
+        "type": "String"
+      }
     }
   },
   "policyholdersFund": "صندوق حملة الوثائق",
@@ -478,35 +504,22 @@
   "distributionDateLabel": "تاريخ التوزيع: {date}",
   "@distributionDateLabel": {
     "placeholders": {
-      "date": { "type": "String" }
+      "date": {
+        "type": "String"
+      }
     }
   },
-  "passwordStrength": "قوة كلمة المرور: {strength}",
   "@passwordStrength": {
     "placeholders": {
-      "strength": { "type": "String" }
+      "strength": {
+        "type": "String"
+      }
     }
   },
   "strengthWeak": "ضعيفة",
   "strengthFair": "مقبولة",
   "strengthGood": "جيدة",
   "strengthStrong": "قوية",
-  "totalSurplus2024": "إجمالي الفائض الموزع 2024",
-  "beneficiariesCount": "عدد المستفيدين: {count}",
-  "@beneficiariesCount": {
-    "placeholders": {
-      "count": { "type": "String" }
-    }
-  },
-  "verify": "تحقق",
-  "skipForDemo": "تخطي التحقق (تجريبي)",
-  "enterOtpCode": "أدخل رمز التحقق",
-  "otpSentSubtitle": "تم إرسال رمز مكون من 6 أرقام إلى\n{phone}",
-  "@otpSentSubtitle": {
-    "placeholders": {
-      "phone": { "type": "String" }
-    }
-  },
   "performanceOverview": "نظرة عامة على الأداء",
   "performanceOverviewSubtitle": "ملخص العمليات والإيرادات التشغيلية للمنصة",
   "totalActivePolicies": "إجمالي الوثائق النشطة",
@@ -521,13 +534,16 @@
   "commissionsAdmin": "العمولات",
   "settingsAdmin": "الإعدادات",
   "legalRecord": "السجل القانوني",
-  "latestActivitiesAdmin": "آخر النشاطات",
   "commissionMonitoring": "مراقبة العمولات",
-  "totalCommissionsMonthYear": "إجمالي عمولات {month} {year}",
+  "totalCommissionsMonthYear": "إجمالي عوملات {month} {year}",
   "@totalCommissionsMonthYear": {
     "placeholders": {
-      "month": { "type": "String" },
-      "year": { "type": "String" }
+      "month": {
+        "type": "String"
+      },
+      "year": {
+        "type": "String"
+      }
     }
   },
   "fromLastMonth": "عن الشهر الماضي",
@@ -535,7 +551,9 @@
   "commissionRatePct": "نسبة العمولة: {rate}%",
   "@commissionRatePct": {
     "placeholders": {
-      "rate": { "type": "String" }
+      "rate": {
+        "type": "String"
+      }
     }
   },
   "dueCommission": "العمولة المستحقة",
@@ -558,13 +576,17 @@
   "policyNumberLabel": "رقم الوثيقة: {number}",
   "@policyNumberLabel": {
     "placeholders": {
-      "number": { "type": "String" }
+      "number": {
+        "type": "String"
+      }
     }
   },
   "monthlyPremiumLabel": "القسط الشهري: {amount} د.ج",
   "@monthlyPremiumLabel": {
     "placeholders": {
-      "amount": { "type": "String" }
+      "amount": {
+        "type": "String"
+      }
     }
   },
   "myDocuments": "وثائقي",
@@ -573,7 +595,9 @@
   "renewalDueIn": "موعد التجديد بعد {days} يوماً",
   "@renewalDueIn": {
     "placeholders": {
-      "days": { "type": "String" }
+      "days": {
+        "type": "String"
+      }
     }
   },
   "renewalReviewNote": "يرجى مراجعة وثيقة تأمين المنزل لتجنب انقطاع الخدمة.",
@@ -600,9 +624,1408 @@
   "paymentReceiptSentToOperator": "تم إرسال الإيصال إلى المشغل بنجاح",
   "paymentReceiptNumber": "رقم الإيصال",
   "paymentDate": "تاريخ الدفع",
-  "paymentMethod": "طريقة الدفع",
   "paymentConfirmedByClient": "تأكيد الدفع من العميل",
   "downloadReceipt": "تحميل الإيصال",
   "paymentVerified": "تم التحقق من الدفع ✓",
-  "phoneNumberAlreadyTaken": "رقم الهاتف هذا مسجل بالفعل"
+  "phoneNumberAlreadyTaken": "رقم الهاتف هذا مسجل بالفعل",
+  "selectLanguage": "اختر اللغة",
+  "realtimeConnecting": "جاري الاتصال...",
+  "realtimeLive": "مباشر",
+  "realtimeRetrying": "جاري إعادة المحاولة...",
+  "realtimeTapToRetry": "اضغط لإعادة المحاولة",
+  "getStarted": "ابدأ الآن",
+  "forgotPassword": "نسيت كلمة المرور؟",
+  "hoursAgo": "ساعات مضت",
+  "passwordLabel": "كلمة المرور",
+  "userPermissions": "صلاحيات المستخدم",
+  "sinceLaunch": "منذ الإطلاق",
+  "offerFamilyBundleDesc": "باقة حماية العائلة المتكاملة",
+  "active": "نشط",
+  "totalWallet": "إجمالي المحفظة",
+  "walletSubtitle": "إجمالي الرصيد المتراكم من جميع المشتركين",
+  "salesTable": "جدول المبيعات",
+  "addNewCustomer": "إضافة عميل جديد",
+  "systemSettings": "إعدادات النظام",
+  "shareLinkMessage": "رسالة مشاركة الرابط",
+  "equipmentValue": "قيمة المعدات",
+  "startingPrice": "يبدأ السعر من",
+  "mechanic": "ميكانيكي",
+  "offerNewDriverTitle": "عرض السائق الجديد",
+  "distanceKm": "{km} كم",
+  "engineer": "مهندس",
+  "formulaExplanation1": "شرح الصيغة 1",
+  "documentsAppearHere": "تظهر الوثائق هنا",
+  "calculateCarInsurance": "حساب تأمين السيارة",
+  "stepContribution": "خطوة المساهمة",
+  "endDate": "تاريخ الانتهاء",
+  "formulaExplanation2": "شرح الصيغة 2",
+  "emergencyDesc": "وصف الطوارئ",
+  "solidarity": "التضامن",
+  "checkout": "الدفع",
+  "theProcess": "العملية التكافلية",
+  "notifications": "الإشعارات",
+  "roadsideAssistance": "المساعدة على الطريق",
+  "availableBalance": "الرصيد المتاح",
+  "duration": "المدة",
+  "coverage": "التغطية",
+  "shield": "درع",
+  "takafulConcept": "مفهوم التكافل",
+  "whyLegalFramework": "لماذا الإطار القانوني",
+  "notificationClaimTitle": "عنوان إشعار المطالبة",
+  "offerDeletedSuccess": "تم حذف العرض بنجاح",
+  "islamicPrinciples": "المبادئ الإسلامية",
+  "nearbyGarages": "ورش قريبة",
+  "offerRamadanTitle": "عرض رمضان",
+  "plansManagement": "إدارة الخطط",
+  "nightMode": "الوضع الليلي",
+  "addOffer": "إضافة عرض",
+  "transparencyDesc": "وصف الشفافية",
+  "offerRamadanDesc": "وصف عرض رمضان",
+  "policyDetails": "تفاصيل البوليصة",
+  "customer": "العميل",
+  "exit": "خروج",
+  "bestValueUnmarked": "أفضل قيمة (غير محددة)",
+  "perYear": "سنوياً",
+  "imageUploaded": "تم رفع الصورة",
+  "totalDocuments": "إجمالي الوثائق",
+  "ownership": "الملكية",
+  "internationalStandards": "المعايير الدولية",
+  "stepPooling": "خطوة التجميع",
+  "notificationSystemTitle": "عنوان إشعار النظام",
+  "totalSales": "إجمالي المبيعات",
+  "premium": "القسط",
+  "downloadError": "خطأ في التحميل",
+  "commerce": "تجارة",
+  "startDate": "تاريخ البدء",
+  "electric": "كهربائي",
+  "transparency": "الشفافية",
+  "takafulConceptDesc": "وصف مفهوم التكافل",
+  "carBrokenDown": "تعطلت السيارة",
+  "actionCall": "طلب اتصال",
+  "view": "عرض",
+  "aboutApp": "عن التطبيق",
+  "paymentSuccessful": "تم الدفع بنجاح",
+  "towing": "قطر السيارات",
+  "exampleValue": "مثال: 2,000,000",
+  "selectDriverAge": "اختر عمر السائق",
+  "salesList": "قائمة المبيعات",
+  "confirmDeleteTitle": "تأكيد الحذف",
+  "roleManagement": "إدارة الأدوار",
+  "processingDurationDays": "مدة المعالجة (أيام)",
+  "shariaSupervisionDesc": "وصف الرقابة الشرعية",
+  "lawyer": "محامي",
+  "offerFamilyBundleValidity": "صلاحية باقة العائلة",
+  "roadsideAssistanceTitle": "عنوان المساعدة على الطريق",
+  "securityConfiguration": "إعدادات الأمان",
+  "shariaInsuranceSubtitle": "عنوان التأمين الشرعي الفرعي",
+  "services": "الخدمات",
+  "stepSurplusDesc": "شرح خطوة الفائض",
+  "addNewPlan": "إضافة خطة جديدة",
+  "ratingWithStar": "التقييم بالنجوم",
+  "editOffer": "تعديل العرض",
+  "renewalAlert24H": "تنبيه التجديد 24 ساعة",
+  "premiumDzd": "القسط (د.ج)",
+  "ownerNotSpecified": "المالك غير محدد",
+  "invalidMasterPasscode": "رمز المرور الرئيسي غير صحيح",
+  "honestyDesc": "وصف الأمانة",
+  "createAdminAccountSubtitle": "إنشاء حساب مسؤول فرعي",
+  "privacyPolicy": "سياسة الخصوصية",
+  "offerNewDriverDesc": "وصف عرض السائق الجديد",
+  "noSalesCurrently": "لا توجد مبيعات حالياً",
+  "currency": "الملعة",
+  "specialties": "التخصصات",
+  "pending": "معلق",
+  "addNew": "إضافة جديد",
+  "notificationUserBody": "نص إشعار المستخدم",
+  "visionDesc": "وصف الرؤية",
+  "errorLoadingDataTryLater": "خطأ في تحميل البيانات، حاول لاحقاً",
+  "copyright": "حقوق الطبع",
+  "pressForImmediateSos": "اضغط لطلب نجدة فورية",
+  "mutualCooperation": "التعاون المتبادل",
+  "howTakafulWorks": "كيف يعمل التكافل",
+  "activityNature": "طبيعة النشاط",
+  "policyholders": "حملة الوثائق",
+  "yourProfit": "ربحك",
+  "adminRegistration": "تسجيل المسؤول",
+  "offerNewDriverValidity": "صلاحية عرض السائق الجديد",
+  "noDocumentsYet": "لا توجد وثائق بعد",
+  "legalFramework": "الإطار القانوني",
+  "distributed": "موزع",
+  "honesty": "الأمانة",
+  "shariaSupervision": "الرقابة الشرعية",
+  "yearUnit": "سنة",
+  "productAccreditation": "اعتماد المنتج",
+  "registrationNumber": "رقم التسجيل",
+  "manageOffers": "إدارة العروض",
+  "requestFreeQuote": "طلب عرض سعر مجاني",
+  "planName": "اسم الخطة",
+  "offerRamadanValidity": "صلاحية عرض رمضان",
+  "insuranceLawDesc": "وصف قانون التأمين",
+  "annualInsurancePrice": "سعر التأمين السنوي",
+  "category": "الفئة",
+  "solidarityDesc": "وصف التضامن",
+  "retained": "محتجز",
+  "emergencyAssistance": "مساعدة الطوارئ",
+  "callNow": "اتصل الآن",
+  "chooseByWilayaAndSpecialty": "اختر حسب الولاية والتخصص",
+  "dataBackup": "نسخ احتياطي للبيانات",
+  "helpCenter": "مركز المساعدة",
+  "operatorTakaful": "مشغل تكافل",
+  "recentSales": "المبيعات الأخيرة",
+  "monthProfit": "ربح الشهر",
+  "offerFamilyBundleTitle": "عرض باقة العائلة",
+  "myCommissionRate": "نسبة عمولتي",
+  "premiumRate": "نسبة القسط",
+  "featureComingSoon": "الميزة قادمة قريباً",
+  "stepSurplus": "خطوة الفائض",
+  "shareMyLink": "مشاركة رابطي",
+  "auditAnnual": "تدقيق سنوي",
+  "amount": "المبلغ",
+  "appDiscountLabel": "ملصق خصم التطبيق",
+  "driverAge": "عمر السائق",
+  "formulaExplanation3": "شرح الصيغة 3",
+  "aboutUs": "عننا",
+  "noClaimsYet": "لا توجد مطالبات بعد",
+  "proceedToCheckout": "المتابعة للدفع",
+  "directCallToTowing": "اتصال مباشر بالقطر",
+  "contractor": "مقاول",
+  "hourAgo": "قبل ساعة",
+  "renewalAlertDays": "أيام تنبيه التجديد",
+  "promotions": "العروض الترويجية",
+  "activityLogs": "سجلات النشاط",
+  "tires": "إطارات",
+  "bestValueMarked": "أفضل قيمة (محددة)",
+  "enterEquipmentValue": "يرجى إدخال قيمة التجهيزات",
+  "myClaims": "مطالباتي",
+  "errorLoadingData": "خطأ في تحميل البيانات",
+  "surplusPercent": "نسبة الفائض",
+  "stepProtection": "خطوة الحماية",
+  "shariaCompliant": "متوافق مع الشريعة",
+  "notificationUserTitle": "عنوان إشعار المستخدم",
+  "industry": "الصناعة",
+  "fileNewClaim": "تقديم مطالبة جديدة",
+  "battery": "بطارية",
+  "noTowingTrucksAvailable": "لا تتوفر شاحنات قطر",
+  "saveOffer": "حفظ العرض",
+  "yesterday": "أمس",
+  "enterGoodsValue": "يرجى إدخال قيمة السلع",
+  "todayProfit": "ربح اليوم",
+  "basis": "أساس",
+  "garageUnknown": "ورشة غير معروفة",
+  "registeredAt": "سجل في",
+  "errorLoadingDocuments": "خطأ في تحميل الوثائق",
+  "noGaragesInThisArea": "لا توجد ورش في هذه المنطقة",
+  "availablePlans": "الخطط المتاحة",
+  "allTimeProfit": "إجمالي الأرباح",
+  "viewOnMap": "عرض على الخريطة",
+  "offersManagement": "إدارة العروض",
+  "insuranceRateNotice": "ملاحظة سعر التأمين",
+  "salesTabTitle": "عنوان تبويب المبيعات",
+  "whoWeAre": "من نحن",
+  "howIsPriceCalculated": "كيف يتم حساب السعر",
+  "rafik": "الرفيق",
+  "accountStatus": "حالة الحساب",
+  "doctor": "طبيب",
+  "shareholders": "المساهمون",
+  "download": "تحميل",
+  "internationalStandardsDesc": "وصف المعايير الدولية",
+  "rafikCalculatorTitle": "حاسبة الرفيق المساعد",
+  "verifiedGarages": "ورش معتمدة",
+  "commercialProfit": "ربح تجاري",
+  "expiresIn": "ينتهي خلال",
+  "selectProfessionType": "اختر نوع المهنة",
+  "discountLabel": "ملصق الخصم",
+  "takafulVsConventional": "التكافل مقابل التأمين التقليدي",
+  "orderSummary": "ملخص الطلب",
+  "quoteResult": "نتيجة عرض السعر",
+  "goodsValue": "قيمة البضائع",
+  "equalityDesc": "وصف المساواة",
+  "pickImageHint": "تلميح اختيار الصورة",
+  "noOffersYet": "لا توجد عروض بعد",
+  "notificationSystemBody": "نص إشعار النظام",
+  "activate": "تفعيل",
+  "isBestValue": "أفضل قيمة",
+  "insuranceLaw": "قانون التأمين",
+  "offerSavedSuccess": "تم حفظ العرض بنجاح",
+  "none": "لا يوجد",
+  "completed": "مكتمل",
+  "stepContributionDesc": "وصف خطوة المساهمة",
+  "startingFrom": "يبدأ من",
+  "lastMonth": "الشهر الماضي",
+  "monthlyInsurancePrice": "سعر التأمين الشهري",
+  "lastAccidentDateOptional": "تاريخ آخر حادث (اختياري)",
+  "adminRegisteredSuccessfully": "تم تسجيل المسؤول بنجاح",
+  "required": "مطلوب",
+  "verified": "موثق",
+  "iconType": "نوع الأيقونة",
+  "insuranceDocument": "وثيقة التأمين",
+  "masterPasscode": "رمز المرور الرئيسي",
+  "masterPasscodeHint": "تلميح رمز المرور الرئيسي",
+  "planSavedSuccessfully": "تم حفظ الخطة بنجاح",
+  "minutesAgo": "قبل دقائق",
+  "paymentSuccessMessage": "رسالة نجاح الدفع",
+  "description": "الوصف",
+  "tireChange": "تغيير الإطارات",
+  "addNewOffer": "إضافة عرض جديد",
+  "enterRegistrationNumber": "أدخل رقم التسجيل",
+  "withdraw": "سحب",
+  "ourVision": "رؤيتنا",
+  "adminClaims": "مطالبات المسؤول",
+  "confirmDeleteContent": "نص تأكيد الحذف",
+  "agentDashboard": "لوحة تحكم الوكيل",
+  "termsAndConditions": "الشروط والأحكام",
+  "exitConfirmMessage": "رسالة تأكيد الخروج",
+  "algeriaUnited": "الجزائر المتحدة",
+  "professionType": "نوع المهنة",
+  "userDetails": "تفاصيل المستخدم",
+  "notificationClaimBody": "نص إشعار المطالبة",
+  "offerNameAr": "اسم العرض (عربي)",
+  "stepPoolingDesc": "وصف خطوة التجميع",
+  "systemNotifications": "إشعارات النظام",
+  "equality": "المساواة",
+  "selectActivityNature": "اختر طبيعة النشاط",
+  "stepProtectionDesc": "وصف خطوة الحماية",
+  "tabarruPercent": "نسبة التبرع",
+  "loadingDocument": "جاري تحميل الوثيقة",
+  "fuel": "وقود",
+  "enterCarValueDzd": "أدخل قيمة السيارة (د.ج)",
+  "delete": "حذف",
+  "completePayment": "إتمام الدفع",
+  "noData": "لا توجد بيانات",
+  "contactUs": "اتصل بنا",
+  "faq": "الأسئلة الشائعة",
+  "claims": "المطالبات",
+  "getAQuote": "احصل على عرض سعر",
+  "noNotifications": "لا توجد إشعارات",
+  "noClaims": "لا توجد مطالبات",
+  "yourMessage": "رسالتك",
+  "sendMessage": "إرسال",
+  "protectionPacks": "باقات الحماية",
+  "availableOffers": "العروض المتاحة",
+  "addToCompare": "إضافة للمقارنة",
+  "removeFromCompare": "إزالة من المقارنة",
+  "comparisonList": "قائمة المقارنة",
+  "startComparison": "ابدأ المقارنة الآن",
+  "maxPlansComparison": "يمكنك مقارنة 3 خطط كحد أقصى",
+  "noPlansSelected": "لم يتم اختيار أي خطط للمقارنة",
+  "selectAtLeastTwo": "اختر خطتين على الأقل للمقارنة",
+  "protectionPackSubtitle": "باقات تأمينية شاملة تضمن لك ولعائلتك الحماية الكاملة وفق مبادئ التكافل.",
+  "add": "إضافة",
+  "remove": "إزالة",
+  "halalTakafulInsurance": "تأمين تكافلي حلال ١٠٠٪",
+  "myPlans": "خططي",
+  "emergency": "طوارئ",
+  "calculateNow": "احسب الآن ←",
+  "roadsideServices": "خدمات الطريق (Roadside)",
+  "roadsideSubtitle": "نربطكم بأفضل حلول التأمين وخدمات الطريق في مكان واحد",
+  "takafulTitle": "منصة التكافل.. تعاون وأمان",
+  "takafulDescription": "نضع بين أيديكم تطبيقاً رقمياً يربطكم مباشرة بمنظومة التأمين الإسلامي (التكافلي). هدفنا تسهيل إدارة اشتراكاتكم في صندوق التعاون المشترك باحترافية وشفافية كاملة وفق أحكام الشريعة",
+  "howTakafulWorksAction": "كيف يعمل التكافل؟ ←",
+  "seeAll": "عرض الكل",
+  "fromPrice": "من {price}",
+  "@fromPrice": {
+    "placeholders": {
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+  "takafulHalalNotice": "تأمين تكافلي حلال ١٠٠٪",
+  "rafikCalculator": "🔢 حاسبة الرفيق",
+  "rafikSubtitle": "أدخل قيمة سيارتك واحسب قسطك تلقائياً\n(السعر = 0.4% من قيمة السيارة)",
+  "modernPacksCompetitivePrices": "باقات عصرية بأسعار تنافسية",
+  "performanceStats": "إحصائيات الأداء",
+  "monthlySubscriptions": "الاشتراكات الشهرية",
+  "totalSubscriptions": "إجمالي الاشتراكات",
+  "paidSubscriptions": "الاشتراكات المدفوعة",
+  "claimsVsSurplus": "التعويضات مقابل الفائض",
+  "insurancePacksAndServices": "المنتجات والخدمات التكافلية",
+  "quoteRequirements": "متطلبات طلب التسعيرة",
+  "whyLegal": "لماذا نحن قانونيون؟",
+  "takafulPhilosophy": "التكافل.. حماية بروح التعاون",
+  "editUser": "تعديل مستخدم",
+  "deleteUserConfirmation": "هل أنت متأكد من حذف هذا المستخدم؟",
+  "deleteUser": "حذف مستخدم",
+  "documentId": "رمز الوثيقة",
+  "subscriberData": "بيانات المشترك التكافلي",
+  "insuranceDetails": "تفاصيل وثيقة التغطية",
+  "attachedDocuments": "المستندات والملفات المرفقة",
+  "noDocumentsAttached": "لا توجد مستندات مرفقة بالطلب",
+  "attachedDocument": "وثيقة مرفقة",
+  "viewFile": "معاينة الملف",
+  "regulatoryDecision": "ملاحظات وتفاصيل القرار التنظيمي",
+  "regulatoryDecisionHint": "اكتب سبباً للقبول أو الرفض أو طلب التعديل هنا...",
+  "receiptPhoto": "صورة إثبات الدفع اليدوي",
+  "fullSizeView": "معاينة بالحجم الكامل",
+  "paidVerified": "تم التحقق من استلام مبلغ الاشتراك بنجاح",
+  "operatorDecisionMade": "تم اتخاذ القرار النهائي بشأن هذا الطلب من قبل مشغل النظام",
+  "requestModification": "طلب تعديل",
+  "enterReasonFirst": "الرجاء إدخال سبب الرفض أو طلب التعديل في حقل الملاحظات أولاً!",
+  "requestUpdateSuccess": "تم تحديث حالة طلب التأمين التكافلي بنجاح",
+  "operatorPortalTitle": "بوابة المشغّل",
+  "noAccountYet": "ليس لديك حساب بعد؟",
+  "createAccount": "إنشاء حساب",
+  "subscribeNow": "اشترك الآن",
+  "carValueLabel": "قيمة السيارة (د.ج)",
+  "estimatedPremiumLabel": "السعر التقديري (0.4%)",
+  "passportPhotoLabel": "صورة جواز السفر",
+  "destinationLabel": "وجهة السفر",
+  "durationDaysLabel": "مدة السفر (أيام)",
+  "residenceTypeLabel": "نوع المسكن",
+  "addressLabel": "العنوان الكامل",
+  "goodsNatureLabel": "طبيعة السلع",
+  "routeLabel": "خط السير / المسار",
+  "lastAccidentDateLabel": "تاريخ آخر حادث (اختياري)",
+  "shariaNationalSupervision": "تحت إشراف الهيئة الشرعية الوطنية",
+  "halalCooperativeInsurance": "تأمين تعاوني تكافلي مطابق لأحكام الشريعة الإسلامية",
+  "autoInsurance": "تأمين السيارات والعربات (Automobile)",
+  "tousRisquesPlusRC": "التأمين الشامل (Tous Risques) + المسؤولية المدنية (RC)",
+  "individualsAndCompanies": "الأفراد والشركات (سيارات سياحية ونفعية)",
+  "fastShariaCompensations": "تعويضات سريعة ومتوافقة مع الشريعة",
+  "rcStartingFrom": "المسؤولية المدنية (RC): ابتداءً من 3000 دج",
+  "trStartingFrom": "التأمين الشامل (Tous Risques): ابتداءً من 40000 دج",
+  "rcpLabel": "المسؤولية المدنية المهنية (RCP)",
+  "rcpDesc": "حماية صاحب المهنة من الأخطاء المهنية أثناء العمل",
+  "rcpTargets": "الأطباء، المحامون، المهندسون، وأصحاب الحرف",
+  "rcpStartingPrice": "ابتداءً من 20000 دج",
+  "commercialInsurance": "تأمين النشاطات التجارية (Activités Commerciales)",
+  "commercialDesc": "حماية المحلات والمخازن (حريق، سرقة، كسر زجاج، أضرار كهربائية)",
+  "commercialTargets": "أصحاب المحلات، السوبر ماركت، والمطاعم",
+  "commercialStartingPrice": "ابتداءً من 80,000 دج (متعدد الأخطار تجاري)",
+  "multirisquePro": "النشاطات المهنية والحرفية (Multirisque Pro)",
+  "multirisqueProDesc": "تأمين شامل لمقر العمل والعتاد المهني",
+  "multirisqueProTargets": "أصحاب الورشات والمهن الحرة",
+  "multirisqueProStartingPrice": "ابتداءً من 250,000 دج (متعدد الأخطار مهني)",
+  "cargoTransport": "تأمين نقل البضائع (Transport de Marchandises)",
+  "cargoDesc": "حماية السلع المنقولة (براً، بحراً، وجواً) من التلف أو الضياع",
+  "cargoTargets": "شركات الاستيراد والتصدير، والموزعون",
+  "cargoStartingPrice": "الأسعار: حسب قيمة البضاعة وخط السير",
+  "agriIndus": "النشاطات الفلاحية والصناعية (Agricole & Industriel)",
+  "agriIndusDesc": "تأمين العتاد، المحاصيل، المصانع، والآلات الكبرى",
+  "agriIndusTargets": "الفلاحون، المستثمرات الفلاحية، وأصحاب المصانع",
+  "agriIndusPrice": "الأسعار: تخضع لدراسة تقنية خاصة (بناءً على حجم المنشأة)",
+  "emergencySosBtn": "زر الطوارئ (SOS Dépannage)",
+  "sosFeatureSpeed": "للسرعة: نجدة في ضغطة زر",
+  "findRepairman": "دليل الورشات المعتمدة (Find a Repairman)",
+  "garageCardDetails": "بطاقة الورشة: التقييم، الموقع، ووسام التخفيض",
+  "discountBadge": "🏅 خصم {percent}%",
+  "takafulDefinitionTitle": "ما هو التأمين التكافلي؟",
+  "takafulDefinition": "التكافل هو نظام تأمين إسلامي يقوم على مبدأ التضامن؛ حيث يشترك الجميع في صندوق واحد لتعويض المتضررين. نحن لا نربح من مخاطركم، بل ندير تعاونكم باحترافية وشفافية تامة وفق الشريعة.",
+  "legalFrameworkTitle": "الإطار القانوني والشرعي",
+  "decree2181Title": "المرسوم التنفيذي رقم 21-81",
+  "decree2181Desc": "الدستور الخاص بالتكافل في الجزائر (الفصل المالي، نافذة التكافل، قرار وزارة المالية)",
+  "whyWeAreLegal": "لماذا نحن قانونيون؟",
+  "wakalaPrinciple": "مبدأ الوكالة (Al-Wakala)",
+  "shariaSupervisionNational": "الرقابة الشرعية الوطنية",
+  "subscribersFund": "صندوق المشتركين",
+  "socialTakaful": "التكافل الاجتماعي",
+  "adminDashboardSales": "قائمة المبيعات (الاسم - الشركة - المبلغ)",
+  "adminDashboardProfit": "خانة الأرباح (نسبة الوكالة)",
+  "adminDashboardWallet": "المحفظة (الرصيد الإجمالي من المشتركين)",
+  "roadsideAppTitle": "خدمات الطريق والتصليح",
+  "certifiedGaragesDirectory": "دليل الورشات المعتمدة",
+  "searchGarageHint": "ابحث باسم الورشة أو الولاية...",
+  "gpsScanningMessage": "جاري قراءة موقعك عبر الـ GPS وتحديد أقرب مسعف...",
+  "locationDeterminedSuccess": "تم تحديد موقعك! أقرب مسعف متاح الآن",
+  "distanceAway": "على بعد {distance} كم",
+  "@distanceAway": {
+    "placeholders": {
+      "distance": {
+        "type": "String"
+      }
+    }
+  },
+  "callDirectlyNow": "اتصال مباشر الآن",
+  "takafulDefinitionHeader": "تعريف بنظام التكافل والخدمة",
+  "appSubscriberDiscount": "خصم {discount}% لمشتركي التطبيق",
+  "@appSubscriberDiscount": {
+    "placeholders": {
+      "discount": {
+        "type": "String"
+      }
+    }
+  },
+  "callItemButton": "اتصال",
+  "sosTitle": "النجدة في ضغطة زر",
+  "sosSubtitle": "اضغط لطلب المساعدة الطارئة فوراً وتحديد موقعك",
+  "fallbackTruckName": "عمي أحمد للتصليح والقطر السريع",
+  "noGaragesFound": "لم يتم العثور على ورشات تطابق خيارات التصفية.",
+  "errorLoadingGarages": "حدث خطأ أثناء تحميل بيانات الورشات المعتمدة. يرجى التحقق من اتصال الإنترنت.",
+  "callingPerson": "جاري الاتصال بـ {name}...",
+  "@callingPerson": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "callConfirmationPrompt": "هل تريد الاتصال بـ {name} على الرقم {phone}؟",
+  "@callConfirmationPrompt": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "phone": {
+        "type": "String"
+      }
+    }
+  },
+  "specialtyMechanic": "ميكانيك عام",
+  "specialtyElectrician": "كهرباء سيارات",
+  "specialtyTires": "تصليح إطارات",
+  "specialtyDefault": "صيانة معتمدة",
+  "callingDirect": "اتصال مباشر",
+  "provinceAlgiers": "الجزائر",
+  "provinceOran": "وهران",
+  "provinceConstantine": "قسنطينة",
+  "provinceBlida": "البليدة",
+  "provinceBoumerdes": "بومرداس",
+  "wilayaFilterPrefix": "الولاية: ",
+  "specialtyFilterPrefix": "التخصص: ",
+  "filterAll": "الكل",
+  "specialtyMechanicFilter": "ميكانيك",
+  "specialtyElectricianFilter": "كهرباء",
+  "specialtyTiresFilter": "عجلات",
+  "claimsRequests": "طلبات التعويض",
+  "claimProcessingSubtitle": "معالجة طلبات التعويض المقدمة من قبل حاملي وثائق التأمين",
+  "claimsChartTitle": "مخطط وتيرة قيم التعويضات (بـ الألف د.ج)",
+  "claimAcceptedMsg": "تم قبول التعويض بنجاح",
+  "claimRejectedMsg": "تم رفض طلب التعويض",
+  "claimUpdateError": "خطأ أثناء التحديث",
+  "claimErrorOccurred": "حدث خطأ",
+  "claimsSubmittedViaApp": "عبر التطبيق",
+  "claimRequestWizardTitle": "طلب تعويض",
+  "generalClaim": "تعويض عام",
+  "clientDocuments": "وثائق العميل",
+  "nationalIdCard": "بطاقة التعريف الوطنية",
+  "proofOfResidence": "إثبات الإقامة",
+  "openDocLink": "فتح رابط الوثيقة",
+  "closeDialog": "إغلاق",
+  "acceptClaim": "قبول الطلب",
+  "rejectClaim": "رفض الطلب",
+  "takafulClient": "عميل تكافل",
+  "alIttihadClient": "عميل الاتحاد",
+  "requiredDocsCount": "{count} وثائق مطلوبة",
+  "insuranceRequest": "طلب التأمين",
+  "selectInsuranceService": "اختر الخدمة التأمينية المناسبة",
+  "policyholderInfo": "معلومات المؤمَّن له",
+  "requestedInsuranceAmount": "مبلغ التأمين المطلوب (دج)",
+  "enterAmountDzd": "أدخل المبلغ بالدينار الجزائري",
+  "requiredDocsForService": "الوثائق المطلوبة لهذه الخدمة",
+  "maxFileSizeHint": "الحجم الأقصى لكل ملف 5 ميجابايت (PDF أو صور)",
+  "mustUploadAllDocs": "يجب رفع جميع الوثائق للمتابعة",
+  "insuranceRequestSuccess": "تم إرسال طلب التأمين بنجاح",
+  "insuranceSuccessDesc": "سيقوم فريق المؤسسة بمراجعة طلبك التأميني وإخطارك بقرار القبول في أقرب وقت ممكن. يمكنك متابعة حالة الطلب من خلال قسم وثائقي.",
+  "trackMyRequests": "متابعة طلباتي",
+  "nextUploadDocs": "التالي: رفع الوثائق",
+  "uploading": "جاري الرفع...",
+  "sendInsuranceRequest": "إرسال طلب التأمين",
+  "pleaseFillAllFieldsCorrectly": "يرجى ملء جميع البيانات الشخصية بشكل صحيح",
+  "fileTooLarge": "حجم الملف يتجاوز الحد الأقصى (5 ميجابايت)",
+  "pdfImageLimit": "PDF / صورة (الحد الأقصى 5 ميجابايت)",
+  "quoteRequest": "طلب التسعيرة",
+  "sendQuoteRequest": "إرسال طلب التسعيرة",
+  "quoteSuccessDesc": "سيتم دراسة طلب التسعيرة من قبل الخبراء في المؤسسة والتواصل معك في أقرب وقت ممكن.",
+  "quoteRequestSuccess": "تم إرسال طلب التسعيرة بنجاح",
+  "claimRequest": "طلب تعويض",
+  "claimSubtitle": "تعويض الأضرار الناجمة عن الحوادث",
+  "claimStep1": "وثائق الحادث",
+  "claimStep2": "تفاصيل الحادث",
+  "claimStep3": "تأكيد",
+  "officialRequiredDocs": "الوثائق الرسمية المطلوبة",
+  "drivingLicenseBothSides": "رخصة السياقة (الوجهان)",
+  "carteGriseLabel": "البطاقة الرمادية",
+  "friendlyReportOptional": "المعاينة الودية (اختياري)",
+  "carPhotosCount": "صور السيارة – {count}/4 صور",
+  "carPhotosHint": "صوّر السيارة من الزوايا الأربع لتسريع معالجة الطلب",
+  "tapToAdd": "اضغط لإضافة",
+  "accidentInfo": "معلومات الحادث",
+  "associatedPolicy": "العقد المرتبط",
+  "accidentDate": "تاريخ الحادث",
+  "accidentLocation": "مكان الحادث",
+  "pleaseEnterLocation": "الرجاء إدخال مكان الحادث",
+  "locationHint": "المدينة، الحي، الشارع...",
+  "accidentDescription": "وصف الحادث",
+  "pleaseEnterDescription": "الرجاء كتابة وصف مفصّل (20 حرف على الأقل)",
+  "descriptionHint": "اشرح ما حدث بالتفصيل...",
+  "takePhoto": "التقاط صورة",
+  "fromGallery": "من المعرض",
+  "stage1": "المرحلة 1",
+  "fileReceived": "تم استلام الملف",
+  "stage2": "المرحلة 2",
+  "expertAssignment": "تعيين خبير (اسم + هاتف + موقع)",
+  "stage3": "المرحلة 3",
+  "directRepairOrder": "أمر الإصلاح المباشر (QR Code أو رقم الوصول للورشة)",
+  "trackingStages": "مراحل متابعة الطلب",
+  "claimSuccessDesc": "تم تسجيل طلب التعويض بنجاح. سيتم تعيين خبير في أقرب وقت ممكن ومن ثم ستتلقى إشعاراً بأمر الإصلاح.",
+  "backToHome": "العودة للرئيسية",
+  "previous": "السابق",
+  "uploadedCheck": "تم الرفع ✓",
+  "front": "أمامية",
+  "backPhoto": "خلفية",
+  "rightSide": "جانب أيمن",
+  "leftSide": "جانب أيسر",
+  "claimRequestSuccess": "تم تسجيل طلب التعويض بنجاح",
+  "nextIncidentDetails": "التالي: تفاصيل الحادث",
+  "sending": "جاري الإرسال...",
+  "sendClaimRequest": "إرسال طلب التعويض",
+  "insuranceRequests": "طلبات التأمين",
+  "claimRequests": "طلبات التعويض",
+  "newInsuranceRequest": "طلب تأمين جديد",
+  "newClaimRequest": "طلب تعويض جديد",
+  "noInsuranceRequests": "لا توجد طلبات تأمين بعد",
+  "statusReceived": "تم الاستلام",
+  "statusInsurancePending": "قيد المراجعة",
+  "stageReceived": "استلام",
+  "stageExpertAssigned": "تعيين خبير",
+  "stageRepairAuthorised": "إصلاح",
+  "unknown": "غير محدد",
+  "requestAcceptedTitle": "تم قبول طلبك!",
+  "policyReadyForPayment": "بوليصة {planName} جاهزة للدفع.",
+  "@policyReadyForPayment": {
+    "placeholders": {
+      "planName": {
+        "type": "String"
+      }
+    }
+  },
+  "notifiedWhenApproved": "سيتم إشعارك فور موافقة مشغل {companyName}.",
+  "@notifiedWhenApproved": {
+    "placeholders": {
+      "companyName": {
+        "type": "String"
+      }
+    }
+  },
+  "unspecified": "غير محدد",
+  "supermarket": "سوبر ماركت",
+  "restaurant": "مطعم",
+  "apartment": "شقة",
+  "villa": "فيلا",
+  "singleFamilyHome": "منزل فردي",
+  "digitalClaimRequest": "طلب التعويض الرقمي",
+  "requiredDocuments": "الوثائق المطلوبة",
+  "vehicleRegistrationDocument": "البطاقة الرمادية (وثيقة السيارة)",
+  "friendlyConstatOptional": "المعاينة الودية (اختياري)",
+  "damagePhotosCount": "صور الأضرار ({count}/4)",
+  "@damagePhotosCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "addPhoto": "إضافة صورة",
+  "carPhotoInstructions": "صوّر السيارة من 4 زوايا مختلفة (أمام، خلف، يمين، يسار)",
+  "accidentInformation": "معلومات الحادث",
+  "relatedPolicy": "العقد المرتبط",
+  "cityNeighborhoodStreet": "المدينة، الحي، الشارع...",
+  "pleaseEnterAccidentLocation": "الرجاء إدخال مكان الحادث",
+  "pleaseEnterDetailedDescription": "الرجاء كتابة وصف مفصّل (20 حرف على الأقل)",
+  "explainWhatHappened": "اشرح ما حدث بالتفصيل...",
+  "claimTrackingStages": "مراحل متابعة الطلب",
+  "fileReceivedAfterUpload": "تم استلام الملف (بعد الرفع)",
+  "expertAssignedDetails": "تعيين الخبير (يظهر اسم وهاتف وموقع الخبير)",
+  "pleaseUploadRequiredDocs": "يرجى رفع رخصة السياقة والبطاقة الرمادية على الأقل",
+  "uploadedSuccessfully": "تم الرفع ✓",
+  "max4DamagePhotos": "الحد الأقصى 4 صور للأضرار",
+  "claimReceivedSuccessfully": "تم استلام طلب التعويض بنجاح ✓",
+  "errorWithParam": "خطأ: {error}",
+  "@errorWithParam": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "fileSizeExceedsLimit": "حجم الملف يتجاوز الحد الأقصى المسموح به وهو 5 ميجابايت",
+  "pleaseUploadRequiredDocsForReassessment": "الرجاء رفع المستندات المطلوبة لإعادة التقييم - {planName}",
+  "@pleaseUploadRequiredDocsForReassessment": {
+    "placeholders": {
+      "planName": {
+        "type": "String"
+      }
+    }
+  },
+  "maxFileSize5MB": "الحجم الأقصى للملف الواحد هو 5 ميجابايت (PDF أو صور)",
+  "uploadedPreviouslyChooseToEdit": "تم الرفع مسبقاً، اختر ملفاً للتعديل",
+  "pleaseChooseAFile": "يرجى اختيار ملف",
+  "saveAndResubmit": "حفظ و إعادة إرسال الطلب",
+  "modifyDocumentsRequest": "طلب تعديل مستندات",
+  "pleaseReuploadDocsAsRequested": "يرجى إعادة رفع المستندات المطلوبة أو تعديلها بناء على طلب الإدارة.",
+  "editAndResubmitDocs": "تعديل وإعادة إرسال المستندات",
+  "sosEmergencyTitle": "النجدة في ضغطة زر",
+  "sosServiceSubtitle": "تطبيقنا الرقمي يربطكم فوراً بأكبر شبكة من خدمات الديباناج والورشات المعتمدة في ولايتكم لضمان تدخل سريع وآمن.",
+  "done": "تم!",
+  "sos": "SOS",
+  "directCall": "اتصال مباشر",
+  "wilayaLabel": "الولاية",
+  "specialtyLabel": "التخصص",
+  "failedToLoadGarages": "تعذّر تحميل الورشات. تحقق من اتصالك.",
+  "@discountBadge": {
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "@distanceKm": {
+    "placeholders": {
+      "km": {
+        "type": "num"
+      }
+    }
+  },
+  "dummyEmergencyStation": "محطة الطوارئ — أبو خالد",
+  "dummyTowingService": "ديبناج وسحب",
+  "wilaya1": "أدرار",
+  "wilaya2": "الشلف",
+  "wilaya3": "الأغواط",
+  "wilaya4": "أم البواقي",
+  "wilaya5": "باتنة",
+  "wilaya6": "بجاية",
+  "wilaya7": "بسكرة",
+  "wilaya8": "بشار",
+  "wilaya9": "البليدة",
+  "wilaya10": "البويرة",
+  "wilaya11": "تمنراست",
+  "wilaya12": "تبسة",
+  "wilaya13": "تلمسان",
+  "wilaya14": "تيارت",
+  "wilaya15": "تيزي وزو",
+  "wilaya16": "الجزائر",
+  "wilaya17": "الجلفة",
+  "wilaya18": "جيجل",
+  "wilaya19": "سطيف",
+  "wilaya20": "سعيدة",
+  "wilaya21": "سكيكدة",
+  "wilaya22": "سيدي بلعباس",
+  "wilaya23": "عنابة",
+  "wilaya24": "قالمة",
+  "wilaya25": "قسنطينة",
+  "wilaya26": "المدية",
+  "wilaya27": "مستغانم",
+  "wilaya28": "المسيلة",
+  "wilaya29": "معسكر",
+  "wilaya30": "ورقلة",
+  "wilaya31": "وهران",
+  "wilaya32": "البيض",
+  "wilaya33": "إليزي",
+  "wilaya34": "برج بوعريريج",
+  "wilaya35": "بومرداس",
+  "wilaya36": "الطارف",
+  "wilaya37": "تندوف",
+  "wilaya38": "تيسمسيلت",
+  "wilaya39": "الوادي",
+  "wilaya40": "خنشلة",
+  "wilaya41": "سوق أهراس",
+  "wilaya42": "تيبازة",
+  "wilaya43": "ميلة",
+  "wilaya44": "عين الدفلى",
+  "wilaya45": "النعامة",
+  "wilaya46": "عين تموشنت",
+  "wilaya47": "غرداية",
+  "wilaya48": "غليزان",
+  "uploadGrayCardSuccess": "تم رفع البطاقة الرمادية",
+  "grayCardImage": "صورة البطاقة الرمادية",
+  "exampleCarValue": "مثال: 2000000",
+  "enterCarValue": "يرجى إدخال قيمة السيارة",
+  "estimatedPremium": "السعر التقديري (0.4%): {amount} د.ج",
+  "@estimatedPremium": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "insuranceDurationLabel": "مدة التأمين (Duration)",
+  "sixMonths": "6 أشهر (6 Months)",
+  "oneYear": "سنة واحدة (1 Year)",
+  "selectInsuranceDuration": "يرجى اختيار مدة التأمين",
+  "equipmentValueLabel": "قيمة التجهيزات (د.ج)",
+  "goodsValueLabel": "قيمة السلع (د.ج)",
+  "artisan": "صاحب حرفة",
+  "registrationNumberLabel": "رقم التسجيل في الهيئة المهنية",
+  "travelDestinationLabel": "وجهة السفر",
+  "exampleDestination": "مثال: فرنسا، تونس، السعودية",
+  "enterDestination": "يرجى إدخال الوجهة",
+  "travelDurationLabel": "مدة السفر (أيام)",
+  "enterDuration": "يرجى إدخال المدة",
+  "individualHouse": "منزل فردي",
+  "selectResidenceType": "يرجى اختيار نوع المسكن",
+  "fullAddressLabel": "العنوان الكامل",
+  "enterAddress": "يرجى إدخال العنوان",
+  "enterGoodsNature": "يرجى إدخال طبيعة السلع",
+  "cargoGoodsValueLabel": "قيمة البضاعة (د.ج)",
+  "enterCargoValue": "يرجى إدخال القيمة",
+  "enterRoute": "يرجى إدخال خط السير",
+  "facilityTypeLabel": "نوع المنشأة / المستثمرة",
+  "enterFacilityType": "يرجى إدخال نوع المنشأة",
+  "facilitySizeLabel": "حجم المنشأة / المساحة",
+  "exampleFacilitySize": "مثال: 500 متر مربع أو 10 هكتارات",
+  "enterFacilitySize": "يرجى إدخال الحجم",
+  "takafulPackage": "باقة تكافلية",
+  "wallet": "المحفظة",
+  "awaitingFinalApproval": "في انتظار القبول النهائي",
+  "quoteRequestDetails": "تفاصيل طلب التسعيرة",
+  "chooseService": "اختر الخدمة التي تناسبك",
+  "serviceChosen": "الخدمة المختارة",
+  "submitQuoteRequest": "إرسال طلب التسعيرة",
+  "donationRate": "نسبة التبرع",
+  "settlement": "التسوية",
+  "change": "تغيير",
+  "requestData": "بيانات الطلب",
+  "alIttihadTakaful": "الجزائر المتحدة — تكافل متكامل",
+  "alRafikPlan": "الرفيق (Al-Rafik)",
+  "rafikInsuranceIttihad": "تأمين الرفيق من الجزائر المتحدة (Al-Ittihad)",
+  "pleaseCompleteData": "الرجاء إكمال البيانات (عمر السائق + صورة البطاقة الرمادية)",
+  "requiredInfoToSubscribe": "المعلومات المطلوبة للإشتراك:",
+  "greyCardUploaded": "تم رفع البطاقة الرمادية",
+  "greyCardImage": "صورة البطاقة الرمادية",
+  "legalCompliancePortalSubtitle": "بوابة الامتثال القانوني والشرعي",
+  "wakalaPrincipleDesc": "الشركة وكيل يدير الصندوق مقابل أجر معلوم",
+  "shariaOversightTitle": "الرقابة الشرعية",
+  "shariaOversightDesc": "لا يصدر عقد بدون تأشيرة الهيئة الشرعية الوطنية",
+  "subscribersFundTitle": "صندوق المشتركين",
+  "subscribersFundDesc": "الأموال تُستخدم حصراً لتعويض المتضررين",
+  "socialTakafulTitle": "التكافل الاجتماعي",
+  "socialTakafulDesc": "الهدف هو التعاون لا الربح",
+  "regulatoryLawsTitle": "القوانين التنظيمية",
+  "lawOrder9507": "الأمر رقم 95-07 (المعدل والمتمم)",
+  "lawDecree2181": "المرسوم التنفيذي رقم 21-81",
+  "lawFinanceMinistry2021": "قرار وزارة المالية (2021)",
+  "whoWeAreTitle": "من نحن",
+  "atCompanyTitle": "شركة جزائر تكافل للتأمين",
+  "atCompanyDesc": "شركة جزائر تكافل هي أول شركة تأمين تكافلي عام في الجزائر، تأسست وفق أحكام الشريعة الإسلامية وتعمل بموجب الترخيص الرسمي الصادر عن وزارة المالية. نقدم منتجات تأمينية متنوعة تشمل تأمين السيارات والمؤسسات والمسؤولية المهنية وغيرها، مع ضمان الشفافية التامة والفصل بين أموال المشتركين وأموال المساهمين.",
+  "atLocation": "الجزائر العاصمة",
+  "atLicensed": "مرخصة رسمياً",
+  "atPhilosophyTitle": "التكافل.. حماية بروح التعاون",
+  "atPhilosophyDesc": "نظام يقوم على التضامن المشترك حيث يساهم الأعضاء في صندوق مخصص لتعويض المتضررين منهم، وتوزع الفوائض المحققة على المشتركين.",
+  "servicesTitle": "خدماتنا التأمينية",
+  "serviceCarTitle": "تأمين السيارات",
+  "serviceCarDesc": "RC من 3,000 دج\nTR من 40,000 دج",
+  "serviceCivilTitle": "المسؤولية المدنية",
+  "serviceCivilDesc": "من 20,000 دج",
+  "serviceHomeTitle": "تأمين السكن",
+  "serviceHomeDesc": "من 80,000 دج",
+  "serviceProfTitle": "النشاطات المهنية",
+  "serviceProfDesc": "من 250,000 دج",
+  "serviceCargoTitle": "نقل البضائع",
+  "serviceCargoDesc": "حسب قيمة البضاعة",
+  "serviceAgriTitle": "النشاطات الفلاحية",
+  "serviceAgriDesc": "دراسة تقنية خاصة",
+  "protectionPlansTitle": "باقات الحماية التكافلية",
+  "docsGuideTitle": "دليل الوثائق المطلوبة",
+  "docCars": "للسيارات",
+  "docCarsDesc": "بطاقة رمادية + رخصة سياقة",
+  "docCompanies": "للمؤسسات",
+  "docCompaniesDesc": "سجل تجاري + قائمة العتاد",
+  "docTravelers": "للمسافرين",
+  "docTravelersDesc": "صورة جواز السفر + تفاصيل الوجهة",
+  "atLegalDesc": "تعمل جزائر تكافل وفقاً للمرسوم التنفيذي 21-81 الذي ينظم النشاط التكافلي، لضمان أعلى مستويات الشفافية والأمان لمشتركينا.",
+  "statsExp": "سنة خبرة",
+  "statsSubscribers": "مشترك",
+  "statsSatisfaction": "رضا العملاء",
+  "aiCompanyTitle": "شركة الجزائر المتحدة للتأمينات",
+  "aiCompanyDesc": "شركة الجزائر المتحدة للتأمينات (الاتحاد) هي شركة تأمين تقليدية رائدة في الجزائر، تأسست بموجب الترخيص الرسمي الصادر عن وزارة المالية. نقدم مجموعة واسعة من المنتجات التأمينية تشمل تأمين السيارات والممتلكات والمؤسسات والمسؤولية المدنية وغيرها، مع التزامنا بأعلى معايير الجودة والشفافية في خدمة عملائنا.",
+  "aiPhilosophyTitle": "التأمين.. حماية بخبرة ومسؤولية",
+  "aiPhilosophyDesc": "نعتمد على نظام التأمين التقليدي المبني على عقود التعويض المتبادل، حيث نضمن لعملائنا تغطية شاملة ضد المخاطر مع التزامنا بالشفافية والكفاءة في معالجة الملفات.",
+  "servicePropertyTitle": "تأمين الممتلكات",
+  "servicePropertyDesc": "من 80,000 دج",
+  "serviceEnterpriseTitle": "تأمين المؤسسات",
+  "serviceEnterpriseDesc": "من 250,000 دج",
+  "serviceAgriRiskTitle": "المخاطر الفلاحية",
+  "serviceAgriRiskDesc": "دراسة تقنية خاصة",
+  "protectionPlansIttihadTitle": "باقات الحماية التأمينية",
+  "legalFrameworkIttihadTitle": "الإطار التنظيمي والقانوني",
+  "aiLegalDesc": "تعمل الجزائر المتحدة وفقاً للأمر 95-07 المتعلق بالتأمينات والقانون 06-04 المعدل والمتمم، لضمان أعلى مستويات الشفافية والأمان لعملائنا.",
+  "statsClients": "عميل",
+  "myRequests": "طلباتي",
+  "myPersonalDocuments": "وثائقي الشخصية",
+  "personalDocsViewOnly": "هذه وثائقك المرفوعة عند التسجيل. يمكنك الاطلاع عليها فقط.",
+  "confirmRefuseOffer": "هل أنت متأكد من رفض هذا العرض؟ لا يمكن التراجع عن هذا الإجراء.",
+  "aiTotalRequests": "إجمالي الطلبات",
+  "aiApproved": "موافَق عليه",
+  "aiSurplusNav": "الفائض",
+  "aiPaidPolicies": "مدفوعة",
+  "aiRejectedPolicies": "مرفوضة",
+  "aiDashboardSubtitle": "تكافل متكامل للأفراد والمؤسسات",
+  "aiPolicy": "وثيقة",
+  "aiNewPolicyRequest": "طلب وثيقة جديدة من {applicant}",
+  "@aiNewPolicyRequest": {
+    "placeholders": {
+      "applicant": {
+        "type": "Object"
+      }
+    }
+  },
+  "aiNoRequests": "لا توجد طلبات حالياً",
+  "aiLoadError": "خطأ في تحميل البيانات: {error}",
+  "@aiLoadError": {
+    "placeholders": {
+      "error": {
+        "type": "Object"
+      }
+    }
+  },
+  "aiClaimsVsSurplusTooltip": "{count} وثيقة",
+  "@aiClaimsVsSurplusTooltip": {
+    "placeholders": {
+      "count": {
+        "type": "Object"
+      }
+    }
+  },
+  "aiMonthlySubscriptions": "الاشتراكات الشهرية",
+  "aiQuoteRequest": "طلب تسعيرة",
+  "aiMonthlyRequests": "الطلبات الشهرية",
+  "aiStatusDistribution": "توزيع حالات الطلبات",
+  "aiPaidStatus": "مدفوع",
+  "aiRequestTooltip": "{count} طلب",
+  "@aiRequestTooltip": {
+    "placeholders": {
+      "count": {
+        "type": "Object"
+      }
+    }
+  },
+  "monthJanuary": "يناير",
+  "monthFebruary": "فبراير",
+  "monthMarch": "مارس",
+  "monthApril": "أبريل",
+  "monthMay": "مايو",
+  "monthJune": "يونيو",
+  "monthJuly": "يوليو",
+  "monthAugust": "أغسطس",
+  "monthSeptember": "سبتمبر",
+  "monthOctober": "أكتوبر",
+  "monthNovember": "نوفمبر",
+  "monthDecember": "ديسمبر",
+  "aiRoadsideTitle": "المساعدة على الطريق والورشات",
+  "aiTowingService": "قطر النجدة السريع — متوفر 24/7",
+  "aiEmergencyCallSubtitle": "اتصل فوراً للحصول على مساعدة عاجلة 24/7",
+  "aiWorkshopNakhba": "ورشة النخبة — أولاد فايت، الجزائر",
+  "aiWorkshopAmane": "ورشة الأمان — باب الزوار، الجزائر",
+  "aiCertifiedWorkshops": "ورشات ميكانيك معتمدة",
+  "aiTowingServices": "خدمات سحب وقطر السيارات",
+  "aiEmergency3030": "طوارئ 3030",
+  "aiIttihaddTowing": "سحب الاتحاد الآمن — تغطية وطنية",
+  "aiHotlineTitle": "خط الطوارئ الساخن الموحد",
+  "aiWorkshopPhone": "الهاتف: {phone}",
+  "@aiWorkshopPhone": {
+    "placeholders": {
+      "phone": {
+        "type": "Object"
+      }
+    }
+  },
+  "aiPoliciesTitle": "طلبات وثائق التأمين",
+  "aiPoliciesSubtitle": "مراجعة وتعديل وتدقيق طلبات الاكتتاب الواردة",
+  "aiManagePolicies": "إدارة وثائق التأمين",
+  "aiCompanyPortalTitle": "الاتحاد الجزائري",
+  "aiNewInsuranceRequests": "طلبات تأمين جديدة",
+  "aiSearchHint": "البحث عن طريق اسم العميل أو الرقم المعرف...",
+  "aiLoadErrorShort": "خطأ في تحميل البيانات: {error}",
+  "@aiLoadErrorShort": {
+    "placeholders": {
+      "error": {
+        "type": "Object"
+      }
+    }
+  },
+  "aiSubscriberRequestDetails": "تفاصيل طلب المشترك",
+  "aiAlgeriaUnitedFull": "الجزائر المتحدة (الاتحاد)",
+  "aiRequestCode": "رمز الطلب: {code}",
+  "@aiRequestCode": {
+    "placeholders": {
+      "code": {
+        "type": "Object"
+      }
+    }
+  },
+  "aiSubscriberPersonalInfo": "المعلومات الشخصية للمشترك",
+  "aiIdentityAndContactInfo": "معلومات الهوية والاتصال الموثقة",
+  "aiServiceDetails": "تفاصيل الخدمة المطلوبة",
+  "aiUnspecifiedService": "خدمة غير محددة",
+  "aiEstimatedAmountAndDate": "المبلغ المقدر والتاريخ",
+  "aiAmountLabel": "المبلغ:",
+  "aiRequestDate": "تاريخ الطلب:",
+  "aiAttachedDocuments": "المستندات المرفقة",
+  "aiNoDocumentsUploaded": "لا توجد وثائق مرفوعة.",
+  "aiClickToPreview": "اضغط للمعاينة",
+  "aiDocumentOpenError": "خطأ أثناء فتح المستند: {error}",
+  "@aiDocumentOpenError": {
+    "placeholders": {
+      "error": {
+        "type": "Object"
+      }
+    }
+  },
+  "aiFinalQuoteLabel": "التسعيرة النهائية (دج):",
+  "aiFinalQuoteHint": "أدخل المبلغ النهائي للتسعيرة",
+  "aiOperatorDecisionLabel": "قرار المشغل والملاحظات:",
+  "aiDecisionNotesHint": "اكتب ملاحظات القبول أو الرفض هنا...",
+  "aiWriteReasonNote": "الرجاء كتابة السبب في الملاحظات",
+  "aiValidQuoteRequired": "الرجاء إدخال تسعيرة صحيحة قبل القبول",
+  "aiOffersTitle": "إدارة العروض الترويجية",
+  "aiAddOffer": "إضافة عرض ترويجي جديد",
+  "aiEditOffer": "تعديل بيانات العرض",
+  "aiOfferName": "اسم العرض الترويجي",
+  "aiPremiumValue": "قيمة قسط الاشتراك (د.ج)",
+  "aiCoverageLimit": "حد التغطية المالية للتعويضات",
+  "aiTabarruRate": "نسبة صندوق التبرع (٪)",
+  "aiSurplusRate": "نسبة الفائض الموزع (٪)",
+  "aiClaimsDurationDays": "مدة تسوية المطالبات (بالأيام)",
+  "aiIconCode": "رمز العرض الترويجي",
+  "aiIconShield": "درع الحماية (Shield)",
+  "aiIconVerified": "معتمد وموثق (Verified)",
+  "aiIconRafik": "الرفيق المساعد (Rafik)",
+  "aiBestValueOffer": "العرض الموصى به (أفضل قيمة للمشترك)",
+  "aiSaveOffer": "حفظ بيانات العرض الترويجي",
+  "aiOfferSavedSuccess": "تم حفظ العرض الترويجي بنجاح",
+  "aiFieldRequired": "هذا الحقل مطلوب وملزم للمشغل",
+  "aiDeleteOffer": "حذف العرض",
+  "aiConfirmDeleteOffer": "هل أنت متأكد من رغبتك في حذف هذا العرض نهائياً؟",
+  "aiOfferDeletedSuccess": "تم حذف العرض بنجاح",
+  "aiOfferSaveError": "خطأ أثناء الحفظ: {error}",
+  "@aiOfferSaveError": {
+    "placeholders": {
+      "error": {
+        "type": "Object"
+      }
+    }
+  },
+  "aiOfferUpdateError": "خطأ أثناء التحديث: {error}",
+  "@aiOfferUpdateError": {
+    "placeholders": {
+      "error": {
+        "type": "Object"
+      }
+    }
+  },
+  "aiOfferDeleteError": "خطأ أثناء الحذف: {error}",
+  "@aiOfferDeleteError": {
+    "placeholders": {
+      "error": {
+        "type": "Object"
+      }
+    }
+  },
+  "aiOfferMarkedBestValue": "تم تحديد العرض كأفضل قيمة",
+  "aiOfferUnmarkedBestValue": "تم إلغاء تحديد أفضل قيمة",
+  "aiTabarruSuggestedRate": "نسبة التبرع المقترحة للمشترك",
+  "aiClaimsDurationValue": "{count} أيام",
+  "@aiClaimsDurationValue": {
+    "placeholders": {
+      "count": {
+        "type": "Object"
+      }
+    }
+  },
+  "aiGenericError": "خطأ: {error}",
+  "@aiGenericError": {
+    "placeholders": {
+      "error": {
+        "type": "Object"
+      }
+    }
+  },
+  "aiOperatorName": "مشغل النظام",
+  "aiSurplusDistribution": "توزيع الفائض",
+  "aiQuarterlyDistributionLog": "سجل التوزيع الربع سنوي",
+  "aiNoSurplusData": "لا توجد بيانات للفائض",
+  "aiPolicyholdersSurplus": "فائض المشتركين (90٪)",
+  "aiManagementShare": "حصة شركة الإدارة (10٪)",
+  "aiSurplusAnalytics": "التحليل البياني للفائض",
+  "aiTotalCoopInsuranceSurplus": "إجمالي فائض التأمين التعاوني الموزع",
+  "aiNotificationsTitle": "إشعارات الاتحاد للتأمين",
+  "aiMarkAllRead": "تحديد الكل",
+  "aiNoNotifications": "لا توجد إشعارات حالياً",
+  "aiNow": "الآن",
+  "aiMinutesAgo": "منذ {count} دقيقة",
+  "@aiMinutesAgo": {
+    "placeholders": {
+      "count": {
+        "type": "Object"
+      }
+    }
+  },
+  "aiHoursAgo": "منذ {count} ساعة",
+  "@aiHoursAgo": {
+    "placeholders": {
+      "count": {
+        "type": "Object"
+      }
+    }
+  },
+  "aiDaysAgo": "منذ {count} يوم",
+  "@aiDaysAgo": {
+    "placeholders": {
+      "count": {
+        "type": "Object"
+      }
+    }
+  },
+  "aiNotificationsLoadError": "خطأ في تحميل الإشعارات: {error}",
+  "@aiNotificationsLoadError": {
+    "placeholders": {
+      "error": {
+        "type": "Object"
+      }
+    }
+  },
+  "withdrawRequestUnderReview": "طلب السحب قيد المراجعة",
+  "withdrawAmountHint": "المبلغ المراد سحبه",
+  "ccpNumberHint": "رقم الحساب الجاري",
+  "withdrawSecurityNote": "تتم مراجعة جميع عمليات السحب من قبل النظام المالي لضمان الامتثال للمرسوم 21-81.",
+  "adminResetSystemConfirm": "هل أنت متأكد من رغبتك في مسح جميع البيانات؟ سيتم حذف جميع المستخدمين (باستثناء المسؤولين) والسياسات والمطالبات والسجلات بشكل نهائي. هذا الإجراء لا يمكن التراجع عنه.",
+  "adminWipeAll": "مسح الكل",
+  "adminResetSystemSuccess": "تمت إعادة ضبط النظام بنجاح.",
+  "adminDangerZone": "منطقة الخطر",
+  "adminResetSystemTitle": "إعادة ضبط النظام (مسح شامل)",
+  "noPlansFound": "لا توجد خطط حالياً",
+  "adminOperatorCompanyLabel": "المشغل / الشركة",
+  "adminPlanCodeLabel": "رمز الخطة (مثال: TRANSPORT_PRO)",
+  "adminPlanNameArabicLabel": "اسم الخطة بالعربية",
+  "adminNameArabicHint": "الاسم بالعربية",
+  "adminStartingPriceLabel": "السعر الابتدائي (د.ج)",
+  "adminDisplayAndStyleSection": "العرض والأيقونة",
+  "adminIconTypeLabel": "نوع الأيقونة",
+  "adminShortDescriptionArabicLabel": "وصف مختصر (بالعربية)",
+  "adminPlanDescriptionHint": "وصف الخطة...",
+  "markAllAsRead": "تعيين الكل كمقروء",
+  "errorLoadingNotifications": "حدث خطأ في تحميل الإشعارات",
+  "noNotificationsAvailable": "لا توجد إشعارات حالياً",
+  "mockClient1": "أحمد محمد",
+  "mockClient2": "عمر خالد",
+  "adminTotalSubscriptionsCollected": "إجمالي الاشتراكات المجمعة",
+  "adminPolicyDistribution": "توزيع الوثائق",
+  "categoryProperties": "ممتلكات",
+  "adminSalesListTitle": "قائمة المبيعات",
+  "adminNoSalesRegistered": "لا توجد مبيعات مسجلة حالياً",
+  "paymentReceiptLabel": "وصل الدفع",
+  "noDocumentsAvailableForRequest": "لا توجد مستندات متاحة لهذا الطلب.",
+  "chooseDocumentToPreview": "اختر المستند للمعاينة",
+  "algeriaUnitedTitle": "الجزائر المتحدة",
+  "takafulForIndividualsAndCompanies": "تكافل متكامل للأفراد والمؤسسات",
+  "newPolicyRequestFrom": "طلب وثيقة جديدة من {name}",
+  "errorLoadingDataWithDetails": "خطأ في تحميل البيانات: {error}",
+  "noRequestsCurrently": "لا توجد طلبات حالياً",
+  "filterPending": "قيد الانتظار",
+  "filterApproved": "موافَق عليه",
+  "filterPaid": "مدفوعة",
+  "filterRejected": "مرفوضة",
+  "alIttihadAlgerian": "الاتحاد الجزائري",
+  "surplusDistributionSubtitle": "توزيع الفائض",
+  "quarterlyDistributionLog": "سجل التوزيع الربع سنوي",
+  "totalCooperativeInsuranceSurplus": "إجمالي فائض التأمين التعاوني الموزع",
+  "surplusChartAnalysis": "التحليل البياني للفائض",
+  "noSurplusData": "لا توجد بيانات للفائض",
+  "policyholdersSurplus90": "فائض المشتركين (90٪)",
+  "managementFee10": "حصة شركة الإدارة (10٪)",
+  "insurancePoliciesRequests": "طلبات وثائق التأمين",
+  "reviewAndAuditRequests": "مراجعة وتعديل وتدقيق طلبات الاكتتاب الواردة",
+  "searchByNameOrId": "البحث عن طريق اسم العميل أو الرقم المعرف...",
+  "newInsuranceRequests": "طلبات تأمين جديدة",
+  "policyManagementSubtitle": "إدارة وثائق التأمين",
+  "offersManagementSubtitle": "إدارة العروض الترويجية",
+  "errorDuringUpdate": "خطأ أثناء التحديث: {error}",
+  "confirmDeletion": "تأكيد الحذف",
+  "confirmDeleteOffer": "هل أنت متأكد من رغبتك في حذف هذا العرض نهائياً؟",
+  "deleteOffer": "حذف العرض",
+  "errorDuringDeletion": "خطأ أثناء الحذف: {error}",
+  "editOfferData": "تعديل بيانات العرض",
+  "offerNameLabel": "اسم العرض الترويجي",
+  "premiumAmountLabel": "قيمة قسط الاشتراك (د.ج)",
+  "tabarruRateLabel": "نسبة التبرع المقترحة للمشترك",
+  "coverageLimitLabel": "حد التغطية المالية للتعويضات",
+  "donationFundRateLabel": "نسبة صندوق التبرع (٪)",
+  "surplusDistributionRateLabel": "نسبة الفائض الموزع (٪)",
+  "claimSettlementDurationLabel": "مدة تسوية المطالبات (بالأيام)",
+  "offerIconLabel": "رمز العرض الترويجي",
+  "shieldProtection": "درع الحماية (Shield)",
+  "verifiedCertified": "معتمد وموثق (Verified)",
+  "rafikAssistant": "الرفيق المساعد (Rafik)",
+  "recommendedBestValueOffer": "العرض الموصى به (أفضل قيمة للمشترك)",
+  "saveOfferData": "حفظ بيانات العرض الترويجي",
+  "errorDuringSave": "خطأ أثناء الحفظ: {error}",
+  "daysUnit": "{count} أيام",
+  "alIttihadInsuranceNotifications": "إشعارات الاتحاد للتأمين",
+  "markAllRead": "تحديد الكل",
+  "noNotificationsCurrently": "لا توجد إشعارات حالياً",
+  "timeNow": "الآن",
+  "timeMinutesAgo": "منذ {count} دقيقة",
+  "timeHoursAgo": "منذ {count} ساعة",
+  "timeDaysAgo": "منذ {count} يوم",
+  "checkEmailForConfirmation": "يرجى مراجعة البريد الإلكتروني لتأكيد الحساب.",
+  "myWallet": "محفظتي",
+  "accumulatedCommissionBalance": "الرصيد المتراكم من العمولات",
+  "requestProfitWithdrawal": "طلب سحب الأرباح",
+  "companyUnspecified": "شركة غير محددة",
+  "statusApprovedSale": "مقبول",
+  "statusPaidSale": "مدفوع",
+  "statusUnderReview": "قيد المراجعة",
+  "whyWeAreLegalTitle": "لماذا نحن قانونيون؟",
+  "order9507": "الأمر 95-07",
+  "order9507Desc": "القانون الأم للتأمين في الجزائر",
+  "financeMinistryDecision": "قرار وزارة المالية 2021",
+  "financeMinistryDecisionDesc": "يضبط عقود وتوزيع الفوائض",
+  "nationalShariaBody": "الهيئة الشرعية الوطنية",
+  "nationalShariaBodyDesc": "رقابة شرعية على كل عقد",
+  "takafulProtectionCoopTitle": "التكافل.. حماية بروح التعاون",
+  "takafulPhilosophyDesc": "نظام تأمين إسلامي يقوم على مبدأ التضامن — الجميع يشتركون في صندوق واحد لتعويض المتضررين. الشركة وكيل يدير الصندوق مقابل أجر معلوم، وليست مالكة لأموال المشتركين.",
+  "chipAgency": "الوكالة",
+  "chipShariaOversight": "الرقابة الشرعية",
+  "chipSubscribersFund": "صندوق المشتركين",
+  "chipSocialTakaful": "التكافل الاجتماعي",
+  "bestBadge": "⭐ أفضل",
+  "settlementDuration": "مدة التسوية",
+  "coverageLabel": "التغطية",
+  "premiumLabel": "القسط",
+  "bestValueLabel": "الأفضل قيمة",
+  "footerCopyright": "تأميني جزاد — جميع الحقوق محفوظة © 2026",
+  "legalSection": "القانوني",
+  "halalTakafulNotice": "تأمين تكافلي حلال 100% مطابق لأحكام الشريعة الإسلامية تحت إشراف الهيئة الشرعية الوطنية.",
+  "algeriaTakafulTitle": "جزائر تكافل",
+  "genericError": "خطأ: {error}",
+  "policyDocument": "وثيقة",
+  "operatorSystemUser": "مشغل النظام",
+  "clientLabel": "عميل",
+  "requestQuote": "طلب تسعيرة",
+  "requestInsurance": "طلب التأمين",
+  "requestClaim": "طلب التعويض لي",
+  "notifTitleQuote": "طلب تسعيرة جديد",
+  "notifBodyQuote": "قام العميل \"{clientName}\" بتقديم طلب تسعيرة لخطة \"{planName}\" في {operatorName}.",
+  "@notifBodyQuote": { "placeholders": { "clientName": {}, "planName": {}, "operatorName": {} } },
+  "notifTitleInsurance": "طلب تأمين جديد",
+  "notifBodyInsurance": "قام العميل \"{clientName}\" بتقديم طلب تأمين لخطة \"{planName}\" في {operatorName}.",
+  "@notifBodyInsurance": { "placeholders": { "clientName": {}, "planName": {}, "operatorName": {} } },
+  "notifTitleClaim": "طلب تعويض جديد",
+  "notifBodyClaim": "قام العميل \"{clientName}\" بتقديم طلب تعويض للبوليصة \"{planName}\" في {operatorName}.",
+  "@notifBodyClaim": { "placeholders": { "clientName": {}, "planName": {}, "operatorName": {} } },
+
+  "claimDetailTitle": "تفاصيل طلب التعويض",
+  "takafulPortal": "بوابة الجزائر للتكافل",
+  "ittihadPortal": "بوابة الاتحاد للتأمين",
+  "updateSuccess": "تم التحديث بنجاح",
+  "pleaseEnterExpertName": "الرجاء إدخال اسم الخبير",
+  "pleaseEnterValidAmount": "الرجاء إدخال مبلغ التعويض الصحيح",
+  "pleaseEnterRejectionReason": "الرجاء كتابة سبب الرفض",
+  "clientInfo": "معلومات العميل",
+  "defaultClientName": "العميل",
+  "requestTypeLabel": "نوع الطلب: {type}",
+  "submissionDate": "تاريخ التقديم:",
+  "incidentDate": "تاريخ الحادث:",
+  "incidentLocation": "مكان الحادث:",
+  "incidentDescription": "وصف الحادث",
+  "noDescription": "لا يوجد وصف",
+  "attachedDocumentsCount": "الوثائق المرفقة ({count})",
+  "claimProcessStages": "مراحل معالجة الملف",
+  "assignExpert": "تعيين الخبير",
+  "enterExpertNameHint": "أدخل اسم الخبير المعين",
+  "assignExpertAndStartInspection": "تعيين الخبير وبدء المعاينة",
+  "estimateDamageAmount": "تقدير مبلغ التعويض (دج)",
+  "enterEstimatedAmountHint": "أدخل المبلغ المقدر للأضرار",
+  "reviewNotes": "ملاحظات المراجعة",
+  "writeNotesHint": "اكتب ملاحظاتك حول الملف هنا...",
+  "claimAccepted": "تم قبول التعويض",
+  "approvedAmount": "المبلغ المعتمد",
+  "compensationAmount": "مبلغ التعويض:",
+  "notes": "ملاحظات:",
+  "claimRejected": "تم رفض التعويض",
+  "rejectionReason": "سبب الرفض",
+  "notesLabel": "الملاحظات:",
+  "rejectFile": "رفض الملف",
+  "acceptAndIssueRepairOrder": "قبول وإصدار أمر الإصلاح",
+  "acceptCompensation": "قبول التعويض",
+  "stageFileReceived": "استلام الملف",
+  "stageDocumentsReceived": "تم استلام المستندات",
+  "stageAssignExpert": "تعيين خبير",
+  "stageDamageInspection": "خبير معاينة الأضرار",
+  "stageRepairOrder": "أمر الإصلاح",
+  "stageRepairDirect": "التعويض والإصلاح المباشر",
+  "statusPendingLabel": "قيد الانتظار",
+  "statusUnderReview": "قيد المعاينة",
+  "statusAcceptedLabel": "مقبول",
+  "statusRejectedLabel": "مرفوض",
+  "docDrivingLicense": "رخصة السياقة",
+  "docGreyCard": "البطاقة الرمادية",
+  "docFriendlyInspection": "المعاينة الودية",
+  "docRcCard": "بطاقة RC",
+  "docCarPhoto": "صورة السيارة {number}",
+  "docDamagePhoto": "صورة الضرر {number}",
+
+  "claimTypeAccident": "حادث مرور",
+  "claimTypeGeneral": "طلب عام",
+  "claimTypeTheft": "سرقة",
+  "claimTypeFire": "حريق",
+  "requestInfo": "معلومات الطلب",
+  "assignedExpert": "الخبير المعين",
+  "approvedCompensationAmount": "مبلغ التعويض المعتمد",
+  "inProgress": "جارٍ",
+  "compensationAmountDzd": "{amount} دج",
+
+  "subscriberInfoFromRegistration": "معلومات المشترك (من التسجيل الأصلي)",
+  "systemRegisteredData": "البيانات المسجلة في النظام",
+  "takafulPlanDetails": "تفاصيل الخطة التكافلية",
+  "unspecifiedPlan": "خطة غير محددة",
+  "coverageAndAmount": "مواصفات التغطية والمبلغ",
+  "premiumColon": "القسط:",
+  "submissionDateColon": "تاريخ التقديم:",
+  "attachedDocumentsAndFiles": "الوثائق والملفات المرفقة",
+  "noDocsAttached": "لا توجد وثائق مرفقة.",
+  "docLabel": "مستند",
+  "previewFile": "معاينة الملف",
+  "finalPolicyDocument": "وثيقة التأمين النهائية",
+  "clickToUploadPolicy": "اضغط لرفع وثيقة التأمين (PDF)",
+  "finalQuoteLabel": "التسعيرة النهائية (دج):",
+  "enterFinalQuoteHint": "أدخل المبلغ النهائي للتسعيرة",
+  "reviewAndDecisionNotes": "ملاحظات المراجعة والقرار:",
+  "writeAcceptRejectNotes": "اكتب سبب القبول أو الرفض أو طلب التعديل هنا...",
+  "rejectBtn": "رفض",
+  "modificationBtn": "طلب تعديل",
+  "acceptBtn": "قبول الطلب",
+  "issuePolicyBtn": "إصدار البوليصة",
+  "pleaseWriteNotesFirst": "الرجاء كتابة الملاحظات قبل الرفض أو التعديل",
+  "pleaseEnterValidQuote": "الرجاء إدخال تسعيرة صحيحة قبل القبول",
+  "pleaseUploadFinalPolicy": "الرجاء رفع وثيقة التأمين النهائية",
+  "insurancePortalTitle": "طلبات وثائق التأمين",
+  "insurancePortalSubtitle": "مراجعة وتعديل وتدقيق طلبات الاكتتاب الواردة",
+  "searchByNameOrIdHint": "البحث عن طريق اسم العميل أو الرقم المعرف...",
+  "newInsuranceRequestsFilter": "طلبات تأمين جديدة",
+  "dataLoadingError": "خطأ في تحميل البيانات: {error}",
+  "amountDzd": "{amount} دج",
+  "requestTypeQuote": "طلب تسعيرة",
+  "requestTypeInsurance": "طلب تأمين",
+  "statusIssued": "بوليصة مُصدرة",
+  "accumulatedCommissions": "الرصيد المتراكم من العمولات",
+  "requestWithdrawal": "طلب سحب الأرباح",
+  "withdrawalAmount": "مبلغ السحب (دج)",
+  "ccpAccountNumber": "رقم حساب CCP",
+  "withdrawalRequestSent": "تم إرسال طلب السحب بنجاح!",
+  "offerRefusedSuccess": "تم رفض العرض بنجاح",
+  "insufficientBalance": "رصيد غير كافٍ لهذا السحب",
+  "operatorTakafulTitle": "الجزائر للتكافل (Algerie Takaful)",
+  "operatorTakafulSubtitle": "حلول تأمين تكافلية مطابقة تماماً لأحكام الشريعة",
+  "operatorIttihadTitle": "الجزائر المتحدة (Al-Ittihad)",
+  "operatorIttihadSubtitle": "باقات حماية عصرية بأسعار تنافسية ورؤية حديثة",
+  "salesTable": "جدول المبيعات",
+  "dahabiaCard": "بطاقة الذهبية",
+  "bankTransfer": "تحويل بنكي",
+  "oneYear": "سنة واحدة",
+  "servicesOffered": "الخدمات المقدمة",
+  "towingService": "خدمة القطر",
+  "partnerDiscount": "خصم الشريك",
+  "discountPercentage": "خصم {percent}٪ لأعضاء تأميني",
+  "@discountPercentage": { "placeholders": { "percent": { "type": "String" } } },
+  "phoneNumber": "رقم الهاتف",
+  "province": "الولاية",
+  "specialty": "التخصص",
+  "distance": "المسافة",
+  "couldNotOpenFile": "تعذر فتح هذا الملف",
+  "statusUpdatedSuccess": "تم تحديث حالة الطلب بنجاح",
+  "zoomReceipt": "تكبير الإيصال",
+  "adminActions": "إجراءات الإدارة",
+  "addNoteHint": "أضف ملاحظة للمستخدم (سبب الرفض أو المستندات الناقصة)...",
+  "rejectPermanently": "رفض الطلب نهائياً",
+  "requestsToday": "طلبات اليوم",
+  "totalPoliciesCount": "إجمالي الوثائق: {count}",
+  "appBrandName": "تأميني إيليت",
+  "platformCommission": "عمولة المنصة (4.5% من العميل)",
+  "adminShareLabel": "الإدارة: {amount} {currency}",
+  "operatorsShareLabel": "المشغلون: {amount} {currency}",
+  "newClientsCount": "عملاء جدد: {count} (100% للإدارة)",
+  "returningClientsCount": "عائدون: {count} (50/50)",
+  "fromClientRate": "{rate}% من العميل",
+  "newFullAdmin": "جديد: 100% للإدارة | قديم: 50/50",
+  "requestsAndNin": "الطلبات ورقم التعريف (عمولة الإدارة)",
+  "returningClient": "عميل عائد (50/50)",
+  "newClient": "عميل جديد (100% للإدارة)",
+  "sinceLastMonth": "+12% من الشهر الماضي",
+  "atAiShare": "AT/AI: {amount} {currency}",
+  "auditSubtitle": "سجل العمليات بالتاريخ والوقت (ثواني) • مرتبط ببوابة الدفع",
+  "clear": "مسح",
+  "allTypes": "جميع الأنواع",
+  "payments": "المدفوعات",
+  "allPortals": "جميع البوابات",
+  "operatorLabel": "المشغل (AT/AI)",
+  "alerts": "التنبيهات",
+  "trackContractExpiry": "متابعة تواريخ انتهاء عقودك",
+  "activeAlertCount": "({count}) تنبيه نشط",
+  "allMyContracts": "جميع عقودي",
+  "generalNotifications": "الإشعارات العامة",
+  "markAllAsRead": "تحديد الكل كمقروء",
+  "noAlertsCurrently": "لا توجد تنبيهات حالياً",
+  "enablePushNotifications": "تفعيل الإشعارات الفورية",
+  "autoAlertBefore15Days": "تنبيه تلقائي قبل 15 يوم من الانتهاء",
+  "enable": "تفعيل",
+  "urgentAlert": "تنبيه عاجل",
+  "daysRemaining": "{days} يوم متبقٍ",
+  "contractExpiresIn15Days": "ينتهي عقدك التأميني خلال 15 يوماً",
+  "expiryDateLabel": "تاريخ الانتهاء: {date}",
+  "expired": "منتهي",
+  "daysUnit": "{days} يوم",
+  "algerTakaful": "جزائر تكافل",
+  "alIttihad": "المتحدة",
+  "maxImageSize5mb": "الحجم الأقصى للصورة: 5 ميجابايت",
+  "imageSizeExceeds5mb": "حجم الصورة يتجاوز الحد الأقصى المسموح به وهو 5 ميجابايت",
+  "manualPaymentProof": "إثبات الدفع اليدوي",
+  "uploadReceiptInstruction": "إذا دفعت عبر تحويل بنكي أو CCP، يرجى تحميل صورة الإيصال هنا.",
+  "uploadReceiptPhoto": "تحميل صورة الإيصال",
+  "changePhoto": "تغيير الصورة",
+  "processingPayment": "جاري المعالجة...",
+  "confirmDeletion": "تأكيد الحذف",
+  "deleteOfferConfirm": "هل أنت متأكد من رغبتك في حذف هذا العرض نهائياً؟",
+  "deleteOffer": "حذف العرض",
+  "offerDeleted": "تم حذف العرض بنجاح",
+  "errorDuringDeletion": "خطأ أثناء الحذف: {error}",
+  "bestValueSet": "تم تحديد العرض كأفضل قيمة",
+  "bestValueUnset": "تم إلغاء تحديد أفضل قيمة",
+  "errorDuringUpdate": "خطأ أثناء التحديث: {error}",
+  "addNewOffer": "إضافة عرض ترويجي جديد",
+  "editOfferData": "تعديل بيانات العرض",
+  "offerName": "اسم العرض الترويجي",
+  "premiumAmount": "قيمة قسط الاشتراك (د.ج)",
+  "suggestedTabarruRate": "نسبة التبرع المقترحة للمشترك",
+  "coverageLimit": "حد التغطية المالية للتعويضات",
+  "donationFundRate": "نسبة صندوق التبرع (٪)",
+  "surplusDistributionRate": "نسبة الفائض الموزع (٪)",
+  "claimsDurationDays": "مدة تسوية المطالبات (بالأيام)",
+  "offerIcon": "رمز العرض الترويجي",
+  "shieldProtection": "درع الحماية",
+  "certifiedVerified": "معتمد وموثق",
+  "rafiqAssistant": "الرفيق المساعد",
+  "recommendedBestValue": "العرض الموصى به (أفضل قيمة للمشترك)",
+  "saveOfferData": "حفظ بيانات العرض الترويجي",
+  "offerSaved": "تم حفظ العرض الترويجي بنجاح",
+  "errorDuringSave": "خطأ أثناء الحفظ: {error}",
+  "fieldRequired": "هذا الحقل مطلوب",
+  "claimsDurationLabel": "مدة التسوية",
+  "bestValue": "الأفضل قيمة",
+  "errorGeneric": "خطأ: {error}",
+  "errorOpeningFile": "خطأ في فتح الملف: {error}",
+  "aiPortalTitle": "الاتحاد الجزائري",
+  "aiOffersSubtitle": "إدارة العروض الترويجية",
+  "atPortalTitle": "الجزائر للتكافل",
+  "systemOperator": "مشغل النظام",
+  "checkEmailConfirm": "يرجى مراجعة البريد الإلكتروني لتأكيد الحساب.",
+  "goToLogin": "الانتقال إلى تسجيل الدخول",
+  "appDiscountLabel": "خصم {percent}% لمشتركي التطبيق",
+  "takafulPlan": "باقة تكافلية",
+  "whyLegal": "لماذا نحن قانونيون؟",
+  "order9507": "الأمر 95-07",
+  "order9507Desc": "القانون الأم للتأمين في الجزائر",
+  "decree2181": "المرسوم 21-81",
+  "decree2181Desc": "دستور التكافل، الفصل المالي ونافذة التكافل",
+  "financeMinistry2021": "قرار وزارة المالية 2021",
+  "financeMinistry2021Desc": "يضبط عقود وتوزيع الفوائض",
+  "nationalShariahBody": "الهيئة الشرعية الوطنية",
+  "nationalShariahBodyDesc": "رقابة شرعية على كل عقد",
+  "takafulPhilosophy": "التكافل.. حماية بروح التعاون",
+  "takafulDescription": "نظام تأمين إسلامي يقوم على مبدأ التضامن — الجميع يشتركون في صندوق واحد لتعويض المتضررين. الشركة وكيل يدير الصندوق مقابل أجر معلوم، وليست مالكة لأموال المشتركين.",
+  "chipAgency": "الوكالة",
+  "chipShariahOversight": "الرقابة الشرعية",
+  "chipSubscribersFund": "صندوق المشتركين",
+  "chipSocialTakaful": "التكافل الاجتماعي",
+  "accountCreatedSuccess": "تم إنشاء الحساب بنجاح!"
 }

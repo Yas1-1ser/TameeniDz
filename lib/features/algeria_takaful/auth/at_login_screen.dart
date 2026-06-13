@@ -1,12 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:go_router/go_router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import '../../../core/constants/app_colors.dart';
-import '../../../core/theme/app_colors_extension.dart';
-import '../../../generated/l10n/app_localizations.dart';
+import 'package:tameenidz/core/theme/app_colors.dart';
+import 'package:tameenidz/core/theme/app_colors_extension.dart';
+import 'package:tameenidz/features/shared/widgets/page_entry_animation.dart';
+import 'package:tameenidz/features/splash/widgets/floating_particles.dart';
+import 'package:tameenidz/core/utils/auth_exception_handler.dart';
+import 'package:tameenidz/generated/l10n/app_localizations.dart';
+import 'package:tameenidz/features/shared/widgets/language_picker_button.dart';
+import 'package:tameenidz/core/services/auth_service.dart';
+import 'package:tameenidz/core/constants/role_constants.dart';
+import 'package:tameenidz/core/router/app_routes.dart';
 
 class AtLoginScreen extends StatefulWidget {
   const AtLoginScreen({super.key});
+
   @override
   State<AtLoginScreen> createState() => _AtLoginScreenState();
 }
@@ -15,9 +24,12 @@ class _AtLoginScreenState extends State<AtLoginScreen> {
   final _formKey = GlobalKey<FormState>();
   final _emailCtrl = TextEditingController();
   final _pwCtrl = TextEditingController();
-  bool _obscure = true;
+
+  bool _obscurePw = true;
   bool _loading = false;
   String? _error;
+
+  static const _accent = AppColors.primaryGreen;
 
   @override
   void dispose() {
@@ -25,6 +37,8 @@ class _AtLoginScreenState extends State<AtLoginScreen> {
     _pwCtrl.dispose();
     super.dispose();
   }
+
+  // Removed local _translate method
 
   Future<void> _login() async {
     if (!_formKey.currentState!.validate()) return;
@@ -42,310 +56,457 @@ class _AtLoginScreenState extends State<AtLoginScreen> {
       final company = res.user?.userMetadata?['company'] as String?;
       if (company != 'algeria_takaful') {
         await Supabase.instance.client.auth.signOut();
-        setState(
-          () =>
-              _error = AppLocalizations.of(context)!.wrongCompanyError(
-                AppLocalizations.of(context)!.algeriaTakaful,
-              ),
-        );
+        if (mounted) {
+          final locale = Localizations.localeOf(context).languageCode;
+          setState(() => _error = AuthExceptionHandler.translateCode('company_mismatch_takaful', locale));
+        }
         return;
       }
 
-      if (mounted) context.go('/at/dashboard');
+      AuthService.instance.applyOperatorSession(RoleConstants.companyTakaful);
+      await AuthService.instance.refreshRoleFromSession();
+      if (mounted) context.go(AppRoutes.atDashboard);
     } on AuthException catch (e) {
-      setState(() => _error = _translate(e.message));
-    } catch (_) {
-      setState(() => _error = AppLocalizations.of(context)!.unexpectedError);
+      if (mounted) {
+        final locale = Localizations.localeOf(context).languageCode;
+        setState(() => _error = AuthExceptionHandler.translate(e, locale));
+      }
+    } catch (e) {
+      if (mounted) {
+        final locale = Localizations.localeOf(context).languageCode;
+        setState(() => _error = AuthExceptionHandler.translateCode('auth_unexpected_error', locale));
+      }
     } finally {
       if (mounted) setState(() => _loading = false);
     }
   }
 
-  String _translate(String msg) {
-    if (msg.contains('Invalid login')) {
-      return AppLocalizations.of(context)!.wrongPassword;
-    }
-    if (msg.contains('Email not confirmed')) {
-      return AppLocalizations.of(
-        context,
-      )!.codeExpired; // Use more appropriate key if available
-    }
-    if (msg.contains('Too many')) {
-      return AppLocalizations.of(context)!.tooManyRequests;
-    }
-    return msg;
-  }
-
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final isRtl = Directionality.of(context) == TextDirection.rtl;
+
     return Scaffold(
-      backgroundColor: context.colors.background,
+      backgroundColor: context.colors.beigeBg,
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back_rounded, color: context.colors.onSurface, size: 24),
+          icon: Container(
+            width: 36,
+            height: 36,
+            decoration: BoxDecoration(
+              color: context.colors.surface.withValues(alpha: 0.85),
+              shape: BoxShape.circle,
+              border: Border.all(
+                color: AppColors.goldAccent.withValues(alpha: 0.30),
+              ),
+            ),
+            child: Icon(
+              isRtl ? Icons.arrow_forward_ios_rounded : Icons.arrow_back_ios_new_rounded,
+              color: _accent,
+              size: 16,
+            ),
+          ),
           onPressed: () => context.go('/role/operator'),
         ),
+        actions: const [
+          LanguagePickerButton(),
+          SizedBox(width: 16),
+        ],
       ),
-      extendBodyBehindAppBar: true,
-      body: SafeArea(
-        child: Column(
+      body: PageEntryAnimation(
+        child: Stack(
           children: [
-            // ── Company header bar ─────────────────────────────────
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.symmetric(vertical: 16),
-              color: AppColors.primaryContainer,
-              child: Text(
-                l10n.algeriaTakaful,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.onPrimaryContainer,
+            // ── Radial gradient background ──
+            Positioned.fill(
+              child: Container(
+                decoration: const BoxDecoration(
+                  gradient: RadialGradient(
+                    center: Alignment(0.0, -0.3),
+                    radius: 1.2,
+                    colors: [
+                      Color(0xFFFFFDF9),
+                      Color(0xFFF9F6F0),
+                      Color(0xFFF2ECE0),
+                    ],
+                  ),
                 ),
               ),
             ),
-
-            Expanded(
+            // ── Floating gold particles ──
+            const Positioned.fill(
+              child: FloatingParticles(count: 10, color: AppColors.goldAccent),
+            ),
+            SafeArea(
               child: Center(
                 child: SingleChildScrollView(
-                  padding: const EdgeInsets.all(28),
-                  child: Form(
-                    key: _formKey,
-                    child: Container(
-                      padding: const EdgeInsets.all(28),
-                      decoration: BoxDecoration(
-                        color: context.colors.surfaceContainerLowest,
-                        borderRadius: BorderRadius.circular(20),
-                        border: Border.all(color: AppColors.outlineVariant),
-                        boxShadow: [
-                          BoxShadow(
-                            color: AppColors.primaryGreen.withValues(
-                              alpha: 0.05,
-                            ),
-                            blurRadius: 20,
-                            offset: const Offset(0, 8),
-                          ),
-                        ],
-                      ),
-                      child: Column(
-                        children: [
-                          // Icon
-                          Container(
-                            width: 64,
-                            height: 64,
-                            decoration: BoxDecoration(
-                              color: AppColors.primaryContainer,
-                              shape: BoxShape.circle,
-                            ),
-                            child: Icon(
-                              Icons.admin_panel_settings_outlined,
-                              color: AppColors.primaryGreen,
-                              size: 32,
-                            ),
-                          ),
-                          const SizedBox(height: 16),
-                          Text(
-                            '${l10n.employeePortalSubtitle} — ${l10n.algeriaTakaful}',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              color: context.colors.onSurface,
-                            ),
-                          ),
-                          const SizedBox(height: 6),
-                          Text(
-                            l10n.loginToSystemPrompt,
-                            style: TextStyle(
-                              fontSize: 13,
-                              color: context.colors.onSurfaceVariant,
-                            ),
-                          ),
-                          const SizedBox(height: 28),
-
-                          // ── Error ───────────────────────────────
-                          if (_error != null) ...[
-                            Container(
-                              width: double.infinity,
-                              padding: const EdgeInsets.all(12),
-                              margin: const EdgeInsets.only(bottom: 16),
-                              decoration: BoxDecoration(
-                                color: AppColors.rejected.withValues(
-                                  alpha: 0.08,
-                                ),
-                                borderRadius: BorderRadius.circular(8),
-                                border: Border.all(
-                                  color: AppColors.rejected.withValues(
-                                    alpha: 0.3,
-                                  ),
-                                ),
-                              ),
-                              child: Text(
-                                _error!,
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  fontSize: 13,
-                                  color: AppColors.rejected,
-                                ),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 28,
+                    vertical: 16,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      const SizedBox(height: 24),
+                      _buildLogoCenterpiece(l10n),
+                      const SizedBox(height: 28),
+                      if (_error != null) ...[
+                        _buildErrorBanner(_error!),
+                        const SizedBox(height: 16),
+                      ],
+                      _buildFormCard(l10n),
+                      const SizedBox(height: 24),
+                      _buildSubmitButton(l10n),
+                      const SizedBox(height: 16),
+                      Align(
+                        alignment: AlignmentDirectional.centerStart,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 24),
+                          child: TextButton(
+                            onPressed: () {},
+                            child: Text(
+                              l10n.forgotPassword,
+                              style: const TextStyle(
+                                color: _accent,
+                                fontWeight: FontWeight.w600,
+                                fontFamily: 'Cairo',
+                                fontSize: 13,
                               ),
                             ),
-                          ],
-
-                          // ── Email ───────────────────────────────
-                          TextFormField(
-                            controller: _emailCtrl,
-                            keyboardType: TextInputType.emailAddress,
-                            textDirection: TextDirection.ltr,
-                            decoration: InputDecoration(
-                              labelText: l10n.emailLabel,
-                              prefixIcon: const Icon(Icons.email_outlined),
-                              hintText: 'employee@algeriatakaful.dz',
-                            ),
-                            validator: (v) {
-                              if (v == null || v.isEmpty) {
-                                return l10n.emailRequired;
-                              }
-                              if (!v.contains('@')) {
-                                return l10n.invalidEmailError;
-                              }
-                              return null;
-                            },
                           ),
-                          const SizedBox(height: 16),
-
-                          // ── Password ────────────────────────────
-                          TextFormField(
-                            controller: _pwCtrl,
-                            obscureText: _obscure,
-                            decoration: InputDecoration(
-                              labelText: l10n.password,
-                              prefixIcon: const Icon(Icons.lock_outlined),
-                              suffixIcon: IconButton(
-                                icon: Icon(
-                                  _obscure
-                                      ? Icons.visibility_off_outlined
-                                      : Icons.visibility_outlined,
-                                ),
-                                onPressed:
-                                    () => setState(() => _obscure = !_obscure),
-                              ),
-                            ),
-                            validator: (v) {
-                              if (v == null || v.isEmpty) {
-                                return l10n.passwordRequired;
-                              }
-                              if (v.length < 6) {
-                                return l10n.passwordTooShortError;
-                              }
-                              return null;
-                            },
-                          ),
-                          const SizedBox(height: 24),
-
-                          // ── Login button ────────────────────────
-                          SizedBox(
-                            width: double.infinity,
-                            child: ElevatedButton(
-                              onPressed: _loading ? null : _login,
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: AppColors.primaryGreen,
-                                minimumSize: const Size.fromHeight(52),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                              ),
-                              child:
-                                  _loading
-                                      ? const CircularProgressIndicator(
-                                        color: Colors.white,
-                                        strokeWidth: 2,
-                                      )
-                                      : Text(
-                                        l10n.loginAction,
-                                        style: const TextStyle(
-                                          fontSize: 16,
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                            ),
-                          ),
-                          const SizedBox(height: 16),
-
-                          // ── Register link ────────────────────────
-                          Wrap(
-                            alignment: WrapAlignment.center,
-                            crossAxisAlignment: WrapCrossAlignment.center,
-                            children: [
-                              TextButton(
-                                onPressed: () => context.go('/at/register'),
-                                child: Text(
-                                  l10n.createEmployeeAccount,
-                                  style: TextStyle(
-                                    color: AppColors.primaryGreen,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                              ),
-                              Text(
-                                l10n.newEmployeeQuestion,
-                                style: TextStyle(
-                                  fontSize: 13,
-                                  color: context.colors.slate500,
-                                ),
-                              ),
-                            ],
-                          ),
-
-                          const SizedBox(height: 8),
-                          // ── Isolation note ──────────────────────
-                          Container(
-                            padding: const EdgeInsets.all(12),
-                            decoration: BoxDecoration(
-                              color: AppColors.primaryGreen.withValues(
-                                alpha: 0.04,
-                              ),
-                              borderRadius: BorderRadius.circular(10),
-                              border: Border.all(
-                                color: AppColors.primaryGreen.withValues(
-                                  alpha: 0.15,
-                                ),
-                              ),
-                            ),
-                            child: Row(
-                              children: [
-                                Icon(
-                                  Icons.info_outline,
-                                  size: 16,
-                                  color: AppColors.primaryGreen,
-                                ),
-                                SizedBox(width: 8),
-                                Expanded(
-                                  child: Text(
-                                    l10n.exclusivePortalNote(
-                                      l10n.algeriaTakaful,
-                                    ),
-                                    style: TextStyle(
-                                      fontSize: 11,
-                                      color: AppColors.primaryGreen,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
+                        ),
+                      ).animate().fadeIn(delay: 700.ms),
+                      const SizedBox(height: 24),
+                    ],
                   ),
                 ),
               ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+
+  // ── Logo Centerpiece ──
+  Widget _buildLogoCenterpiece(AppLocalizations l10n) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Container(
+          width: 110,
+          height: 110,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(20),
+            color: Colors.transparent,
+            boxShadow: [
+              BoxShadow(
+                color: _accent.withValues(alpha: 0.16),
+                blurRadius: 20,
+                offset: const Offset(0, 6),
+              ),
+            ],
+          ),
+          child: Image.asset(
+            'assets/images/logotameen.jpg',
+            fit: BoxFit.contain,
+            errorBuilder: (_, __, ___) => Icon(Icons.shield_rounded, size: 80, color: _accent),
+          ),
+        )
+            .animate()
+            .scale(
+              begin: const Offset(0.8, 0.8),
+              duration: 700.ms,
+              curve: Curves.easeOutBack,
+            )
+            .fadeIn(duration: 500.ms),
+        const SizedBox(height: 16),
+        Text(
+          l10n.algeriaTakaful,
+          style: const TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+            color: _accent,
+            fontFamily: 'Cairo',
+            letterSpacing: 1.2,
+          ),
+        ).animate().fadeIn(delay: 300.ms).slideY(begin: 0.2, end: 0),
+        const SizedBox(height: 4),
+        Text(
+          l10n.operatorPortalTitle,
+          style: const TextStyle(
+            fontSize: 14,
+            color: AppColors.midBrown,
+            fontFamily: 'Cairo',
+          ),
+        ).animate().fadeIn(delay: 350.ms),
+        const SizedBox(height: 10),
+        Container(
+          width: 32,
+          height: 2,
+          color: AppColors.goldAccent,
+        ).animate().fadeIn(delay: 400.ms).scaleX(begin: 0, end: 1),
+      ],
+    );
+  }
+
+  // ── Error Banner ──
+  Widget _buildErrorBanner(String message) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      margin: const EdgeInsets.symmetric(horizontal: 24),
+      decoration: BoxDecoration(
+        color: AppColors.error.withValues(alpha: 0.06),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: AppColors.error.withValues(alpha: 0.25)),
+      ),
+      child: Row(
+        children: [
+          const Icon(Icons.error_outline, color: AppColors.error, size: 18),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Text(
+              message,
+              style: TextStyle(
+                color: AppColors.error,
+                fontSize: 13,
+                fontFamily: 'Cairo',
+              ),
+            ),
+          ),
+        ],
+      ),
+    ).animate().shake(duration: 400.ms);
+  }
+
+  // ── Form Card ──
+  Widget _buildFormCard(AppLocalizations l10n) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 24),
+      child: Container(
+        decoration: BoxDecoration(
+          color: context.colors.beigeCard,
+          borderRadius: BorderRadius.circular(24),
+          border: Border.all(
+            color: AppColors.goldAccent.withValues(alpha: 0.25),
+            width: 1.5,
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.06),
+              blurRadius: 20,
+              offset: const Offset(0, 8),
+            ),
+          ],
+        ),
+        clipBehavior: Clip.antiAlias,
+        child: Padding(
+          padding: const EdgeInsets.all(28),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Center(
+                  child: Text(
+                    l10n.login,
+                    style: const TextStyle(
+                      fontSize: 22,
+                      fontWeight: FontWeight.w800,
+                      color: _accent,
+                      fontFamily: 'Cairo',
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Center(
+                  child: Text(
+                    l10n.algeriaTakaful,
+                    style: const TextStyle(
+                      fontSize: 14,
+                      color: AppColors.midBrown,
+                      fontFamily: 'Cairo',
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 24),
+                // ── Email field ──
+                _PremiumFieldLabel(label: l10n.email),
+                const SizedBox(height: 8),
+                Directionality(
+                  textDirection: TextDirection.ltr,
+                  child: TextFormField(
+                    controller: _emailCtrl,
+                    keyboardType: TextInputType.emailAddress,
+                    style: const TextStyle(fontSize: 14),
+                    decoration: _inputDecoration(
+                      hint: 'example@email.com',
+                      icon: Icons.email_outlined,
+                    ),
+                    validator: (v) =>
+                        v!.isEmpty ? l10n.emailRequired : null,
+                  ),
+                ),
+                const SizedBox(height: 16),
+                // ── Password field ──
+                _PremiumFieldLabel(label: l10n.password),
+                const SizedBox(height: 8),
+                Directionality(
+                  textDirection: TextDirection.ltr,
+                  child: TextFormField(
+                    controller: _pwCtrl,
+                    obscureText: _obscurePw,
+                    style: const TextStyle(fontSize: 14),
+                    decoration: _inputDecoration(
+                      hint: '••••••••',
+                      icon: Icons.lock_outline,
+                    ).copyWith(
+                      suffixIcon: IconButton(
+                        icon: Icon(
+                          _obscurePw
+                              ? Icons.visibility_off_outlined
+                              : Icons.visibility_outlined,
+                          color: AppColors.goldAccent.withValues(alpha: 0.7),
+                          size: 20,
+                        ),
+                        onPressed: () =>
+                            setState(() => _obscurePw = !_obscurePw),
+                      ),
+                    ),
+                    validator: (v) =>
+                        v!.isEmpty ? l10n.passwordRequired : null,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    )
+        .animate()
+        .fadeIn(delay: 200.ms, duration: 400.ms)
+        .slideY(begin: 0.08, end: 0, curve: Curves.easeOutCubic);
+  }
+
+  // ── Submit Button ──
+  Widget _buildSubmitButton(AppLocalizations l10n) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 24),
+      child: SizedBox(
+        height: 56,
+        width: double.infinity,
+        child: GestureDetector(
+          onTap: _loading ? null : _login,
+          child: DecoratedBox(
+            decoration: BoxDecoration(
+              gradient: const LinearGradient(
+                colors: [_accent, Color(0xFF247E53)],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+              borderRadius: BorderRadius.circular(40),
+              border: Border.all(
+                color: AppColors.goldAccent.withValues(alpha: 0.45),
+                width: 1.5,
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: _accent.withValues(alpha: 0.35),
+                  blurRadius: 20,
+                  offset: const Offset(0, 8),
+                ),
+              ],
+            ),
+            child: Center(
+              child: _loading
+                  ? SizedBox(
+                      width: 24,
+                      height: 24,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2.5,
+                        color: context.colors.surface,
+                      ),
+                    )
+                  : Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Icon(Icons.login_rounded, size: 18, color: Colors.white),
+                        SizedBox(width: 8),
+                        Text(
+                          l10n.login,
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: context.colors.surface,
+                            fontFamily: 'Cairo',
+                          ),
+                        ),
+                      ],
+                    ),
+            ),
+          ),
+        ),
+      ),
+    )
+        .animate()
+        .fadeIn(delay: 600.ms)
+        .slideY(begin: 0.2, end: 0, curve: Curves.easeOutBack)
+        .shimmer(delay: 1400.ms, duration: 1800.ms);
+  }
+
+  // ── Shared input decoration ──
+  InputDecoration _inputDecoration({
+    required String hint,
+    required IconData icon,
+  }) {
+    return InputDecoration(
+      hintText: hint,
+      filled: true,
+      fillColor: context.colors.beigeCard,
+      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+      prefixIcon: Icon(icon, color: AppColors.goldAccent, size: 20),
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(14),
+        borderSide: BorderSide(color: context.colors.warmDivider),
+      ),
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(14),
+        borderSide: BorderSide(color: context.colors.warmDivider),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(14),
+        borderSide: const BorderSide(color: _accent, width: 1.5),
+      ),
+      errorBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(14),
+        borderSide: const BorderSide(color: AppColors.error),
+      ),
+      focusedErrorBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(14),
+        borderSide: const BorderSide(color: AppColors.error, width: 1.5),
+      ),
+    );
+  }
+}
+
+class _PremiumFieldLabel extends StatelessWidget {
+  const _PremiumFieldLabel({required this.label});
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
+    return Align(
+      alignment: AlignmentDirectional.centerStart,
+      child: Text(
+        label,
+        style: TextStyle(
+          fontSize: 13,
+          fontWeight: FontWeight.w600,
+          color: context.colors.darkText,
+          fontFamily: 'Cairo',
         ),
       ),
     );

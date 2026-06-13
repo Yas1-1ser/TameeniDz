@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:tameenidz/core/theme/app_colors_extension.dart';
-import 'package:tameenidz/generated/l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
-import 'package:tameenidz/shared/widgets/responsive_layout.dart';
-import '../../../shared/widgets/portal_layout.dart';
-import '../../../core/constants/app_colors.dart';
+import 'package:tameenidz/generated/l10n/app_localizations.dart';
+import 'package:tameenidz/features/admin/widgets/admin_shared_widgets.dart';
+import 'package:tameenidz/features/shared/widgets/responsive_layout.dart';
 import '../dashboard/admin_providers.dart';
+import 'package:tameenidz/core/utils/commission_utils.dart';
+import 'package:tameenidz/features/shared/domain/models/policy_model.dart';
 
 class CommissionMonitorScreen extends ConsumerStatefulWidget {
   const CommissionMonitorScreen({super.key});
@@ -19,150 +19,47 @@ class CommissionMonitorScreen extends ConsumerStatefulWidget {
 
 class _CommissionMonitorScreenState
     extends ConsumerState<CommissionMonitorScreen> {
-  static const int _navIdx = 1; // Commission is index 1
-
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final policiesAsync = ref.watch(allPoliciesStreamProvider);
-    final colors = context.colors;
     final isMobile = ResponsiveLayout.isMobile(context);
 
-    final menuItems = [
-      (Icons.dashboard_rounded, l10n.dashboard, '/admin/dashboard'),
-      (Icons.auto_graph_rounded, l10n.commissionsAdmin, '/admin/commission'),
-      (Icons.history_edu_rounded, l10n.legalRecord, '/admin/audit'),
-      (Icons.manage_accounts_rounded, l10n.userManagement, '/admin/users'),
-      (Icons.settings_rounded, l10n.settingsAdmin, '/admin/settings'),
-    ];
+    return Scaffold(
+      backgroundColor: const Color(0xFFF5F0E8),
+      appBar: buildAdminAppBar(context, l10n.commissionMonitoring),
+      bottomNavigationBar: adminBottomNav(context, 1, l10n),
+      body: policiesAsync.when(
+        data: (policies) {
+          final summary = ref.watch(commissionSummaryProvider(policies));
+          final Map<String, double> companyPremiums = {
+            'الجزائر للتكافل': 0.0,
+            'الاتحاد': 0.0,
+          };
+          for (final p in policies) {
+            final name = p.displayCompanyName;
+            companyPremiums[name] = (companyPremiums[name] ?? 0) + p.amount;
+          }
 
-    // Build the bottom navigation bar for mobile
-    final bottomNavBar = BottomNavigationBar(
-      currentIndex: _navIdx,
-      onTap: (idx) {
-        final targetIdx = idx == 3 ? 4 : idx;
-        context.go(menuItems[targetIdx].$3);
-      },
-      selectedItemColor: colors.primary,
-      unselectedItemColor: colors.onSurfaceVariant,
-      showUnselectedLabels: true,
-      type: BottomNavigationBarType.fixed,
-      items: [
-        BottomNavigationBarItem(
-          icon: Icon(menuItems[0].$1),
-          label: menuItems[0].$2,
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(menuItems[1].$1),
-          label: menuItems[1].$2,
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(menuItems[2].$1),
-          label: menuItems[2].$2,
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(menuItems[4].$1),
-          label: menuItems[4].$2,
-        ), // Settings
-      ],
-    );
-
-    return PortalLayout(
-      selectedIndex: _navIdx,
-      menuItems: menuItems,
-      portalTitle: isMobile ? l10n.commissionMonitoring : l10n.adminPortal,
-      portalSubtitle: l10n.shariaInsurance,
-      accentColor: colors.primary,
-      showBackButton: true,
-      fallbackRoute: '/admin/dashboard',
-      topHeader: l10n.masterConsole,
-      appBarColor: isMobile ? const Color(0xFF1E3A34) : null,
-      appBarTextColor: isMobile ? Colors.white : null,
-      bottomNavigationBar: isMobile ? bottomNavBar : null,
-      appBarActions:
-          isMobile
-              ? [
-                _buildHeaderAction(
-                  Icons.notifications_active_rounded,
-                  () {},
-                  hasBadge: true,
-                  iconColor: Colors.white,
-                  bgColor: Colors.white.withValues(alpha: 0.1),
-                ),
-              ]
-              : [
-                _buildHeaderAction(
-                  Icons.notifications_active_rounded,
-                  () {},
-                  hasBadge: true,
-                  iconColor: colors.onSurfaceVariant,
-                  bgColor: colors.surfaceContainerHigh,
-                ),
-              ],
-      body: _buildMainContent(context, l10n, policiesAsync),
-    );
-  }
-
-  Widget _buildHeaderAction(
-    IconData icon,
-    VoidCallback onTap, {
-    bool hasBadge = false,
-    required Color iconColor,
-    required Color bgColor,
-  }) {
-    return Stack(
-      children: [
-        IconButton(
-          onPressed: onTap,
-          icon: Icon(icon, color: iconColor),
-          style: IconButton.styleFrom(
-            backgroundColor: bgColor,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
+          return isMobile
+              ? _buildMobileLayout(context, l10n, summary, companyPremiums, policies)
+              : _buildDesktopLayout(context, l10n, summary, companyPremiums, policies);
+        },
+        loading:
+            () => const Center(
+              child: CircularProgressIndicator(color: Color(0xFFC9A96E)),
             ),
-          ),
-        ),
-        if (hasBadge)
-          Positioned(
-            right: 8,
-            top: 8,
-            child: Container(
-              width: 8,
-              height: 8,
-              decoration: const BoxDecoration(
-                color: AppColors.rejected,
-                shape: BoxShape.circle,
+        error:
+            (err, stack) => Center(
+              child: Text(
+                '${l10n.unexpectedError}: $err',
+                style: const TextStyle(
+                  fontFamily: 'Cairo',
+                  color: Color(0xFFA03030),
+                ),
               ),
             ),
-          ),
-      ],
-    );
-  }
-
-  Widget _buildMainContent(
-    BuildContext context,
-    AppLocalizations l10n,
-    AsyncValue policiesAsync,
-  ) {
-    return policiesAsync.when(
-      data: (policies) {
-        final summary = ref.watch(commissionSummaryProvider(policies));
-        final Map<String, double> companyPremiums = {
-          'الجزائر للتكافل': 0.0,
-          'الاتحاد': 0.0,
-        };
-        for (final p in policies) {
-          final name = p.displayCompanyName;
-          companyPremiums[name] = (companyPremiums[name] ?? 0) + p.amount;
-        }
-
-        return ResponsiveLayout.isMobile(context)
-            ? _buildMobileLayout(context, l10n, summary, companyPremiums)
-            : _buildDesktopLayout(context, l10n, summary, companyPremiums);
-      },
-      loading: () => const Center(child: CircularProgressIndicator()),
-      error:
-          (err, stack) => Center(child: Text('${l10n.unexpectedError}: $err')),
+      ),
     );
   }
 
@@ -171,24 +68,29 @@ class _CommissionMonitorScreenState
     AppLocalizations l10n,
     CommissionSummary summary,
     Map<String, double> companyPremiums,
+    List<PolicyModel> policies,
   ) {
-    final colors = context.colors;
     final now = DateTime.now();
-    final monthFormat = DateFormat('MMMM'); // Or localized month array
-    final monthName = monthFormat.format(now);
+    final monthName = DateFormat('MMMM').format(now);
 
     return Column(
       children: [
-        // Top Card Area
+        // Hero section with summary
         Container(
-          color: const Color(0xFF1E3A34),
           width: double.infinity,
-          padding: const EdgeInsets.fromLTRB(20, 0, 20, 32),
+          padding: const EdgeInsets.all(24),
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              colors: [Color(0xFF2D1F0E), Color(0xFF4A3520)],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+          ),
           child: Container(
-            padding: const EdgeInsets.all(24),
+            padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(24),
+              color: context.colors.surface,
+              borderRadius: BorderRadius.circular(16),
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -198,52 +100,57 @@ class _CommissionMonitorScreenState
                     monthName,
                     now.year.toString(),
                   ),
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.w700,
-                    color: colors.onSurfaceVariant,
+                    color: Color(0xFF8B7355),
+                    fontFamily: 'Cairo',
+                  ),
+                ),
+                const SizedBox(height: 6),
+                Text(
+                  "${NumberFormat.compact().format(summary.totalCommission)} ${l10n.dzd}",
+                  style: const TextStyle(
+                    fontSize: 28,
+                    fontWeight: FontWeight.w900,
+                    color: Color(0xFF2D1F0E),
+                    fontFamily: 'Cairo',
+                    letterSpacing: -0.5,
                   ),
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  "${NumberFormat.compact().format(summary.totalCommission)} ${l10n.dzd}",
-                  style: TextStyle(
-                    fontSize: 32,
-                    fontWeight: FontWeight.w900,
-                    color: colors.onSurface,
-                    letterSpacing: -1,
-                  ),
+                  '${l10n.adminShareLabel(NumberFormat.compact().format(summary.adminShare), l10n.dzd)} • '
+                  '${l10n.operatorsShareLabel(NumberFormat.compact().format(summary.operatorShare), l10n.dzd)}',
+                  style: const TextStyle(fontSize: 11, color: Color(0xFF8B7355), fontFamily: 'Cairo'),
                 ),
-                const SizedBox(height: 4),
                 Text(
-                  "+12% ${l10n.fromLastMonth}", // Mock trend
-                  style: const TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w800,
-                    color: AppColors.accepted,
-                  ),
+                  '${l10n.newClientsCount(summary.newClientCount)} • ${l10n.returningClientsCount(summary.returningClientCount)}',
+                  style: const TextStyle(fontSize: 10, color: Color(0xFF3A7D4E), fontFamily: 'Cairo'),
                 ),
               ],
             ),
           ),
         ),
 
-        // Details Section
         Expanded(
           child: SingleChildScrollView(
-            padding: const EdgeInsets.all(20),
+            padding: const EdgeInsets.all(16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                _buildPolicyCommissionList(context, l10n, policies),
+                const SizedBox(height: 20),
                 Text(
                   l10n.companiesDetails,
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w900,
-                    color: colors.onSurface,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w700,
+                    color: Color(0xFF2D1F0E),
+                    fontFamily: 'Cairo',
                   ),
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: 12),
                 ...companyPremiums.entries.map(
                   (e) => _buildCompanyCard(
                     context,
@@ -253,7 +160,6 @@ class _CommissionMonitorScreenState
                     summary.rate,
                   ),
                 ),
-                const SizedBox(height: 24),
               ],
             ),
           ),
@@ -267,183 +173,197 @@ class _CommissionMonitorScreenState
     AppLocalizations l10n,
     CommissionSummary summary,
     Map<String, double> companyPremiums,
+    List<PolicyModel> policies,
   ) {
-    final colors = context.colors;
     final now = DateTime.now();
     final monthName = DateFormat('MMMM').format(now);
 
-    return Column(
-      children: [
-        Expanded(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.all(32),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Expanded(
-                      child: Container(
-                        padding: const EdgeInsets.all(32),
-                        decoration: BoxDecoration(
-                          color: colors.primary,
-                          borderRadius: BorderRadius.circular(32),
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(24),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              // Hero card
+              Expanded(
+                child: Container(
+                  padding: const EdgeInsets.all(24),
+                  decoration: BoxDecoration(
+                    gradient: const LinearGradient(
+                      colors: [Color(0xFF2D1F0E), Color(0xFF4A3520)],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        l10n.totalCommissionsMonthYear(
+                          monthName,
+                          now.year.toString(),
                         ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              l10n.totalCommissionsMonthYear(
-                                monthName,
-                                now.year.toString(),
-                              ),
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w700,
-                                color: colors.onPrimary.withValues(alpha: 0.8),
-                              ),
-                            ),
-                            const SizedBox(height: 16),
-                            Text(
-                              "${NumberFormat.compact().format(summary.totalCommission)} ${l10n.dzd}",
-                              style: TextStyle(
-                                fontSize: 56,
-                                fontWeight: FontWeight.w900,
-                                color: colors.onPrimary,
-                                letterSpacing: -2,
-                                height: 1.1,
-                              ),
-                            ),
-                            const SizedBox(height: 8),
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 12,
-                                vertical: 6,
-                              ),
-                              decoration: BoxDecoration(
-                                color: Colors.white.withValues(alpha: 0.2),
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                              child: Text(
-                                "+12% ${l10n.fromLastMonth}", // Mock trend
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w800,
-                                  color: colors.onPrimary,
-                                ),
-                              ),
-                            ),
-                          ],
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w700,
+                          color: context.colors.surface.withValues(alpha: 0.8),
+                          fontFamily: 'Cairo',
                         ),
                       ),
-                    ),
-                    const SizedBox(width: 24),
-                    Expanded(
-                      child: Container(
-                        padding: const EdgeInsets.all(32),
-                        height: 240,
+                      const SizedBox(height: 12),
+                      Text(
+                        "${NumberFormat.compact().format(summary.totalCommission)} ${l10n.dzd}",
+                        style: TextStyle(
+                          fontSize: 40,
+                          fontWeight: FontWeight.w900,
+                          color: context.colors.surface,
+                          fontFamily: 'Cairo',
+                          letterSpacing: -1,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 10,
+                          vertical: 4,
+                        ),
                         decoration: BoxDecoration(
-                          color: colors.surfaceContainerLowest,
-                          borderRadius: BorderRadius.circular(32),
-                          border: Border.all(
-                            color: colors.outlineVariant.withValues(alpha: 0.2),
+                          color: context.colors.surface.withValues(alpha: 0.1),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Text(
+                          l10n.sinceLastMonth,
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w700,
+                            color: context.colors.surface,
+                            fontFamily: 'Cairo',
                           ),
                         ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Row(
-                              children: [
-                                Container(
-                                  padding: const EdgeInsets.all(12),
-                                  decoration: BoxDecoration(
-                                    color: AppColors.goldAccent.withValues(
-                                      alpha: 0.1,
-                                    ),
-                                    shape: BoxShape.circle,
-                                  ),
-                                  child: const Icon(
-                                    Icons.star_rounded,
-                                    color: AppColors.goldAccent,
-                                  ),
-                                ),
-                                const SizedBox(width: 16),
-                                Expanded(
-                                  child: Text(
-                                    l10n.commissionsEvolution,
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w800,
-                                      color: colors.onSurface,
-                                    ),
-                                  ),
-                                ),
-                              ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(width: 16),
+              // Info card
+              Expanded(
+                child: Container(
+                  padding: const EdgeInsets.all(24),
+                  height: 180,
+                  decoration: BoxDecoration(
+                    color: context.colors.surface,
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(color: const Color(0xFFE5DDD0)),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Row(
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFFC9A96E).withValues(alpha: 0.1),
+                              shape: BoxShape.circle,
                             ),
-                            const Spacer(),
-                            Text(
-                              l10n.highestMonth,
-                              style: TextStyle(
-                                fontSize: 14,
-                                color: colors.onSurfaceVariant,
-                                fontWeight: FontWeight.w600,
-                              ),
+                            child: const Icon(
+                              Icons.star_rounded,
+                              color: Color(0xFFC9A96E),
+                              size: 20,
                             ),
-                            const SizedBox(height: 4),
-                            Text(
-                              "$monthName ${now.year}",
-                              style: TextStyle(
-                                fontSize: 24,
-                                fontWeight: FontWeight.w900,
-                                color: colors.onSurface,
-                              ),
+                          ),
+                          const SizedBox(width: 12),
+                          Text(
+                            l10n.commissionsEvolution,
+                            style: const TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w800,
+                              color: Color(0xFF2D1F0E),
+                              fontFamily: 'Cairo',
                             ),
-                          ],
+                          ),
+                        ],
+                      ),
+                      const Spacer(),
+                      Text(
+                        l10n.highestMonth,
+                        style: const TextStyle(
+                          fontSize: 12,
+                          color: Color(0xFF8B7355),
+                          fontWeight: FontWeight.w600,
+                          fontFamily: 'Cairo',
                         ),
                       ),
-                    ),
-                  ],
-                ),
-
-                const SizedBox(height: 48),
-                Text(
-                  l10n.companiesDetails,
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.w900,
-                    color: colors.onSurface,
+                      const SizedBox(height: 2),
+                      Text(
+                        "$monthName ${now.year}",
+                        style: const TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w900,
+                          color: Color(0xFF2D1F0E),
+                          fontFamily: 'Cairo',
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-                const SizedBox(height: 24),
+              ),
+            ],
+          ),
 
-                GridView.builder(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    crossAxisSpacing: 24,
-                    mainAxisSpacing: 24,
-                    mainAxisExtent: 160,
-                  ),
-                  itemCount: companyPremiums.length,
-                  itemBuilder: (context, index) {
-                    final entry = companyPremiums.entries.elementAt(index);
-                    return _buildCompanyCard(
-                      context,
-                      l10n,
-                      entry.key,
-                      entry.value,
-                      summary.rate,
-                      isDesktop: true,
-                    );
-                  },
-                ),
-              ],
+          const SizedBox(height: 24),
+          Text(
+            l10n.platformCommission,
+            style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700, fontFamily: 'Cairo'),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            '${l10n.adminShareLabel(NumberFormat.decimalPattern().format(summary.adminShare), l10n.dzd)} • '
+            '${l10n.atAiShare(NumberFormat.decimalPattern().format(summary.operatorShare), l10n.dzd)}',
+            style: const TextStyle(fontSize: 12, color: Color(0xFF8B7355), fontFamily: 'Cairo'),
+          ),
+          const SizedBox(height: 16),
+          _buildPolicyCommissionList(context, l10n, policies),
+          const SizedBox(height: 24),
+          Text(
+            l10n.companiesDetails,
+            style: const TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.w900,
+              color: Color(0xFF2D1F0E),
+              fontFamily: 'Cairo',
             ),
           ),
-        ),
-      ],
+          const SizedBox(height: 16),
+
+          GridView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              crossAxisSpacing: 16,
+              mainAxisSpacing: 16,
+              mainAxisExtent: 150,
+            ),
+            itemCount: companyPremiums.length,
+            itemBuilder: (context, index) {
+              final entry = companyPremiums.entries.elementAt(index);
+              return _buildCompanyCard(
+                context,
+                l10n,
+                entry.key,
+                entry.value,
+                summary.rate,
+                isDesktop: true,
+              );
+            },
+          ),
+        ],
+      ),
     );
   }
 
@@ -455,23 +375,15 @@ class _CommissionMonitorScreenState
     double rate, {
     bool isDesktop = false,
   }) {
-    final colors = context.colors;
     final commission = premium * rate;
 
     return Container(
-      margin: EdgeInsets.only(bottom: isDesktop ? 0 : 16),
-      padding: EdgeInsets.all(isDesktop ? 24 : 20),
+      margin: EdgeInsets.only(bottom: isDesktop ? 0 : 12),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: colors.surfaceContainerLowest,
-        borderRadius: BorderRadius.circular(isDesktop ? 24 : 20),
-        border: Border.all(color: colors.outlineVariant.withValues(alpha: 0.1)),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.02),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
+        color: context.colors.surface,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: const Color(0xFFE5DDD0)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -479,41 +391,51 @@ class _CommissionMonitorScreenState
           Row(
             children: [
               Container(
-                width: isDesktop ? 56 : 48,
-                height: isDesktop ? 56 : 48,
+                width: 44,
+                height: 44,
                 decoration: BoxDecoration(
-                  color: colors.surfaceContainerHigh,
-                  borderRadius: BorderRadius.circular(12),
+                  color: const Color(0xFFF5F0E8),
+                  borderRadius: BorderRadius.circular(10),
                 ),
                 alignment: Alignment.center,
-                child: Icon(
+                child: const Icon(
                   Icons.business_rounded,
-                  color: colors.onSurfaceVariant,
-                  size: isDesktop ? 28 : 24,
+                  color: Color(0xFF8B7355),
+                  size: 20,
                 ),
               ),
-              const SizedBox(width: 16),
+              const SizedBox(width: 12),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       companyName,
-                      style: TextStyle(
-                        fontSize: isDesktop ? 18 : 16,
-                        fontWeight: FontWeight.w900,
-                        color: colors.onSurface,
+                      style: const TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF2D1F0E),
+                        fontFamily: 'Cairo',
                       ),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
-                    const SizedBox(height: 4),
+                    const SizedBox(height: 2),
                     Text(
-                      l10n.commissionRatePct((rate * 100).toStringAsFixed(0)),
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: colors.primary,
+                      l10n.fromClientRate((rate * 100).toStringAsFixed(1)),
+                      style: const TextStyle(
+                        fontSize: 11,
+                        color: Color(0xFFC9A96E),
                         fontWeight: FontWeight.w700,
+                        fontFamily: 'Cairo',
+                      ),
+                    ),
+                    Text(
+                      l10n.newFullAdmin,
+                      style: const TextStyle(
+                        fontSize: 9,
+                        color: Color(0xFF8B7355),
+                        fontFamily: 'Cairo',
                       ),
                     ),
                   ],
@@ -530,19 +452,21 @@ class _CommissionMonitorScreenState
                   children: [
                     Text(
                       l10n.dueCommission,
-                      style: TextStyle(
-                        fontSize: 11,
-                        color: colors.onSurfaceVariant,
+                      style: const TextStyle(
+                        fontSize: 10,
+                        color: Color(0xFF8B7355),
                         fontWeight: FontWeight.w600,
+                        fontFamily: 'Cairo',
                       ),
                     ),
                     const SizedBox(height: 2),
                     Text(
                       "${NumberFormat.compact().format(commission)} ${l10n.dzd}",
-                      style: TextStyle(
-                        fontSize: isDesktop ? 18 : 16,
+                      style: const TextStyle(
+                        fontSize: 15,
                         fontWeight: FontWeight.w900,
-                        color: AppColors.accepted,
+                        color: Color(0xFF3A7D4E),
+                        fontFamily: 'Cairo',
                       ),
                     ),
                   ],
@@ -554,19 +478,21 @@ class _CommissionMonitorScreenState
                   children: [
                     Text(
                       l10n.totalPremiums,
-                      style: TextStyle(
-                        fontSize: 11,
-                        color: colors.onSurfaceVariant,
+                      style: const TextStyle(
+                        fontSize: 10,
+                        color: Color(0xFF8B7355),
                         fontWeight: FontWeight.w600,
+                        fontFamily: 'Cairo',
                       ),
                     ),
                     const SizedBox(height: 2),
                     Text(
                       "${NumberFormat.compact().format(premium)} ${l10n.dzd}",
-                      style: TextStyle(
-                        fontSize: isDesktop ? 18 : 16,
+                      style: const TextStyle(
+                        fontSize: 15,
                         fontWeight: FontWeight.w900,
-                        color: colors.onSurface,
+                        color: Color(0xFF2D1F0E),
+                        fontFamily: 'Cairo',
                       ),
                     ),
                   ],
@@ -576,6 +502,92 @@ class _CommissionMonitorScreenState
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildPolicyCommissionList(
+    BuildContext context,
+    AppLocalizations l10n,
+    List<PolicyModel> policies,
+  ) {
+    final recent = policies.take(12).toList();
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          l10n.requestsAndNin,
+          style: const TextStyle(
+            fontSize: 15,
+            fontWeight: FontWeight.w800,
+            color: Color(0xFF2D1F0E),
+            fontFamily: 'Cairo',
+          ),
+        ),
+        const SizedBox(height: 10),
+        ...recent.map((p) {
+          final split = commissionSplitForPolicy(p, policies);
+          final existing = isExistingClientForOperator(p, policies);
+          return Container(
+            margin: const EdgeInsets.only(bottom: 8),
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: context.colors.surface,
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: const Color(0xFFE5DDD0)),
+            ),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        p.applicantName,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 13,
+                          fontFamily: 'Cairo',
+                        ),
+                      ),
+                      Text(
+                        '${l10n.ninLabel}: ${p.nin ?? '—'}',
+                        style: const TextStyle(fontSize: 11, color: Color(0xFF8B7355), fontFamily: 'Cairo'),
+                      ),
+                      Text(
+                        existing ? l10n.returningClient : l10n.newClient,
+                        style: TextStyle(
+                          fontSize: 10,
+                          color: existing ? const Color(0xFF1B4F72) : const Color(0xFF3A7D4E),
+                          fontFamily: 'Cairo',
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text(
+                      l10n.adminShareLabel(split['admin']!.toStringAsFixed(0), l10n.dzd),
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 12,
+                        color: Color(0xFF3A7D4E),
+                        fontFamily: 'Cairo',
+                      ),
+                    ),
+                    if (split['operator']! > 0)
+                      Text(
+                        l10n.atAiShare(split['operator']!.toStringAsFixed(0), l10n.dzd),
+                        style: const TextStyle(fontSize: 10, color: Color(0xFF8B7355), fontFamily: 'Cairo'),
+                      ),
+                  ],
+                ),
+              ],
+            ),
+          );
+        }),
+      ],
     );
   }
 }

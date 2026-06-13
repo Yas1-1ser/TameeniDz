@@ -1,19 +1,28 @@
+import 'package:tameenidz/features/shared/widgets/page_entry_animation.dart';
+import 'package:tameenidz/core/theme/app_colors.dart';
+import 'package:tameenidz/core/theme/app_colors_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import 'package:go_router/go_router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import '../../../../../core/constants/app_colors.dart';
-import '../../../../../core/providers/service_providers.dart';
-import '../../../../../core/theme/app_colors_extension.dart';
+
 import '../../../../../generated/l10n/app_localizations.dart';
+import '../../../../../core/utils/auth_exception_handler.dart';
+import '../../../../../core/services/notification_helper.dart';
 
 enum _StepState { completed, active, upcoming }
 
+/// Redesigned client Registration Step 2 Screen.
+/// Optimized with RepaintBoundaries and ValueNotifiers to eliminate input lag.
 class Step2PasswordSetup extends ConsumerStatefulWidget {
   final String email;
   final String fullName;
   final String phoneNumber;
   final String ccpNumber;
+  final String? nin;
+  final String? wilaya;
+  final String? dob;
 
   const Step2PasswordSetup({
     super.key,
@@ -21,6 +30,9 @@ class Step2PasswordSetup extends ConsumerStatefulWidget {
     required this.fullName,
     required this.phoneNumber,
     required this.ccpNumber,
+    this.nin,
+    this.wilaya,
+    this.dob,
   });
 
   @override
@@ -32,8 +44,11 @@ class _Step2PasswordSetupState extends ConsumerState<Step2PasswordSetup> {
   final _passwordCtrl = TextEditingController();
   final _confirmCtrl = TextEditingController();
 
-  bool _obscurePassword = true;
-  bool _obscureConfirm = true;
+  // PERFORMANCE: Use ValueNotifiers to avoid full-page rebuilds during interaction
+  final ValueNotifier<bool> _obscurePassword = ValueNotifier(true);
+  final ValueNotifier<bool> _obscureConfirm = ValueNotifier(true);
+  final ValueNotifier<String> _passwordNotifier = ValueNotifier('');
+  
   bool _isLoading = false;
   String? _errorMessage;
   String? _successMessage;
@@ -42,6 +57,9 @@ class _Step2PasswordSetupState extends ConsumerState<Step2PasswordSetup> {
   void dispose() {
     _passwordCtrl.dispose();
     _confirmCtrl.dispose();
+    _obscurePassword.dispose();
+    _obscureConfirm.dispose();
+    _passwordNotifier.dispose();
     super.dispose();
   }
 
@@ -67,30 +85,48 @@ class _Step2PasswordSetupState extends ConsumerState<Step2PasswordSetup> {
     });
 
     try {
-      final response = await Supabase.instance.client.auth.signUp(
+      final supabase = Supabase.instance.client;
+      final response = await supabase.auth.signUp(
         email: widget.email,
         password: _passwordCtrl.text,
         data: {
           'full_name': widget.fullName,
           'phone_number': widget.phoneNumber,
           'ccp_number': widget.ccpNumber,
-          'role': 'client',
+          'nin': widget.nin,
+          'wilaya': widget.wilaya,
+          'dob': widget.dob,
+          'role': 'subscriber',
         },
       );
 
       if (!mounted) return;
 
       if (response.user != null) {
+        try {
+          await supabase.from('users').upsert({
+            'id': response.user!.id,
+            'full_name': widget.fullName,
+            'email': widget.email,
+            'phone_number': widget.phoneNumber,
+            'ccp_number': widget.ccpNumber,
+            'nin': widget.nin,
+            'wilaya': widget.wilaya,
+            'date_of_birth': widget.dob,
+            'role': 'client',
+            'created_at': DateTime.now().toIso8601String(),
+          }, onConflict: 'id');
+        } catch (dbErr) {
+          debugPrint('Ignored manual upsert error (handled by trigger): $dbErr');
+        }
+
+        // ── Notify admins about new registration (fire-and-forget) ──
+        NotificationHelper.notifyAdminNewRegistration(
+          clientName: widget.fullName,
+          clientEmail: widget.email,
+        );
+
         if (response.session != null) {
-          await ref
-              .read(userProfileServiceProvider)
-              .upsertClientProfile(
-                user: response.user!,
-                fullName: widget.fullName,
-                email: widget.email,
-                phoneNumber: widget.phoneNumber,
-                ccpNumber: widget.ccpNumber,
-              );
           if (mounted) context.go('/register/step3');
         } else {
           setState(() {
@@ -103,39 +139,79 @@ class _Step2PasswordSetupState extends ConsumerState<Step2PasswordSetup> {
         setState(() => _errorMessage = l10n.accountCreateError);
       }
     } on AuthException catch (e) {
-      // Handle the specific 'Error sending confirmation email' or other Auth errors
-      String message = e.message;
-      if (message.contains('Error sending confirmation email')) {
-        message =
-            'Email confirmation is required but failed to send. Please contact support or check your Supabase settings.';
+      if (mounted) {
+        final locale = Localizations.localeOf(context).languageCode;
+        setState(() => _errorMessage = AuthExceptionHandler.translate(e, locale));
       }
-      setState(() => _errorMessage = message);
     } catch (e) {
-      setState(() => _errorMessage = l10n.unexpectedAuthError);
+      if (mounted) {
+        final locale = Localizations.localeOf(context).languageCode;
+        final code = e.toString().contains('unexpected_failure')
+                ? 'database_error' : 'auth_unexpected_error';
+        setState(() => _errorMessage = AuthExceptionHandler.translateCode(code, locale));
+      }
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }
   }
 
+  InputDecoration _buildInputDecoration({
+    required String labelText,
+    required IconData prefixIcon,
+    String? hintText,
+    Widget? suffixIcon,
+  }) {
+    return InputDecoration(
+      labelText: labelText,
+      hintText: hintText,
+      prefixIcon: Icon(prefixIcon, color: AppColors.goldAccent, size: 20),
+      suffixIcon: suffixIcon,
+      fillColor: context.colors.beigeCard,
+      filled: true,
+      labelStyle: TextStyle(color: context.colors.slate500, fontFamily: 'Cairo', fontSize: 13),
+      hintStyle: TextStyle(color: context.colors.slate400, fontFamily: 'Cairo', fontSize: 12),
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(14),
+        borderSide: BorderSide(color: context.colors.warmDivider, width: 1.0),
+      ),
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(14),
+        borderSide: BorderSide(color: context.colors.warmDivider, width: 1.0),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(14),
+        borderSide: const BorderSide(color: AppColors.primaryGreen, width: 1.5),
+      ),
+      errorBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(14),
+        borderSide: const BorderSide(color: AppColors.error, width: 1.0),
+      ),
+      focusedErrorBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(14),
+        borderSide: BorderSide(color: AppColors.error, width: 1.5),
+      ),
+      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    // PERFORMANCE: Cache l10n lookup
     final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
-      backgroundColor: context.colors.background,
+      backgroundColor: context.colors.beigeBg,
       appBar: AppBar(
-        backgroundColor: AppColors.primaryGreen,
-        iconTheme: const IconThemeData(color: Colors.white),
-        title: Text(
-          l10n.createPassword,
-          style: const TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        centerTitle: true,
+        backgroundColor: Colors.transparent,
+        elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_rounded, size: 20),
+          icon: Icon(
+            Directionality.of(context) == TextDirection.rtl
+                ? Icons.arrow_forward_rounded
+                : Icons.arrow_back_rounded,
+            color: context.colors.darkText,
+            size: 22,
+          ),
           onPressed: () {
             if (context.canPop()) {
               context.pop();
@@ -144,25 +220,156 @@ class _Step2PasswordSetupState extends ConsumerState<Step2PasswordSetup> {
             }
           },
         ),
+        title: Text(
+          l10n.createPassword,
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.w900,
+            color: context.colors.darkText,
+            fontFamily: 'Cairo',
+          ),
+        ),
+        centerTitle: true,
       ),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(24),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _buildHeader(l10n),
-                const SizedBox(height: 32),
-                _buildFormFields(l10n),
-                const SizedBox(height: 16),
-                if (_successMessage != null) _buildSuccessBanner(),
-                if (_successMessage != null) const SizedBox(height: 16),
-                if (_errorMessage != null) _buildErrorBanner(),
-                const SizedBox(height: 16),
-                _buildSubmitButton(l10n),
-              ],
+      extendBodyBehindAppBar: true,
+      body: PageEntryAnimation(
+        child: SafeArea(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  _buildStepper(l10n),
+                  const SizedBox(height: 28),
+
+                  // Profile Summary Badge
+                  _buildProfileSummary(),
+                  const SizedBox(height: 20),
+
+                  // Form Card Container - Wrapped in RepaintBoundary to isolate input lag
+                  RepaintBoundary(
+                    child: Container(
+                      padding: const EdgeInsets.all(28),
+                      decoration: BoxDecoration(
+                        color: context.colors.beigeCard,
+                        borderRadius: BorderRadius.circular(24),
+                        border: Border.all(
+                          color: AppColors.goldAccent.withValues(alpha: 0.28),
+                          width: 1.5,
+                        ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withValues(alpha: 0.05),
+                            blurRadius: 16,
+                            offset: const Offset(0, 4),
+                          ),
+                        ],
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            l10n.createPasswordTitle,
+                            style: const TextStyle(
+                              fontSize: 15,
+                              fontWeight: FontWeight.bold,
+                              color: AppColors.primaryGreen,
+                              fontFamily: 'Cairo',
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Container(
+                            width: 40,
+                            height: 2.5,
+                            decoration: BoxDecoration(
+                              color: AppColors.goldAccent,
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
+                          const SizedBox(height: 24),
+
+                          // Password Field
+                          ValueListenableBuilder<bool>(
+                            valueListenable: _obscurePassword,
+                            builder: (context, obscure, _) {
+                              return TextFormField(
+                                controller: _passwordCtrl,
+                                obscureText: obscure,
+                                textInputAction: TextInputAction.next,
+                                validator: (v) => _validatePassword(v, l10n),
+                                onChanged: (val) => _passwordNotifier.value = val,
+                                decoration: _buildInputDecoration(
+                                  labelText: l10n.password,
+                                  prefixIcon: Icons.lock_outlined,
+                                  hintText: '••••••••',
+                                  suffixIcon: IconButton(
+                                    icon: Icon(
+                                      obscure ? Icons.visibility_off_outlined : Icons.visibility_outlined,
+                                      color: context.colors.slate500,
+                                    ),
+                                    onPressed: () => _obscurePassword.value = !_obscurePassword.value,
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                          const SizedBox(height: 8),
+
+                          // Password Strength Indicator - surgically updated
+                          ValueListenableBuilder<String>(
+                            valueListenable: _passwordNotifier,
+                            builder: (context, password, _) {
+                              return _buildStrengthIndicator(password, l10n);
+                            },
+                          ),
+                          const SizedBox(height: 20),
+
+                          // Confirm Password Field
+                          ValueListenableBuilder<bool>(
+                            valueListenable: _obscureConfirm,
+                            builder: (context, obscure, _) {
+                              return TextFormField(
+                                controller: _confirmCtrl,
+                                obscureText: obscure,
+                                textInputAction: TextInputAction.done,
+                                validator: (v) => _validateConfirm(v, l10n),
+                                decoration: _buildInputDecoration(
+                                  labelText: l10n.confirmPassword,
+                                  prefixIcon: Icons.lock_outlined,
+                                  hintText: '••••••••',
+                                  suffixIcon: IconButton(
+                                    icon: Icon(
+                                      obscure ? Icons.visibility_off_outlined : Icons.visibility_outlined,
+                                      color: context.colors.slate500,
+                                    ),
+                                    onPressed: () => _obscureConfirm.value = !_obscureConfirm.value,
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+
+                  if (_successMessage != null) ...[
+                    _buildBanner(_successMessage!, AppColors.accepted, Icons.check_circle_outline),
+                    const SizedBox(height: 16),
+                  ],
+                  if (_errorMessage != null) ...[
+                    _buildBanner(_errorMessage!, AppColors.rejected, Icons.error_outline),
+                    const SizedBox(height: 16),
+                  ],
+
+                  // Submit Button
+                  _buildSubmitButton(l10n),
+                  SizedBox(height: 40),
+                ],
+              ),
             ),
           ),
         ),
@@ -170,69 +377,84 @@ class _Step2PasswordSetupState extends ConsumerState<Step2PasswordSetup> {
     );
   }
 
-  Widget _buildHeader(AppLocalizations l10n) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        _buildStepper(l10n),
-        const SizedBox(height: 32),
-        Text(
-          l10n.createPasswordTitle,
-          style: TextStyle(
-            fontSize: 24,
-            fontWeight: FontWeight.bold,
-            color: context.colors.darkText,
+  Widget _buildProfileSummary() {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      decoration: BoxDecoration(
+        color: context.colors.beigeCard,
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: AppColors.goldAccent.withValues(alpha: 0.20), width: 1.2),
+      ),
+      child: Row(
+        children: [
+          const Icon(Icons.person_outline_rounded, size: 20, color: AppColors.goldAccent),
+          SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(widget.fullName, style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: context.colors.darkText, fontFamily: 'Cairo')),
+                Text(widget.email, style: TextStyle(fontSize: 12, color: context.colors.slate500, fontWeight: FontWeight.w600, fontFamily: 'Cairo')),
+              ],
+            ),
           ),
-          textAlign: TextAlign.center,
-        ),
-        const SizedBox(height: 8),
-        Text(
-          l10n.passwordSetupSubtitle,
-          style: TextStyle(fontSize: 14, color: context.colors.slate500),
-          textAlign: TextAlign.center,
-        ),
-        const SizedBox(height: 24),
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-          decoration: BoxDecoration(
-            color: context.colors.surface,
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: context.colors.slate200),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildBanner(String message, Color color, IconData icon) {
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: color.withValues(alpha: 0.08),
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: color.withValues(alpha: 0.3)),
+      ),
+      child: Row(
+        children: [
+          Icon(icon, size: 16, color: color),
+          const SizedBox(width: 8),
+          Flexible(
+            child: Text(
+              message,
+              style: TextStyle(fontSize: 13, color: color, fontWeight: FontWeight.bold, fontFamily: 'Cairo'),
+            ),
           ),
-          child: Row(
-            children: [
-              Icon(
-                Icons.person_outline_rounded,
-                size: 20,
-                color: context.colors.slate500,
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSubmitButton(AppLocalizations l10n) {
+    return GestureDetector(
+      onTap: _isLoading ? null : () => _submit(l10n),
+      child: Container(
+        height: 56,
+        decoration: BoxDecoration(
+          gradient: const LinearGradient(
+            colors: [AppColors.primaryGreen, Color(0xFF247E53)],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+          borderRadius: BorderRadius.circular(40),
+          border: Border.all(color: AppColors.goldAccent.withValues(alpha: 0.45), width: 1.5),
+          boxShadow: [
+            BoxShadow(
+              color: AppColors.primaryGreen.withValues(alpha: 0.30),
+              blurRadius: 18,
+              offset: const Offset(0, 7),
+            ),
+          ],
+        ),
+        alignment: Alignment.center,
+        child: _isLoading
+            ? const CircularProgressIndicator(color: Colors.white, strokeWidth: 2)
+            : Text(
+                l10n.createNewAccount,
+                style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold, fontFamily: 'Cairo'),
               ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      widget.fullName,
-                      style: TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.bold,
-                        color: context.colors.darkText,
-                      ),
-                    ),
-                    Text(
-                      widget.email,
-                      style: TextStyle(
-                        fontSize: 13,
-                        color: context.colors.slate500,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-      ],
+      ),
     );
   }
 
@@ -240,29 +462,22 @@ class _Step2PasswordSetupState extends ConsumerState<Step2PasswordSetup> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        _buildStepNode(number: '3', title: l10n.documents, state: _StepState.upcoming),
-        _buildStepDivider(),
-        _buildStepNode(number: '2', title: l10n.verification, state: _StepState.active),
-        _buildStepDivider(),
         _buildStepNode(number: '1', title: l10n.information, state: _StepState.completed),
+        _buildStepDivider(isGold: true),
+        _buildStepNode(number: '2', title: l10n.verification, state: _StepState.active),
+        _buildStepDivider(isGold: false),
+        _buildStepNode(number: '3', title: l10n.documents, state: _StepState.upcoming),
       ],
     );
   }
 
-  Widget _buildStepDivider() {
+  Widget _buildStepDivider({bool isGold = false}) {
     return Expanded(
-      child: Container(
-        height: 2,
-        color: context.colors.slate200,
-      ),
+      child: Container(height: 2, color: isGold ? AppColors.goldAccent : context.colors.warmDivider),
     );
   }
 
-  Widget _buildStepNode({
-    required String number,
-    required String title,
-    required _StepState state,
-  }) {
+  Widget _buildStepNode({required String number, required String title, required _StepState state}) {
     Color circleColor;
     Color borderColor;
     Widget content;
@@ -270,33 +485,21 @@ class _Step2PasswordSetupState extends ConsumerState<Step2PasswordSetup> {
 
     switch (state) {
       case _StepState.completed:
-        circleColor = AppColors.primaryGreen;
-        borderColor = AppColors.primaryGreen;
-        content = const Icon(Icons.check, color: Colors.white, size: 16);
-        textColor = AppColors.primaryGreen;
+        circleColor = AppColors.goldAccent;
+        borderColor = AppColors.goldAccent;
+        content = const Icon(Icons.check_rounded, color: Colors.white, size: 16);
+        textColor = AppColors.goldAccent;
         break;
       case _StepState.active:
         circleColor = Colors.white;
-        borderColor = AppColors.primaryGreen;
-        content = Text(
-          number,
-          style: TextStyle(
-            color: AppColors.primaryGreen,
-            fontWeight: FontWeight.bold,
-          ),
-        );
-        textColor = AppColors.primaryGreen;
+        borderColor = AppColors.goldAccent;
+        content = Container(width: 12, height: 12, decoration: const BoxDecoration(shape: BoxShape.circle, color: AppColors.goldAccent));
+        textColor = AppColors.goldAccent;
         break;
       case _StepState.upcoming:
-        circleColor = Colors.transparent;
-        borderColor = context.colors.slate300;
-        content = Text(
-          number,
-          style: TextStyle(
-            color: context.colors.slate400,
-            fontWeight: FontWeight.bold,
-          ),
-        );
+        circleColor = context.colors.beigeCard;
+        borderColor = AppColors.goldAccent.withValues(alpha: 0.25);
+        content = Text(number, style: const TextStyle(color: AppColors.goldAccent, fontWeight: FontWeight.bold, fontSize: 12));
         textColor = context.colors.slate400;
         break;
     }
@@ -308,11 +511,7 @@ class _Step2PasswordSetupState extends ConsumerState<Step2PasswordSetup> {
           Container(
             width: 32,
             height: 32,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: circleColor,
-              border: Border.all(color: borderColor, width: 2),
-            ),
+            decoration: BoxDecoration(shape: BoxShape.circle, color: circleColor, border: Border.all(color: borderColor, width: 2)),
             alignment: Alignment.center,
             child: content,
           ),
@@ -324,11 +523,9 @@ class _Step2PasswordSetupState extends ConsumerState<Step2PasswordSetup> {
             overflow: TextOverflow.ellipsis,
             style: TextStyle(
               color: textColor,
-              fontSize: 10,
-              fontWeight:
-                  state == _StepState.active
-                      ? FontWeight.bold
-                      : FontWeight.normal,
+              fontSize: 11,
+              fontWeight: state == _StepState.active ? FontWeight.bold : FontWeight.normal,
+              fontFamily: 'Cairo',
             ),
           ),
         ],
@@ -336,163 +533,17 @@ class _Step2PasswordSetupState extends ConsumerState<Step2PasswordSetup> {
     );
   }
 
-  Widget _buildFormFields(AppLocalizations l10n) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        _buildLabel(l10n.password),
-        const SizedBox(height: 8),
-        TextFormField(
-          controller: _passwordCtrl,
-          obscureText: _obscurePassword,
-          validator: (v) => _validatePassword(v, l10n),
-          onChanged: (_) => setState(() {}),
-          decoration: InputDecoration(
-            hintText: '••••••••',
-            prefixIcon: Icon(
-              Icons.lock_outline,
-              color: context.colors.slate500,
-            ),
-            suffixIcon: IconButton(
-              icon: Icon(
-                _obscurePassword
-                    ? Icons.visibility_off_outlined
-                    : Icons.visibility_outlined,
-                color: context.colors.slate500,
-              ),
-              onPressed:
-                  () => setState(() => _obscurePassword = !_obscurePassword),
-            ),
-          ),
-        ),
-        const SizedBox(height: 8),
-        _buildStrengthIndicator(l10n),
-        const SizedBox(height: 20),
-        _buildLabel(l10n.confirmPassword),
-        const SizedBox(height: 8),
-        TextFormField(
-          controller: _confirmCtrl,
-          obscureText: _obscureConfirm,
-          validator: (v) => _validateConfirm(v, l10n),
-          decoration: InputDecoration(
-            hintText: '••••••••',
-            prefixIcon: Icon(
-              Icons.lock_outline,
-              color: context.colors.slate500,
-            ),
-            suffixIcon: IconButton(
-              icon: Icon(
-                _obscureConfirm
-                    ? Icons.visibility_off_outlined
-                    : Icons.visibility_outlined,
-                color: context.colors.slate500,
-              ),
-              onPressed:
-                  () => setState(() => _obscureConfirm = !_obscureConfirm),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
+  Widget _buildStrengthIndicator(String password, AppLocalizations l10n) {
+    if (password.isEmpty) return const SizedBox.shrink();
 
-  Widget _buildSubmitButton(AppLocalizations l10n) {
-    return SizedBox(
-      width: double.infinity,
-      height: 56,
-      child: ElevatedButton(
-        onPressed: _isLoading ? null : () => _submit(l10n),
-        child:
-            _isLoading
-                ? const SizedBox(
-                  width: 24,
-                  height: 24,
-                  child: CircularProgressIndicator(
-                    color: Colors.white,
-                    strokeWidth: 2,
-                  ),
-                )
-                : Text(l10n.createNewAccount),
-      ),
-    );
-  }
-
-  Widget _buildErrorBanner() {
-    return Container(
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: AppColors.rejected.withValues(alpha: 0.08),
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: AppColors.rejected.withValues(alpha: 0.3)),
-      ),
-      child: Row(
-        children: [
-          const Icon(Icons.error_outline, size: 16, color: AppColors.rejected),
-          const SizedBox(width: 8),
-          Flexible(
-            child: Text(
-              _errorMessage!,
-              style: const TextStyle(fontSize: 13, color: AppColors.rejected),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildSuccessBanner() {
-    return Container(
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: AppColors.accepted.withValues(alpha: 0.08),
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: AppColors.accepted.withValues(alpha: 0.3)),
-      ),
-      child: Row(
-        children: [
-          const Icon(
-            Icons.check_circle_outline,
-            size: 16,
-            color: AppColors.accepted,
-          ),
-          const SizedBox(width: 8),
-          Flexible(
-            child: Text(
-              _successMessage!,
-              style: const TextStyle(fontSize: 13, color: AppColors.accepted),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildLabel(String text) => Text(
-    text,
-    style: TextStyle(
-      fontSize: 14,
-      fontWeight: FontWeight.w600,
-      color: context.colors.darkText,
-    ),
-  );
-
-  Widget _buildStrengthIndicator(AppLocalizations l10n) {
-    final password = _passwordCtrl.text;
     int strength = 0;
     if (password.length >= 8) strength++;
     if (RegExp(r'[A-Z]').hasMatch(password)) strength++;
     if (RegExp(r'[0-9]').hasMatch(password)) strength++;
     if (RegExp(r'[!@#\$&*~]').hasMatch(password)) strength++;
 
-    final colors = [
-      AppColors.rejected,
-      Colors.orange,
-      Colors.amber,
-      AppColors.accepted,
-    ];
+    final colors = [AppColors.rejected, Colors.orange, Colors.amber, AppColors.accepted];
     final labels = [l10n.weak, l10n.fair, l10n.good, l10n.strong];
-
-    if (password.isEmpty) return const SizedBox.shrink();
 
     final idx = (strength - 1).clamp(0, 3);
 
@@ -506,7 +557,7 @@ class _Step2PasswordSetupState extends ConsumerState<Step2PasswordSetup> {
                 margin: const EdgeInsets.symmetric(horizontal: 2),
                 height: 4,
                 decoration: BoxDecoration(
-                  color: i <= idx ? colors[idx] : context.colors.slate200,
+                  color: i <= idx ? colors[idx] : context.colors.warmDivider,
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
@@ -515,8 +566,8 @@ class _Step2PasswordSetupState extends ConsumerState<Step2PasswordSetup> {
         ),
         const SizedBox(height: 4),
         Text(
-          '${l10n.passwordStrength(labels[idx])}',
-          style: TextStyle(fontSize: 12, color: colors[idx]),
+          l10n.passwordStrength(labels[idx]),
+          style: TextStyle(fontSize: 12, color: colors[idx], fontFamily: 'Cairo', fontWeight: FontWeight.bold),
         ),
       ],
     );

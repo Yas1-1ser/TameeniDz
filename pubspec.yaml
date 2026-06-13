@@ -44,6 +44,17 @@ dependencies:
   share_plus: ^12.0.2
   path_provider: ^2.1.5
   screenshot: ^3.0.0
+  http: ^1.2.2
+
+  # FIXED: removed easy_localization — conflicts with flutter gen-l10n.
+  # Both register localization delegates; easy_localization intercepted strings
+  # before AppLocalizations could serve them, causing blank/null UI strings.
+
+  # Animations
+  flutter_animate: ^4.5.0
+
+  # Charts
+  fl_chart: ^0.70.2
 
 dev_dependencies:
   flutter_test:
@@ -62,10 +73,10 @@ flutter:
     - assets/images/
     - assets/icons/
     - assets/fonts/
+    # FIXED: removed assets/translations/ — was the easy_localization folder, now unused.
 
 flutter_launcher_icons:
   android: "launcher_icon"
   ios: true
   image_path: "assets/icons/app_icon.png"
   min_sdk_android: 21
-

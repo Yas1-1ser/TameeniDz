@@ -1,16 +1,21 @@
+import 'package:tameenidz/features/shared/widgets/page_entry_animation.dart';
+import 'package:tameenidz/core/theme/app_colors.dart';
+import 'package:tameenidz/core/theme/app_colors_extension.dart';
 import 'dart:io';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:go_router/go_router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import '../../../../../core/constants/app_colors.dart';
+
 import '../../../../../core/services/user_profile_service.dart';
-import '../../../../../core/theme/app_colors_extension.dart';
+
 import '../../../../../generated/l10n/app_localizations.dart';
 
 enum _StepState { completed, active, upcoming }
 
+/// Redesigned client Registration Step 3 Screen.
+/// Uses the brand's Luxury Beige + Gold design system and preserves all business logic.
 class Step3DocumentUpload extends StatefulWidget {
   const Step3DocumentUpload({super.key});
 
@@ -34,11 +39,25 @@ class _Step3DocumentUploadState extends State<Step3DocumentUpload> {
       );
 
       if (result != null && result.files.isNotEmpty) {
+        final file = result.files.first;
+        if (file.size > 5 * 1024 * 1024) {
+          setState(() {
+            final lang = Localizations.localeOf(context).languageCode;
+            if (lang == 'ar') {
+              _errorMessage = 'حجم الملف يتجاوز الحد الأقصى المسموح به وهو 5 ميجابايت';
+            } else if (lang == 'fr') {
+              _errorMessage = 'La taille du fichier dépasse la limite maximale de 5 Mo';
+            } else {
+              _errorMessage = 'File size exceeds the maximum limit of 5MB';
+            }
+          });
+          return;
+        }
         setState(() {
           if (type == 'national_id') {
-            _nationalIdFile = result.files.first;
+            _nationalIdFile = file;
           } else {
-            _proofOfAddressFile = result.files.first;
+            _proofOfAddressFile = file;
           }
           _errorMessage = null;
         });
@@ -162,20 +181,18 @@ class _Step3DocumentUploadState extends State<Step3DocumentUpload> {
     final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
-      backgroundColor: context.colors.background,
+      backgroundColor: context.colors.beigeBg,
       appBar: AppBar(
-        backgroundColor: AppColors.primaryGreen,
-        iconTheme: const IconThemeData(color: Colors.white),
-        title: Text(
-          l10n.documents,
-          style: const TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        centerTitle: true,
+        backgroundColor: Colors.transparent,
+        elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_rounded, size: 20),
+          icon: Icon(
+            Directionality.of(context) == TextDirection.rtl
+                ? Icons.arrow_forward_rounded
+                : Icons.arrow_back_rounded,
+            color: context.colors.darkText,
+            size: 22,
+          ),
           onPressed: () {
             if (context.canPop()) {
               context.pop();
@@ -184,48 +201,96 @@ class _Step3DocumentUploadState extends State<Step3DocumentUpload> {
             }
           },
         ),
-      ),
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(24),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildHeader(l10n),
-              const SizedBox(height: 32),
-              _buildUploadList(l10n),
-              if (_isUploading) _buildProgress(l10n),
-              const SizedBox(height: 16),
-              _buildSubmitButton(l10n),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildHeader(AppLocalizations l10n) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        _buildStepper(l10n),
-        const SizedBox(height: 32),
-        Text(
+        title: Text(
           l10n.documents,
           style: TextStyle(
-            fontSize: 24,
-            fontWeight: FontWeight.bold,
+            fontSize: 18,
+            fontWeight: FontWeight.w900,
             color: context.colors.darkText,
+            fontFamily: 'Cairo',
           ),
-          textAlign: TextAlign.center,
         ),
-        const SizedBox(height: 8),
-        Text(
-          l10n.uploadDocumentsSubtitle,
-          style: TextStyle(fontSize: 14, color: context.colors.slate500),
-          textAlign: TextAlign.center,
+        centerTitle: true,
+      ),
+      extendBodyBehindAppBar: true,
+      body: PageEntryAnimation(
+        child: SafeArea(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                // Horizontal Stepper Progress Tracker - Standardized 1-2-3
+                _buildStepper(l10n),
+                const SizedBox(height: 28),
+
+                Text(
+                  l10n.uploadDocumentsSubtitle,
+                  style: TextStyle(
+                    fontSize: 13,
+                    color: context.colors.slate500,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: 'Cairo',
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  Localizations.localeOf(context).languageCode == 'ar'
+                      ? 'الحجم الأقصى للملف الواحد: 5 ميجابايت (PDF أو صور)'
+                      : (Localizations.localeOf(context).languageCode == 'fr'
+                          ? 'Taille max par fichier : 5 Mo (PDF ou images)'
+                          : 'Max size per file: 5MB (PDF or images)'),
+                  style: TextStyle(
+                    fontSize: 11,
+                    color: context.colors.slate400,
+                    fontWeight: FontWeight.w500,
+                    fontFamily: 'Cairo',
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 24),
+
+                // Upload list
+                _buildUploadCard(
+                  title: l10n.nationalId,
+                  subtitle: l10n.uploadNationalIdHint,
+                  icon: Icons.badge_outlined,
+                  file: _nationalIdFile,
+                  onTap: () => _pickDocument('national_id', l10n),
+                  onRemove: () => _removeDocument('national_id'),
+                  l10n: l10n,
+                ),
+                const SizedBox(height: 16),
+                _buildUploadCard(
+                  title: l10n.proofOfAddress,
+                  subtitle: l10n.uploadProofOfAddressHint,
+                  icon: Icons.home_outlined,
+                  file: _proofOfAddressFile,
+                  onTap: () => _pickDocument('proof_of_address', l10n),
+                  onRemove: () => _removeDocument('proof_of_address'),
+                  l10n: l10n,
+                ),
+                const SizedBox(height: 20),
+
+                if (_errorMessage != null) ...[
+                  _buildErrorBanner(),
+                  const SizedBox(height: 16),
+                ],
+
+                if (_isUploading) ...[
+                  _buildProgress(l10n),
+                  const SizedBox(height: 20),
+                ],
+
+                // Action Buttons
+                _buildSubmitButton(l10n),
+                SizedBox(height: 40),
+              ],
+            ),
+          ),
         ),
-      ],
+      ),
     );
   }
 
@@ -233,20 +298,20 @@ class _Step3DocumentUploadState extends State<Step3DocumentUpload> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        _buildStepNode(number: '3', title: l10n.documents, state: _StepState.active),
-        _buildStepDivider(),
-        _buildStepNode(number: '2', title: l10n.verification, state: _StepState.completed),
-        _buildStepDivider(),
         _buildStepNode(number: '1', title: l10n.information, state: _StepState.completed),
+        _buildStepDivider(isGold: true),
+        _buildStepNode(number: '2', title: l10n.verification, state: _StepState.completed),
+        _buildStepDivider(isGold: true),
+        _buildStepNode(number: '3', title: l10n.documents, state: _StepState.active),
       ],
     );
   }
 
-  Widget _buildStepDivider() {
+  Widget _buildStepDivider({bool isGold = false}) {
     return Expanded(
       child: Container(
         height: 2,
-        color: context.colors.slate200,
+        color: isGold ? AppColors.goldAccent : context.colors.warmDivider,
       ),
     );
   }
@@ -263,31 +328,33 @@ class _Step3DocumentUploadState extends State<Step3DocumentUpload> {
 
     switch (state) {
       case _StepState.completed:
-        circleColor = AppColors.primaryGreen;
-        borderColor = AppColors.primaryGreen;
-        content = const Icon(Icons.check, color: Colors.white, size: 16);
-        textColor = AppColors.primaryGreen;
+        circleColor = AppColors.goldAccent;
+        borderColor = AppColors.goldAccent;
+        content = const Icon(Icons.check_rounded, color: Colors.white, size: 16);
+        textColor = AppColors.goldAccent;
         break;
       case _StepState.active:
         circleColor = Colors.white;
-        borderColor = AppColors.primaryGreen;
-        content = Text(
-          number,
-          style: TextStyle(
-            color: AppColors.primaryGreen,
-            fontWeight: FontWeight.bold,
+        borderColor = AppColors.goldAccent;
+        content = Container(
+          width: 12,
+          height: 12,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: AppColors.goldAccent,
           ),
         );
-        textColor = AppColors.primaryGreen;
+        textColor = AppColors.goldAccent;
         break;
       case _StepState.upcoming:
-        circleColor = Colors.transparent;
-        borderColor = context.colors.slate300;
+        circleColor = context.colors.beigeCard;
+        borderColor = AppColors.goldAccent.withValues(alpha: 0.25);
         content = Text(
           number,
           style: TextStyle(
-            color: context.colors.slate400,
+            color: AppColors.goldAccent,
             fontWeight: FontWeight.bold,
+            fontSize: 12,
           ),
         );
         textColor = context.colors.slate400;
@@ -317,42 +384,11 @@ class _Step3DocumentUploadState extends State<Step3DocumentUpload> {
             overflow: TextOverflow.ellipsis,
             style: TextStyle(
               color: textColor,
-              fontSize: 10,
-              fontWeight:
-                  state == _StepState.active
-                      ? FontWeight.bold
-                      : FontWeight.normal,
+              fontSize: 11,
+              fontWeight: state == _StepState.active ? FontWeight.bold : FontWeight.normal,
+              fontFamily: 'Cairo',
             ),
           ),
-        ],
-      ),
-    );
-  }
-
-
-  Widget _buildUploadList(AppLocalizations l10n) {
-    return Expanded(
-      child: ListView(
-        children: [
-          _buildUploadCard(
-            title: l10n.nationalId,
-            subtitle: l10n.uploadNationalIdHint,
-            icon: Icons.badge_outlined,
-            file: _nationalIdFile,
-            onTap: () => _pickDocument('national_id', l10n),
-            onRemove: () => _removeDocument('national_id'),
-          ),
-          const SizedBox(height: 20),
-          _buildUploadCard(
-            title: l10n.proofOfAddress,
-            subtitle: l10n.uploadProofOfAddressHint,
-            icon: Icons.home_outlined,
-            file: _proofOfAddressFile,
-            onTap: () => _pickDocument('proof_of_address', l10n),
-            onRemove: () => _removeDocument('proof_of_address'),
-          ),
-          const SizedBox(height: 24),
-          if (_errorMessage != null) _buildErrorBanner(),
         ],
       ),
     );
@@ -361,16 +397,20 @@ class _Step3DocumentUploadState extends State<Step3DocumentUpload> {
   Widget _buildProgress(AppLocalizations l10n) {
     return Column(
       children: [
-        const SizedBox(height: 8),
-        LinearProgressIndicator(
-          value: _uploadProgress,
-          color: AppColors.primaryGreen,
-          backgroundColor: context.colors.slate200,
+        SizedBox(height: 8),
+        ClipRRect(
+          borderRadius: BorderRadius.circular(10),
+          child: LinearProgressIndicator(
+            value: _uploadProgress,
+            color: AppColors.primaryGreen,
+            backgroundColor: context.colors.warmDivider,
+            minHeight: 6,
+          ),
         ),
-        const SizedBox(height: 4),
+        SizedBox(height: 4),
         Text(
           '${(_uploadProgress * 100).toInt()}%',
-          style: TextStyle(fontSize: 12, color: context.colors.slate500),
+          style: TextStyle(fontSize: 12, color: context.colors.slate500, fontWeight: FontWeight.bold, fontFamily: 'Cairo'),
           textAlign: TextAlign.center,
         ),
       ],
@@ -380,42 +420,68 @@ class _Step3DocumentUploadState extends State<Step3DocumentUpload> {
   Widget _buildSubmitButton(AppLocalizations l10n) {
     return Column(
       children: [
-        SizedBox(
-          width: double.infinity,
-          height: 56,
-          child: ElevatedButton(
-            onPressed: _canSubmit ? () => _submitDocuments(l10n) : null,
-            child:
-                _isUploading
-                    ? const SizedBox(
-                      width: 24,
-                      height: 24,
-                      child: CircularProgressIndicator(
-                        color: Colors.white,
-                        strokeWidth: 2,
+        GestureDetector(
+          onTap: _canSubmit ? () => _submitDocuments(l10n) : null,
+          child: Opacity(
+            opacity: _canSubmit ? 1.0 : 0.6,
+            child: Container(
+              height: 56,
+              decoration: BoxDecoration(
+                gradient: const LinearGradient(
+                  colors: [AppColors.primaryGreen, Color(0xFF247E53)],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+                borderRadius: BorderRadius.circular(40),
+                border: Border.all(
+                  color: AppColors.goldAccent.withValues(alpha: 0.45),
+                  width: 1.5,
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: AppColors.primaryGreen.withValues(alpha: 0.30),
+                    blurRadius: 18,
+                    offset: const Offset(0, 7),
+                  ),
+                ],
+              ),
+              alignment: Alignment.center,
+              child: _isUploading
+                  ? const CircularProgressIndicator(color: Colors.white, strokeWidth: 2)
+                  : Text(
+                      l10n.completeRegistration,
+                      style: TextStyle(
+                        color: context.colors.surface,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: 'Cairo',
                       ),
-                    )
-                    : Text(l10n.completeRegistration),
+                    ),
+            ),
           ),
         ),
         if (!_isUploading) ...[
-          const SizedBox(height: 12),
-          SizedBox(
-            width: double.infinity,
-            height: 48,
-            child: OutlinedButton(
-              onPressed: () => context.go('/client'),
-              style: OutlinedButton.styleFrom(
-                side: BorderSide(color: context.colors.slate300),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
+          const SizedBox(height: 14),
+          GestureDetector(
+            onTap: () => context.go('/client'),
+            child: Container(
+              height: 48,
+              decoration: BoxDecoration(
+                color: Colors.transparent,
+                borderRadius: BorderRadius.circular(40),
+                border: Border.all(
+                  color: AppColors.primaryGreen,
+                  width: 1.5,
                 ),
               ),
+              alignment: Alignment.center,
               child: Text(
-                l10n.skip, // or l10n.skipForNow if available
-                style: TextStyle(
-                  color: context.colors.slate500,
-                  fontWeight: FontWeight.w600,
+                l10n.skip,
+                style: const TextStyle(
+                  color: AppColors.primaryGreen,
+                  fontSize: 15,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'Cairo',
                 ),
               ),
             ),
@@ -435,7 +501,7 @@ class _Step3DocumentUploadState extends State<Step3DocumentUpload> {
       ),
       child: Text(
         _errorMessage!,
-        style: const TextStyle(fontSize: 13, color: AppColors.rejected),
+        style: const TextStyle(fontSize: 13, color: AppColors.rejected, fontWeight: FontWeight.bold, fontFamily: 'Cairo'),
       ),
     );
   }
@@ -447,6 +513,7 @@ class _Step3DocumentUploadState extends State<Step3DocumentUpload> {
     required PlatformFile? file,
     required VoidCallback onTap,
     required VoidCallback onRemove,
+    required AppLocalizations l10n,
   }) {
     final hasFile = file != null;
 
@@ -455,11 +522,11 @@ class _Step3DocumentUploadState extends State<Step3DocumentUpload> {
       child: Container(
         padding: const EdgeInsets.all(24),
         decoration: BoxDecoration(
-          color: context.colors.surface,
+          color: context.colors.beigeCard,
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
-            color: hasFile ? AppColors.accepted : context.colors.slate200,
-            width: hasFile ? 2 : 1,
+            color: hasFile ? AppColors.accepted : AppColors.goldAccent.withValues(alpha: 0.28),
+            width: hasFile ? 2 : 1.5,
           ),
           boxShadow: [
             BoxShadow(
@@ -475,58 +542,57 @@ class _Step3DocumentUploadState extends State<Step3DocumentUpload> {
               width: 64,
               height: 64,
               decoration: BoxDecoration(
-                color:
-                    hasFile
-                        ? AppColors.accepted.withValues(alpha: 0.1)
-                        : AppColors.primaryGreen.withValues(alpha: 0.1),
+                color: hasFile
+                    ? AppColors.accepted.withValues(alpha: 0.1)
+                    : AppColors.primaryGreen.withValues(alpha: 0.1),
                 shape: BoxShape.circle,
               ),
               child: Icon(
-                hasFile ? Icons.check_circle : icon,
-                color: hasFile ? AppColors.accepted : AppColors.primaryGreen,
+                hasFile ? Icons.check_circle_rounded : icon,
+                color: hasFile ? AppColors.accepted : AppColors.goldAccent,
                 size: 32,
               ),
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
             Text(
               title,
               style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w600,
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
                 color: context.colors.darkText,
+                fontFamily: 'Cairo',
               ),
             ),
-            const SizedBox(height: 4),
+            SizedBox(height: 4),
             Text(
               subtitle,
-              style: TextStyle(fontSize: 14, color: context.colors.slate500),
+              style: TextStyle(fontSize: 12, color: context.colors.slate500, fontFamily: 'Cairo', fontWeight: FontWeight.w600),
             ),
             const SizedBox(height: 12),
             if (hasFile)
               Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 8,
-                ),
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 decoration: BoxDecoration(
-                  color: context.colors.softSlate,
+                  color: context.colors.beigeBg,
                   borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: AppColors.goldAccent.withValues(alpha: 0.15)),
                 ),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Icon(
+                    const Icon(
                       Icons.attach_file,
                       size: 16,
-                      color: context.colors.slate500,
+                      color: AppColors.goldAccent,
                     ),
-                    const SizedBox(width: 8),
+                    SizedBox(width: 8),
                     Flexible(
                       child: Text(
                         file.name,
                         style: TextStyle(
                           fontSize: 12,
-                          color: context.colors.slate700,
+                          color: context.colors.darkText,
+                          fontFamily: 'Cairo',
                         ),
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -534,7 +600,7 @@ class _Step3DocumentUploadState extends State<Step3DocumentUpload> {
                     const SizedBox(width: 8),
                     GestureDetector(
                       onTap: _isUploading ? null : onRemove,
-                      child: const Icon(
+                      child: Icon(
                         Icons.close,
                         size: 16,
                         color: AppColors.rejected,
@@ -546,7 +612,7 @@ class _Step3DocumentUploadState extends State<Step3DocumentUpload> {
             else
               Text(
                 'PDF / JPG / PNG',
-                style: TextStyle(fontSize: 12, color: context.colors.slate500),
+                style: TextStyle(fontSize: 12, color: context.colors.slate400, fontFamily: 'Cairo', fontWeight: FontWeight.bold),
               ),
           ],
         ),

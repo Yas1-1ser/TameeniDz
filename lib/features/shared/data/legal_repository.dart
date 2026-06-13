@@ -1,3 +1,5 @@
+import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../../core/providers/supabase_provider.dart';
@@ -23,7 +25,6 @@ class LegalRepository {
 
   Future<String?> getDossierDownloadUrl() async {
     try {
-      // Generate a signed URL for the dossier file (valid for 1 hour)
       final String response = await _client.storage
           .from('documents')
           .createSignedUrl('dossier.pdf', 3600);
@@ -31,5 +32,27 @@ class LegalRepository {
     } catch (e) {
       return null;
     }
+  }
+
+  /// Uploads the legal dossier PDF to the 'documents' bucket.
+  Future<void> uploadDossierFile(File file) async {
+    await _client.storage
+        .from('documents')
+        .upload(
+          'dossier.pdf',
+          file,
+          fileOptions: const FileOptions(upsert: true, contentType: 'application/pdf'),
+        );
+  }
+
+  /// Uploads the legal dossier PDF as bytes (for Web support).
+  Future<void> uploadDossierBytes(Uint8List bytes) async {
+    await _client.storage
+        .from('documents')
+        .uploadBinary(
+          'dossier.pdf',
+          bytes,
+          fileOptions: const FileOptions(upsert: true, contentType: 'application/pdf'),
+        );
   }
 }

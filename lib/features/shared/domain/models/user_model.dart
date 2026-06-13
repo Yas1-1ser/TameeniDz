@@ -6,6 +6,10 @@ class UserModel {
   final String? ccpNumber;
   final String role;
   final String? operatorId;
+  final bool documentsSubmitted;
+  final DateTime? documentsSubmittedAt;
+  final String documentStatus; // 'pending', 'approved', 'rejected'
+  final String? rejectionReason;
   final DateTime createdAt;
 
   UserModel({
@@ -16,21 +20,32 @@ class UserModel {
     this.ccpNumber,
     required this.role,
     this.operatorId,
+    this.documentsSubmitted = false,
+    this.documentsSubmittedAt,
+    this.documentStatus = 'pending',
+    this.rejectionReason,
     required this.createdAt,
   });
 
-  factory UserModel.fromJson(Map<String, dynamic> json) {
+  factory UserModel.fromJson(Map<String, dynamic> json, {Map<String, dynamic>? metadata}) {
+    final merged = {...json, ...?(metadata)};
     return UserModel(
-      id: json['id'] ?? '',
-      fullName: json['full_name'] ?? 'Unknown User',
-      email: json['email'] ?? '',
-      phone: json['phone_number'] ?? json['phone'],
-      ccpNumber: json['ccp_number'],
-      role: json['role'] ?? 'client',
-      operatorId: json['operator_id'] ?? json['company'] ?? json['employee_id'],
+      id: merged['id'] ?? '',
+      fullName: merged['full_name'] ?? 'Unknown User',
+      email: merged['email'] ?? '',
+      phone: merged['phone_number'] ?? merged['phone'],
+      ccpNumber: merged['ccp_number'],
+      role: merged['role'] ?? 'client',
+      operatorId: merged['operator_id'] ?? merged['company'] ?? merged['employee_id'],
+      documentsSubmitted: merged['documents_submitted'] ?? false,
+      documentsSubmittedAt: merged['documents_submitted_at'] != null 
+          ? DateTime.parse(merged['documents_submitted_at']) 
+          : null,
+      documentStatus: merged['document_status'] ?? 'pending',
+      rejectionReason: merged['rejection_reason'],
       createdAt:
-          json['created_at'] != null
-              ? DateTime.parse(json['created_at'])
+          merged['created_at'] != null
+              ? DateTime.parse(merged['created_at'])
               : DateTime.now(),
     );
   }
@@ -44,7 +59,36 @@ class UserModel {
       'ccp_number': ccpNumber,
       'role': role,
       'operator_id': operatorId,
+      'documents_submitted': documentsSubmitted,
+      'documents_submitted_at': documentsSubmittedAt?.toIso8601String(),
+      'document_status': documentStatus,
+      'rejection_reason': rejectionReason,
       'created_at': createdAt.toIso8601String(),
     };
+  }
+
+  UserModel copyWith({
+    String? fullName,
+    String? phone,
+    String? ccpNumber,
+    bool? documentsSubmitted,
+    DateTime? documentsSubmittedAt,
+    String? documentStatus,
+    String? rejectionReason,
+  }) {
+    return UserModel(
+      id: id,
+      fullName: fullName ?? this.fullName,
+      email: email,
+      phone: phone ?? this.phone,
+      ccpNumber: ccpNumber ?? this.ccpNumber,
+      role: role,
+      operatorId: operatorId,
+      documentsSubmitted: documentsSubmitted ?? this.documentsSubmitted,
+      documentsSubmittedAt: documentsSubmittedAt ?? this.documentsSubmittedAt,
+      documentStatus: documentStatus ?? this.documentStatus,
+      rejectionReason: rejectionReason ?? this.rejectionReason,
+      createdAt: createdAt,
+    );
   }
 }

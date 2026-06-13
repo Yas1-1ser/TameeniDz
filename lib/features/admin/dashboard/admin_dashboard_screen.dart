@@ -1,17 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:tameenidz/generated/l10n/app_localizations.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:tameenidz/core/theme/app_colors_extension.dart';
+import 'package:fl_chart/fl_chart.dart';
+import 'package:tameenidz/core/router/app_routes.dart';
 import 'package:go_router/go_router.dart';
-import 'package:intl/intl.dart';
-import '../../../core/constants/app_colors.dart';
-import '../../../core/theme/app_colors_extension.dart';
-import '../../../shared/enums/policy_status.dart';
-import 'admin_providers.dart';
-import 'package:tameenidz/shared/widgets/portal_layout.dart';
-import 'package:tameenidz/shared/widgets/responsive_layout.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import '../../../core/realtime/realtime_manager.dart';
-import '../../../core/realtime/realtime_status_badge.dart';
+import 'package:tameenidz/core/services/realtime_manager.dart';
+import 'package:tameenidz/generated/l10n/app_localizations.dart';
+import 'package:tameenidz/features/admin/widgets/admin_shared_widgets.dart';
+import 'package:tameenidz/features/shared/widgets/page_entry_animation.dart';
+import 'admin_providers.dart';
+import 'package:tameenidz/features/shared/domain/models/policy_model.dart';
 
 class AdminDashboardScreen extends ConsumerStatefulWidget {
   const AdminDashboardScreen({super.key});
@@ -21,15 +20,6 @@ class AdminDashboardScreen extends ConsumerStatefulWidget {
 }
 
 class _AdminDashboardScreenState extends ConsumerState<AdminDashboardScreen> {
-  int get _bottomNavIdx {
-    final location = GoRouterState.of(context).uri.toString();
-    if (location.contains('commission')) return 1;
-    if (location.contains('audit')) return 2;
-    if (location.contains('settings')) return 4;
-    return 0;
-  }
-  
-  String _operatorFilter = 'all'; // 'all', 'algeria_takaful', 'al_ittihad'
   late final RealtimeManager _realtimeManager;
 
   @override
@@ -43,17 +33,13 @@ class _AdminDashboardScreenState extends ConsumerState<AdminDashboardScreen> {
           event: PostgresChangeEvent.all,
           schema: 'public',
           table: 'policies',
-          callback: (payload) {
-            ref.invalidate(allPoliciesStreamProvider);
-          },
+          callback: (payload) => ref.invalidate(allPoliciesStreamProvider),
         );
         channel.onPostgresChanges(
           event: PostgresChangeEvent.all,
           schema: 'public',
           table: 'audit_logs',
-          callback: (payload) {
-            ref.invalidate(auditLogsStreamProvider);
-          },
+          callback: (payload) => ref.invalidate(auditLogsStreamProvider),
         );
       },
     );
@@ -70,1001 +56,807 @@ class _AdminDashboardScreenState extends ConsumerState<AdminDashboardScreen> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final policiesAsync = ref.watch(allPoliciesStreamProvider);
-    final colors = context.colors;
-    final isMobile = ResponsiveLayout.isMobile(context);
 
-    final menuItems = [
-      (Icons.dashboard_rounded, l10n.dashboard, '/admin/dashboard'),
-      (Icons.auto_graph_rounded, l10n.commissionsAdmin, '/admin/commission'),
-      (Icons.history_edu_rounded, l10n.legalRecord, '/admin/audit'),
-      (Icons.manage_accounts_rounded, l10n.userManagement, '/admin/users'),
-      (Icons.settings_rounded, l10n.settingsAdmin, '/admin/settings'),
-    ];
-
-    // Build the bottom navigation bar for mobile
-    final bottomNavBar = BottomNavigationBar(
-      currentIndex: _bottomNavIdx,
-      onTap: (idx) {
-        final targetIdx = idx == 3 ? 4 : idx;
-        context.go(menuItems[targetIdx].$3);
-      },
-      selectedItemColor: colors.primary,
-      unselectedItemColor: colors.onSurfaceVariant,
-      showUnselectedLabels: true,
-      type: BottomNavigationBarType.fixed,
-      items: [
-        BottomNavigationBarItem(
-          icon: Icon(menuItems[0].$1),
-          label: menuItems[0].$2,
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(menuItems[1].$1),
-          label: menuItems[1].$2,
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(menuItems[2].$1),
-          label: menuItems[2].$2,
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(menuItems[4].$1),
-          label: menuItems[4].$2,
-        ), // Settings
-      ],
-    );
-
-    return PortalLayout(
-      selectedIndex: _bottomNavIdx,
-      menuItems: menuItems,
-      portalTitle: isMobile ? l10n.dashboard : l10n.adminPortal,
-      portalSubtitle: l10n.shariaInsurance,
-      accentColor: colors.primary,
-      topHeader: l10n.masterConsole,
-      appBarColor: isMobile ? const Color(0xFF1E3A34) : null,
-      appBarTextColor: isMobile ? Colors.white : null,
-      bottomNavigationBar: isMobile ? bottomNavBar : null,
-      showBackButton: true,
-      fallbackRoute: '/role',
-      appBarActions: [
-        Center(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12.0),
-            child: RealtimeStatusBadge(
-              stateStream: _realtimeManager.stateStream,
-              onRetry: _realtimeManager.retryNow,
+    return Scaffold(
+      backgroundColor: const Color(0xFFF5F0E8),
+      appBar: buildAdminAppBar(
+        context,
+        l10n.dashboard,
+        showBackButton: false,
+        actions: [
+          IconButton(
+            tooltip: l10n.totalWallet,
+            icon: const Icon(
+              Icons.account_balance_wallet_outlined,
+              color: Color(0xFFC9A96E),
             ),
+            onPressed: () => context.go(AppRoutes.adminWallet),
           ),
-        ),
-        if (isMobile)
-          _buildHeaderAction(
-            Icons.notifications_active_rounded,
-            () {},
-            hasBadge: true,
-            iconColor: Colors.white,
-            bgColor: Colors.white.withValues(alpha: 0.1),
-          )
-        else
-          _buildHeaderAction(
-            Icons.notifications_active_rounded,
-            () {},
-            hasBadge: true,
-            iconColor: colors.onSurfaceVariant,
-            bgColor: colors.surfaceContainerHigh,
-          ),
-      ],
-      body:
-          isMobile
-              ? _buildMobileContent(context, l10n, policiesAsync)
-              : _buildDesktopContent(context, l10n, policiesAsync),
-    );
-  }
+          const SizedBox(width: 8),
+        ],
+      ),
+      bottomNavigationBar: adminBottomNav(context, 0, l10n),
+      body: PageEntryAnimation(
+        child: policiesAsync.when(
+          data: (policies) {
+            // Sort by submittedAt descending to show latest first
+            final sortedPolicies = List<PolicyModel>.from(policies)
+              ..sort((a, b) => b.submittedAt.compareTo(a.submittedAt));
 
-  Widget _buildHeaderAction(
-    IconData icon,
-    VoidCallback onTap, {
-    bool hasBadge = false,
-    required Color iconColor,
-    required Color bgColor,
-  }) {
-    return Stack(
-      children: [
-        IconButton(
-          onPressed: onTap,
-          icon: Icon(icon, color: iconColor),
-          style: IconButton.styleFrom(
-            backgroundColor: bgColor,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
-          ),
-        ),
-        if (hasBadge)
-          Positioned(
-            right: 8,
-            top: 8,
-            child: Container(
-              width: 8,
-              height: 8,
-              decoration: const BoxDecoration(
-                color: AppColors.rejected,
-                shape: BoxShape.circle,
-              ),
-            ),
-          ),
-      ],
-    );
-  }
+            final summary = ref.watch(commissionSummaryProvider(policies));
+            final recentPolicies = sortedPolicies.take(5).toList();
+            final today = DateTime.now();
+            final todayStart = DateTime(today.year, today.month, today.day);
+            final requestsToday = sortedPolicies
+                .where((p) => !p.submittedAt.isBefore(todayStart))
+                .length;
 
-  Widget _buildDesktopContent(
-    BuildContext context,
-    AppLocalizations l10n,
-    AsyncValue policiesAsync,
-  ) {
-    final colors = context.colors;
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        Expanded(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.all(32),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  l10n.performanceOverview,
-                  style: TextStyle(
-                    fontSize: 28,
-                    fontWeight: FontWeight.w900,
-                    color: colors.onSurface,
-                    letterSpacing: -1,
-                  ),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  l10n.performanceOverviewSubtitle,
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: colors.onSurfaceVariant,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                const SizedBox(height: 32),
-                
-                // ── Operator Separation Filter ─────────────────────────
-                Container(
-                  padding: const EdgeInsets.all(4),
-                  decoration: BoxDecoration(
-                    color: colors.surfaceContainerHigh,
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      _buildFilterChip('all', l10n.allOperators, Icons.business_rounded),
-                      _buildFilterChip('algeria_takaful', 'ALGERIA TAKAFUL', Icons.shield_rounded),
-                      _buildFilterChip('al_ittihad', 'AL-ITTIHAD', Icons.verified_user_rounded),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 32),
-                policiesAsync.when(
-                  data: (policies) {
-                    final filteredPolicies = _operatorFilter == 'all' 
-                        ? policies 
-                        : policies.where((p) => p.operatorId == _operatorFilter).toList();
-
-                    final activeCount =
-                        filteredPolicies
-                            .where((p) => p.status == PolicyStatus.accepted || p.status == PolicyStatus.paid)
-                            .length;
-                    final totalPremium = filteredPolicies.fold<double>(
-                      0.0,
-                      (double sum, p) => sum + p.amount,
-                    );
-                    final pendingCount =
-                        filteredPolicies
-                            .where(
-                              (p) =>
-                                  p.status == PolicyStatus.pending ||
-                                  p.status ==
-                                      PolicyStatus.modificationRequested,
-                            )
-                            .length;
-
-                    final opName = _operatorFilter == 'all' ? l10n.allOperators : (_operatorFilter == 'algeria_takaful' ? 'ALGERIA TAKAFUL' : 'AL-ITTIHAD');
-                    
-                    return Row(
+            return SingleChildScrollView(
+              child: Column(
+                children: [
+                  _buildHeroSection(context, l10n, summary, policies.length, requestsToday),
+                  Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
                       children: [
-                        Expanded(
-                          child: _buildDesktopKpiCard(
-                            context,
-                            title: l10n.totalActivePolicies,
-                            value: activeCount.toString(),
-                            subtitle:
-                                "$pendingCount ${l10n.requireImmediateReview} • $opName",
-                            icon: Icons.verified_user_rounded,
-                            color: colors.primary,
-                          ),
-                        ),
-                        const SizedBox(width: 24),
-                        Expanded(
-                          child: _buildDesktopKpiCard(
-                            context,
-                            title: l10n.totalPremiumsCollectedDzd,
-                            value: NumberFormat.compact().format(totalPremium),
-                            subtitle:
-                                "+15% ${l10n.fromLastMonth} • $opName", // Mock trend
-                            icon: Icons.payments_rounded,
-                            color: AppColors.subscriberFund,
+                        _buildChart1(context, l10n),
+                        const SizedBox(height: 14),
+                        _buildChart2(context, l10n),
+                        const SizedBox(height: 14),
+                        _buildQuickAccessGrid(context, l10n),
+                        const SizedBox(height: 14),
+                        _buildSalesList(context, l10n, recentPolicies),
+                        const SizedBox(height: 12),
+                        Text(
+                          '${l10n.adminPortal} v1.0',
+                          style: const TextStyle(
+                            fontSize: 10,
+                            color: Color(0xFF8B7355),
+                            fontFamily: 'Cairo',
                           ),
                         ),
                       ],
-                    );
-                  },
-                  loading:
-                      () => const Center(child: CircularProgressIndicator()),
-                  error:
-                      (err, stack) =>
-                          Center(child: Text('${l10n.unexpectedError}: $err')),
-                ),
-                const SizedBox(height: 48),
-                _buildRequestsMonitor(context, l10n, policiesAsync),
-                const SizedBox(height: 48),
-                _buildRecentAudit(context, l10n),
-              ],
-            ),
-          ),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
+          loading: () => const Center(child: CircularProgressIndicator()),
+          error: (e, st) => Center(child: Text('${l10n.unexpectedError}: $e')),
         ),
-      ],
+      ),
     );
   }
 
-  Widget _buildDesktopKpiCard(
-    BuildContext context, {
-    required String title,
-    required String value,
-    required String subtitle,
-    required IconData icon,
-    required Color color,
-  }) {
-    final colors = context.colors;
+  Widget _buildHeroSection(
+    BuildContext context,
+    AppLocalizations l10n,
+    CommissionSummary summary,
+    int totalPolicies,
+    int requestsToday,
+  ) {
     return Container(
-      padding: const EdgeInsets.all(32),
-      height: 280,
-      decoration: BoxDecoration(
-        color: colors.surfaceContainerLowest,
-        borderRadius: BorderRadius.circular(32),
-        border: Border.all(color: color.withValues(alpha: 0.1), width: 2),
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [Color(0xFF2D1F0E), Color(0xFF4A3520)],
+        ),
       ),
+      padding: const EdgeInsets.fromLTRB(16, 20, 16, 32),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: color.withValues(alpha: 0.1),
-              shape: BoxShape.circle,
-            ),
-            child: Icon(icon, color: color, size: 32),
-          ),
-          const Spacer(),
           Text(
-            title,
+            l10n.adminPortal,
             style: TextStyle(
-              fontSize: 16,
-              color: colors.onSurfaceVariant,
-              fontWeight: FontWeight.w700,
+              color: const Color(0xFFC9A96E).withValues(alpha: 0.7),
+              fontSize: 12,
+              fontFamily: 'Cairo',
             ),
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: 4),
           Text(
-            value,
+            '${l10n.welcomePrefix} ${l10n.generalManager} ✦',
             style: TextStyle(
-              fontSize: 48,
-              fontWeight: FontWeight.w900,
-              color: colors.onSurface,
-              height: 1.1,
-              letterSpacing: -2,
+              color: context.colors.surface,
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              fontFamily: 'Cairo',
             ),
           ),
-          const SizedBox(height: 12),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-            decoration: BoxDecoration(
-              color: color.withValues(alpha: 0.1),
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: Text(
-              subtitle,
-              style: TextStyle(
-                fontSize: 12,
-                color: color,
-                fontWeight: FontWeight.w800,
+          const SizedBox(height: 20),
+          GridView.count(
+            crossAxisCount: 2,
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            mainAxisSpacing: 10,
+            crossAxisSpacing: 10,
+            childAspectRatio: 1.5,
+            children: [
+              _statCard(
+                context,
+                icon: Icons.account_balance_wallet_outlined,
+                label: l10n.totalWallet,
+                value: '${summary.totalPremium.toInt()} ${l10n.dzd}',
+                sub: l10n.adminTotalSubscriptionsCollected,
               ),
-            ),
+              _statCard(
+                context,
+                icon: Icons.description_outlined,
+                label: l10n.requestsToday,
+                value: '$requestsToday',
+                sub: l10n.totalPoliciesCount(totalPolicies),
+              ),
+
+              _statCard(
+                context,
+                icon: Icons.business_outlined,
+                label: l10n.takafulCompaniesCount,
+                value: '2',
+                sub: l10n.activeAudited,
+              ),
+            ],
           ),
         ],
       ),
     );
   }
 
-  Widget _buildMobileContent(
-    BuildContext context,
-    AppLocalizations l10n,
-    AsyncValue policiesAsync,
-  ) {
-    final colors = context.colors;
-
-    return Column(
-      children: [
-        Expanded(
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Top Green Section background extension
-                Container(
-                  color: const Color(0xFF1E3A34),
-                  width: double.infinity,
-                  padding: const EdgeInsets.fromLTRB(20, 0, 20, 32),
-                  child: policiesAsync.when(
-                    data: (policies) {
-                      final activeCount =
-                          policies
-                              .where((p) => p.status == PolicyStatus.accepted)
-                              .length;
-                      final totalPremium = policies.fold<double>(
-                        0.0,
-                        (double sum, p) => sum + p.amount,
-                      );
-                      // Mocking some values for the UI
-                      final usersCount = 2847;
-                      final companiesCount = 2;
-
-                      return GridView(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 2,
-                              crossAxisSpacing: 12,
-                              mainAxisSpacing: 12,
-                              mainAxisExtent: 90,
-                            ),
-                        children: [
-                          _mobileKpiCard(
-                            l10n.totalUsersAdmin,
-                            NumberFormat.compact().format(usersCount),
-                            Icons.people_alt_rounded,
-                          ),
-                          _mobileKpiCard(
-                            l10n.activeRequestsAdmin,
-                            activeCount.toString(),
-                            Icons.pending_actions_rounded,
-                          ),
-                          _mobileKpiCard(
-                            l10n.takafulCompaniesCount,
-                            companiesCount.toString(),
-                            Icons.business_rounded,
-                          ),
-                          _mobileKpiCard(
-                            l10n.totalRevenue,
-                            "${NumberFormat.compact().format(totalPremium)} ${l10n.dzd}",
-                            Icons.payments_rounded,
-                          ),
-                        ],
-                      );
-                    },
-                    loading:
-                        () => const Center(
-                          child: CircularProgressIndicator(color: Colors.white),
-                        ),
-                    error:
-                        (err, stack) => Center(
-                          child: Text(
-                            '${l10n.unexpectedError}: $err',
-                            style: const TextStyle(color: Colors.white),
-                          ),
-                        ),
-                  ),
-                ),
-
-                // Quick Access
-                Padding(
-                  padding: const EdgeInsets.all(20),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        l10n.quickAccess,
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w900,
-                          color: colors.onSurface,
-                        ),
-                      ),
-                      const SizedBox(height: 16),
-                      GridView(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 4,
-                              crossAxisSpacing: 12,
-                              mainAxisSpacing: 12,
-                              mainAxisExtent: 110,
-                            ),
-                        children: [
-                          _quickAccessBtn(
-                            l10n.userManagement,
-                            Icons.manage_accounts_rounded,
-                            '/admin/users',
-                            const Color(0xFFE8F5E9),
-                            const Color(0xFF2E7D32),
-                          ),
-                          _quickAccessBtn(
-                            l10n.commissionsAdmin,
-                            Icons.auto_graph_rounded,
-                            '/admin/commission',
-                            const Color(0xFFFFF3E0),
-                            const Color(0xFFEF6C00),
-                          ),
-                          _quickAccessBtn(
-                            l10n.settingsAdmin,
-                            Icons.settings_rounded,
-                            '/client/settings',
-                            const Color(0xFFF3E5F5),
-                            const Color(0xFF6A1B9A),
-                          ),
-                          _quickAccessBtn(
-                            l10n.legalRecord,
-                            Icons.history_edu_rounded,
-                            '/admin/audit',
-                            const Color(0xFFE3F2FD),
-                            const Color(0xFF1565C0),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-
-                // Requests Monitor
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: _buildRequestsMonitor(
-                    context,
-                    l10n,
-                    policiesAsync,
-                    isMobile: true,
-                  ),
-                ),
-                const SizedBox(height: 24),
-
-                // Latest Activities
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: _buildRecentAudit(context, l10n, isMobile: true),
-                ),
-
-                const SizedBox(height: 24),
-              ],
-            ),
-          ),
-        ),
-        // System Status Footer
-        Container(
-          width: double.infinity,
-          padding: const EdgeInsets.symmetric(vertical: 12),
-          color: colors.surfaceContainerLowest,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Container(
-                width: 8,
-                height: 8,
-                decoration: const BoxDecoration(
-                  color: AppColors.accepted,
-                  shape: BoxShape.circle,
-                ),
-              ),
-              const SizedBox(width: 8),
-              Text(
-                l10n.systemStatusNormal,
-                style: TextStyle(
-                  fontSize: 11,
-                  fontWeight: FontWeight.w700,
-                  color: colors.onSurfaceVariant,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _mobileKpiCard(String title, String value, IconData icon) {
+  Widget _statCard(
+    BuildContext context, {
+    required IconData icon,
+    required String label,
+    required String value,
+    required String sub,
+  }) {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(16),
+        color: const Color(0xFFC9A96E).withValues(alpha: 0.1),
+        border: Border.all(
+          color: const Color(0xFFC9A96E).withValues(alpha: 0.25),
+          width: 0.5,
+        ),
+        borderRadius: BorderRadius.circular(12),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Row(
-            children: [
-              Icon(icon, color: Colors.white70, size: 16),
-              const SizedBox(width: 8),
-              Expanded(
-                child: Text(
-                  title,
-                  style: const TextStyle(
-                    fontSize: 11,
-                    color: Colors.white70,
-                    fontWeight: FontWeight.w600,
-                  ),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
-            ],
-          ),
-          const Spacer(),
-          FittedBox(
-            fit: BoxFit.scaleDown,
-            child: Text(
-              value,
-              style: const TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.w900,
-                color: Colors.white,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _quickAccessBtn(
-    String label,
-    IconData icon,
-    String route,
-    Color bgColor,
-    Color iconColor,
-  ) {
-    return GestureDetector(
-      onTap: () => context.push(route),
-      child: Column(
-        children: [
-          Container(
-            width: 56,
-            height: 56,
-            decoration: BoxDecoration(
-              color: bgColor,
-              borderRadius: BorderRadius.circular(16),
-            ),
-            child: Icon(icon, color: iconColor, size: 28),
-          ),
-          const SizedBox(height: 8),
-          SizedBox(
-            height: 40,
-            child: Text(
-              label,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 11,
-                fontWeight: FontWeight.w700,
-                color: context.colors.onSurfaceVariant,
-                height: 1.1,
-              ),
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildRecentAudit(
-    BuildContext context,
-    AppLocalizations l10n, {
-    bool isMobile = false,
-  }) {
-    final colors = context.colors;
-    final auditAsync = ref.watch(auditLogsStreamProvider);
-
-    return Container(
-      padding: EdgeInsets.all(isMobile ? 16 : 32),
-      decoration: BoxDecoration(
-        color: colors.surfaceContainerLowest,
-        borderRadius: BorderRadius.circular(isMobile ? 24 : 32),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
+              Icon(icon, color: const Color(0xFFC9A96E), size: 20),
               Text(
-                isMobile ? l10n.latestActivitiesAdmin : l10n.latestAuditLogs,
+                label,
                 style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w900,
-                  color: colors.onSurface,
-                ),
-              ),
-              TextButton(
-                onPressed: () => context.push('/admin/audit'),
-                child: Text(
-                  l10n.viewAll,
-                  style: TextStyle(
-                    fontWeight: FontWeight.w800,
-                    color: colors.primary,
-                  ),
+                  color: const Color(0xFFC9A96E).withValues(alpha: 0.7),
+                  fontSize: 11,
+                  fontFamily: 'Cairo',
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 16),
-          auditAsync.when(
-            data: (logs) {
-              if (logs.isEmpty) {
-                return Center(
-                  child: Padding(
-                    padding: const EdgeInsets.all(32),
-                    child: Text(
-                      l10n.noLogsYet,
-                      style: TextStyle(
-                        color: colors.onSurfaceVariant,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ),
-                );
-              }
-              return Column(
-                children:
-                    logs.take(5).map((l) {
-                      Color c = colors.primary;
-                      if (l.action.toLowerCase().contains('upload'))
-                        c = AppColors.accepted;
-                      if (l.action.toLowerCase().contains('edit'))
-                        c = AppColors.goldAccent;
-
-                      return Container(
-                        margin: const EdgeInsets.only(bottom: 12),
-                        padding: const EdgeInsets.all(16),
-                        decoration: BoxDecoration(
-                          color: colors.surfaceContainerHigh.withValues(
-                            alpha: 0.3,
-                          ),
-                          borderRadius: BorderRadius.circular(16),
-                        ),
-                        child: Row(
-                          children: [
-                            Container(
-                              width: 40,
-                              height: 40,
-                              decoration: BoxDecoration(
-                                color: c.withValues(alpha: 0.1),
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              child: Icon(
-                                Icons.history_rounded,
-                                color: c,
-                                size: 20,
-                              ),
-                            ),
-                            const SizedBox(width: 16),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    l.action,
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w700,
-                                      color: colors.onSurface,
-                                    ),
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                  const SizedBox(height: 2),
-                                  Text(
-                                    "${l.userName} • ${DateFormat('HH:mm').format(l.createdAt)}",
-                                    style: TextStyle(
-                                      fontSize: 12,
-                                      color: colors.onSurfaceVariant,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Text(
-                              DateFormat('MMM dd').format(l.createdAt),
-                              style: TextStyle(
-                                fontSize: 11,
-                                color: colors.onSurfaceVariant,
-                                fontWeight: FontWeight.w800,
-                              ),
-                            ),
-                          ],
-                        ),
-                      );
-                    }).toList(),
-              );
-            },
-            loading: () => const Center(child: CircularProgressIndicator()),
-            error:
-                (e, st) => Center(child: Text('${l10n.unexpectedError}: $e')),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildRequestsMonitor(
-    BuildContext context,
-    AppLocalizations l10n,
-    AsyncValue policiesAsync, {
-    bool isMobile = false,
-  }) {
-    final colors = context.colors;
-
-    return Container(
-      padding: EdgeInsets.all(isMobile ? 16 : 32),
-      decoration: BoxDecoration(
-        color: colors.surfaceContainerLowest,
-        borderRadius: BorderRadius.circular(isMobile ? 24 : 32),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                l10n.recentRequests,
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w900,
-                  color: colors.onSurface,
-                ),
-              ),
-              if (!isMobile)
-                TextButton(
-                  onPressed: () {}, // Link to a full list if available
-                  child: Text(
-                    l10n.viewAll,
-                    style: TextStyle(
-                      fontWeight: FontWeight.w800,
-                      color: colors.primary,
-                    ),
-                  ),
-                ),
-            ],
-          ),
-          const SizedBox(height: 16),
-          policiesAsync.when(
-            data: (policies) {
-              // Filter by operator
-              final filteredPolicies = _operatorFilter == 'all'
-                  ? policies as List
-                  : (policies as List).where((p) => p.operatorId == _operatorFilter).toList();
-
-              if (filteredPolicies.isEmpty) {
-                return Center(
-                  child: Padding(
-                    padding: const EdgeInsets.all(32),
-                    child: Text(
-                      l10n.noRequestsFound,
-                      style: TextStyle(
-                        color: colors.onSurfaceVariant,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ),
-                );
-              }
-
-              // Sort by date descending
-              final sortedPolicies = List.from(filteredPolicies)
-                ..sort((a, b) => b.submittedAt.compareTo(a.submittedAt));
-              final displayPolicies = sortedPolicies.take(5).toList();
-
-              return Column(
-                children:
-                    displayPolicies
-                        .map(
-                          (p) => _buildRequestItem(context, p, isMobile, l10n),
-                        )
-                        .toList(),
-              );
-            },
-            loading: () => const Center(child: CircularProgressIndicator()),
-            error:
-                (e, st) => Center(child: Text('${l10n.unexpectedError}: $e')),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildRequestItem(
-    BuildContext context,
-    dynamic policy,
-    bool isMobile,
-    AppLocalizations l10n,
-  ) {
-    final colors = context.colors;
-
-    return Container(
-      margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: colors.surfaceContainerHigh.withValues(alpha: 0.3),
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: InkWell(
-        onTap: () {
-          context.push('/admin/application/${policy.id}');
-        },
-        child: Row(
-          children: [
-            Container(
-              width: 40,
-              height: 40,
-              decoration: BoxDecoration(
-                color: colors.primary.withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Icon(
-                Icons.description_rounded,
-                color: colors.primary,
-                size: 20,
-              ),
+          Text(
+            value,
+            style: TextStyle(
+              color: context.colors.surface,
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              fontFamily: 'Cairo',
             ),
-            const SizedBox(width: 16),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+          ),
+          Text(
+            sub,
+            style: TextStyle(
+              color: context.colors.surface.withValues(alpha: 0.6),
+              fontSize: 10,
+              fontFamily: 'Cairo',
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _sectionLabel(String text) => Padding(
+    padding: const EdgeInsets.only(bottom: 12, top: 4),
+    child: Row(
+      children: [
+        Container(
+          width: 3,
+          height: 14,
+          decoration: BoxDecoration(
+            color: const Color(0xFFC9A96E),
+            borderRadius: BorderRadius.circular(2),
+          ),
+        ),
+        const SizedBox(width: 8),
+        Text(
+          text,
+          style: const TextStyle(
+            fontSize: 13,
+            fontWeight: FontWeight.bold,
+            color: Color(0xFF2D1F0E),
+            fontFamily: 'Cairo',
+          ),
+        ),
+      ],
+    ),
+  );
+
+  Widget _buildChart1(BuildContext context, AppLocalizations l10n) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _sectionLabel(l10n.performanceOverview),
+        Container(
+          decoration: BoxDecoration(
+            color: context.colors.surface,
+            borderRadius: BorderRadius.circular(14),
+            border: Border.all(color: const Color(0xFFE5DDD0), width: 0.5),
+          ),
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    policy.applicantName,
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w700,
-                      color: colors.onSurface,
-                    ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  const SizedBox(height: 2),
-                  Text(
-                    "${policy.planName ?? 'Auto Takaful'} • ${DateFormat('MMM dd').format(policy.submittedAt)}",
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: colors.onSurfaceVariant,
-                      fontWeight: FontWeight.w600,
+                    l10n.totalPremiumsCollectedDzd,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF2D1F0E),
+                      fontFamily: 'Cairo',
                     ),
                   ),
-                  const SizedBox(height: 4),
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                    decoration: BoxDecoration(
-                      color: (policy.operatorId == 'algeria_takaful' ? AppColors.primaryGreen : AppColors.alIttihadGreen).withValues(alpha: 0.1),
-                      borderRadius: BorderRadius.circular(4),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 4,
                     ),
-                    child: Text(
-                      policy.operatorId == 'algeria_takaful' ? 'ALGERIA TAKAFUL' : 'AL-ITTIHAD',
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFF5F0E8),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: const Text(
+                      '2025',
                       style: TextStyle(
-                        fontSize: 9,
-                        fontWeight: FontWeight.bold,
-                        color: policy.operatorId == 'algeria_takaful' ? AppColors.primaryGreen : AppColors.alIttihadGreen,
+                        fontSize: 10,
+                        color: Color(0xFF8B7355),
+                        fontFamily: 'Cairo',
                       ),
                     ),
                   ),
                 ],
               ),
+              const SizedBox(height: 16),
+              Row(
+                children: [
+                  _buildLegendItem(l10n.totalPremium, const Color(0xFFC9A96E)),
+                  const SizedBox(width: 12),
+                  _buildLegendItem(
+                    l10n.commissionsAdmin,
+                    const Color(0xFF2D1F0E),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+              SizedBox(
+                height: 200,
+                child: BarChart(
+                  BarChartData(
+                    alignment: BarChartAlignment.spaceAround,
+                    maxY: 600,
+                    barGroups: [
+                      _makeGroup(0, 320, 13),
+                      _makeGroup(1, 410, 16),
+                      _makeGroup(2, 380, 15),
+                      _makeGroup(3, 500, 20),
+                      _makeGroup(4, 460, 18),
+                      _makeGroup(5, 540, 22),
+                    ],
+                    titlesData: FlTitlesData(
+                      bottomTitles: AxisTitles(
+                        sideTitles: SideTitles(
+                          showTitles: true,
+                          getTitlesWidget:
+                              (v, _) => Text(
+                                [
+                                  l10n.monthJanuary,
+                                  l10n.monthFebruary,
+                                  l10n.monthMarch,
+                                  l10n.monthApril,
+                                  l10n.monthMay,
+                                  l10n.monthJune,
+                                ][v.toInt()],
+                                style: const TextStyle(
+                                  fontSize: 10,
+                                  color: Color(0xFF8B7355),
+                                  fontFamily: 'Cairo',
+                                ),
+                              ),
+                        ),
+                      ),
+                      leftTitles: AxisTitles(
+                        sideTitles: SideTitles(
+                          showTitles: true,
+                          getTitlesWidget:
+                              (v, _) => Text(
+                                '${v.toInt()}K',
+                                style: const TextStyle(
+                                  fontSize: 9,
+                                  color: Color(0xFF8B7355),
+                                  fontFamily: 'Cairo',
+                                ),
+                              ),
+                          interval: 200,
+                        ),
+                      ),
+                      rightTitles: const AxisTitles(
+                        sideTitles: SideTitles(showTitles: false),
+                      ),
+                      topTitles: const AxisTitles(
+                        sideTitles: SideTitles(showTitles: false),
+                      ),
+                    ),
+                    gridData: FlGridData(
+                      show: true,
+                      drawVerticalLine: false,
+                      getDrawingHorizontalLine:
+                          (_) => const FlLine(
+                            color: Color(0xFFF0E8DC),
+                            strokeWidth: 0.5,
+                          ),
+                    ),
+                    borderData: FlBorderData(show: false),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildLegendItem(String label, Color color) {
+    return Row(
+      children: [
+        Container(
+          width: 10,
+          height: 10,
+          decoration: BoxDecoration(
+            color: color,
+            borderRadius: BorderRadius.circular(2),
+          ),
+        ),
+        const SizedBox(width: 4),
+        Text(
+          label,
+          style: const TextStyle(
+            fontSize: 11,
+            color: Color(0xFF8B7355),
+            fontFamily: 'Cairo',
+          ),
+        ),
+      ],
+    );
+  }
+
+  BarChartGroupData _makeGroup(int x, double premiums, double commission) {
+    return BarChartGroupData(
+      x: x,
+      barRods: [
+        BarChartRodData(
+          toY: premiums,
+          color: const Color(0xFFC9A96E),
+          width: 12,
+          borderRadius: BorderRadius.circular(4),
+        ),
+        BarChartRodData(
+          toY: commission,
+          color: const Color(0xFF2D1F0E),
+          width: 12,
+          borderRadius: BorderRadius.circular(4),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildChart2(BuildContext context, AppLocalizations l10n) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _sectionLabel(l10n.adminPolicyDistribution),
+        Container(
+          decoration: BoxDecoration(
+            color: context.colors.surface,
+            borderRadius: BorderRadius.circular(14),
+            border: Border.all(color: const Color(0xFFE5DDD0), width: 0.5),
+          ),
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            children: [
+              Row(
+                children: [
+                  _buildLegendItem(l10n.categoryAuto, const Color(0xFFC9A96E)),
+                  const SizedBox(width: 8),
+                  _buildLegendItem(l10n.categoryTravel, const Color(0xFF2D1F0E)),
+                  const SizedBox(width: 8),
+                  _buildLegendItem(l10n.categoryHealth, const Color(0xFF8B7355)),
+                  const SizedBox(width: 8),
+                  _buildLegendItem(l10n.categoryProperties, const Color(0xFFE5DDD0)),
+                ],
+              ),
+              const SizedBox(height: 16),
+              SizedBox(
+                height: 180,
+                child: PieChart(
+                  PieChartData(
+                    centerSpaceRadius: 50,
+                    sectionsSpace: 2,
+                    sections: [
+                      PieChartSectionData(
+                        value: 45,
+                        color: const Color(0xFFC9A96E),
+                        title: '45%',
+                        radius: 40,
+                        titleStyle: TextStyle(
+                          color: context.colors.surface,
+                          fontSize: 11,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: 'Cairo',
+                        ),
+                      ),
+                      PieChartSectionData(
+                        value: 25,
+                        color: const Color(0xFF2D1F0E),
+                        title: '25%',
+                        radius: 40,
+                        titleStyle: TextStyle(
+                          color: context.colors.surface,
+                          fontSize: 11,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: 'Cairo',
+                        ),
+                      ),
+                      PieChartSectionData(
+                        value: 20,
+                        color: const Color(0xFF8B7355),
+                        title: '20%',
+                        radius: 40,
+                        titleStyle: TextStyle(
+                          color: context.colors.surface,
+                          fontSize: 11,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: 'Cairo',
+                        ),
+                      ),
+                      PieChartSectionData(
+                        value: 10,
+                        color: const Color(0xFFE5DDD0),
+                        title: '10%',
+                        radius: 40,
+                        titleStyle: const TextStyle(
+                          color: Color(0xFF2D1F0E),
+                          fontSize: 11,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: 'Cairo',
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildQuickAccessGrid(BuildContext context, AppLocalizations l10n) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _sectionLabel(l10n.quickAccess),
+        GridView.count(
+          crossAxisCount: 2,
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          mainAxisSpacing: 10,
+          crossAxisSpacing: 10,
+          childAspectRatio: 2.5,
+          children: [
+            _quickBtn(
+              icon: Icons.assignment_outlined,
+              label: l10n.legalRecord,
+              route: AppRoutes.adminAudit,
             ),
-            _buildStatusChip(policy.status, l10n),
+            _quickBtn(
+              icon: Icons.settings_outlined,
+              label: l10n.settingsAdmin,
+              route: AppRoutes.adminSettings,
+            ),
+            _quickBtn(
+              icon: Icons.percent,
+              label: l10n.commissionsAdmin,
+              route: AppRoutes.adminCommission,
+            ),
+            _quickBtn(
+              icon: Icons.manage_accounts_outlined,
+              label: l10n.userManagement,
+              route: AppRoutes.adminUsers,
+            ),
           ],
         ),
-      ),
+      ],
     );
   }
 
-  Widget _buildStatusChip(PolicyStatus status, AppLocalizations l10n) {
-    Color color;
-    String label;
-
-    switch (status) {
-      case PolicyStatus.accepted:
-        color = AppColors.accepted;
-        label = l10n.statusAccepted;
-        break;
-      case PolicyStatus.rejected:
-        color = AppColors.rejected;
-        label = l10n.statusRejected;
-        break;
-      case PolicyStatus.modificationRequested:
-        color = AppColors.goldAccent;
-        label = l10n.statusModReq;
-        break;
-      case PolicyStatus.pending:
-        color = AppColors.subscriberFund;
-        label = l10n.statusPending;
-        break;
-      case PolicyStatus.paid:
-        color = const Color(0xFF0097A7);
-        label = l10n.statusPaid;
-        break;
-    }
-
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-      decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: Text(
-        label,
-        style: TextStyle(
-          fontSize: 10,
-          fontWeight: FontWeight.w900,
-          color: color,
-        ),
-      ),
-    );
-  }
-  Widget _buildFilterChip(String value, String label, IconData icon) {
-    final isSelected = _operatorFilter == value;
-    final colors = context.colors;
-
+  Widget _quickBtn({
+    required IconData icon,
+    required String label,
+    required String route,
+  }) {
     return GestureDetector(
-      onTap: () => setState(() => _operatorFilter = value),
+      onTap: () => context.go(route),
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         decoration: BoxDecoration(
-          color: isSelected ? colors.surface : Colors.transparent,
-          borderRadius: BorderRadius.circular(10),
-          boxShadow:
-              isSelected
-                  ? [
-                    BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.05),
-                      blurRadius: 4,
-                      offset: const Offset(0, 2),
-                    ),
-                  ]
-                  : null,
+          color: context.colors.surface,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: const Color(0xFFE5DDD0), width: 0.5),
         ),
         child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              icon,
-              size: 16,
-              color: isSelected ? colors.primary : colors.onSurfaceVariant,
-            ),
+            Icon(icon, color: const Color(0xFFC9A96E), size: 20),
             const SizedBox(width: 8),
             Text(
               label,
-              style: TextStyle(
-                fontSize: 12,
-                fontWeight: isSelected ? FontWeight.bold : FontWeight.w600,
-                color: isSelected ? colors.onSurface : colors.onSurfaceVariant,
+              style: const TextStyle(
+                fontSize: 11,
+                color: Color(0xFF2D1F0E),
+                fontWeight: FontWeight.bold,
+                fontFamily: 'Cairo',
               ),
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildSalesList(
+    BuildContext context,
+    AppLocalizations l10n,
+    List<PolicyModel> recentPolicies,
+  ) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _sectionLabel(l10n.adminSalesListTitle),
+        Container(
+          decoration: BoxDecoration(
+            color: context.colors.surface,
+            borderRadius: BorderRadius.circular(14),
+            border: Border.all(color: const Color(0xFFE5DDD0), width: 0.5),
+          ),
+          child: Column(
+            children: [
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 12,
+                ),
+                decoration: const BoxDecoration(
+                  color: Color(0xFFF5F0E8),
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(14),
+                    topRight: Radius.circular(14),
+                  ),
+                ),
+                child: Row(
+                  children: [
+                    Expanded(
+                      flex: 3,
+                      child: Text(
+                        l10n.fullName,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 11,
+                          color: Color(0xFF2D1F0E),
+                          fontFamily: 'Cairo',
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      flex: 3,
+                      child: Text(
+                        l10n.company,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 11,
+                          color: Color(0xFF2D1F0E),
+                          fontFamily: 'Cairo',
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      flex: 2,
+                      child: Text(
+                        l10n.total,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 11,
+                          color: Color(0xFF2D1F0E),
+                          fontFamily: 'Cairo',
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      flex: 2,
+                      child: Text(
+                        l10n.statusLabel,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 11,
+                          color: Color(0xFF2D1F0E),
+                          fontFamily: 'Cairo',
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              if (recentPolicies.isEmpty)
+                Container(
+                  padding: const EdgeInsets.symmetric(vertical: 24),
+                  child: Center(
+                    child: Text(
+                      l10n.adminNoSalesRegistered,
+                      style: const TextStyle(
+                        color: Color(0xFF8B7355),
+                        fontSize: 12,
+                        fontFamily: 'Cairo',
+                      ),
+                    ),
+                  ),
+                )
+              else
+                ListView.separated(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: recentPolicies.length,
+                  separatorBuilder:
+                      (_, __) => const Divider(
+                        color: Color(0xFFF0E8DC),
+                        height: 0.5,
+                        thickness: 0.5,
+                      ),
+                  itemBuilder:
+                      (_, i) => _salesListRow(
+                        policy: recentPolicies[i],
+                        l10n: l10n,
+                      ),
+                ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _salesListRow({
+    required PolicyModel policy,
+    required AppLocalizations l10n,
+  }) {
+    final name = policy.applicantName;
+    final company = policy.displayCompanyName;
+    final amountText = '${policy.amount.toInt()} ${l10n.dzd}';
+    final status = PolicyModel.statusToString(policy.status);
+
+    Color bg;
+    Color fg;
+    String statusText;
+
+    switch (status) {
+      case 'accepted':
+      case 'paid':
+        bg = const Color(0xFF3A7D4E).withValues(alpha: 0.1);
+        fg = const Color(0xFF3A7D4E);
+        statusText = l10n.accepted;
+        break;
+      case 'rejected':
+        bg = const Color(0xFFA03030).withValues(alpha: 0.1);
+        fg = const Color(0xFFA03030);
+        statusText = l10n.rejected;
+        break;
+      default:
+        bg = const Color(0xFFC9A96E).withValues(alpha: 0.1);
+        fg = const Color(0xFFC9A96E);
+        statusText = l10n.pendingState;
+    }
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      child: Row(
+        children: [
+          Expanded(
+            flex: 3,
+            child: Row(
+              children: [
+                const CircleAvatar(
+                  radius: 12,
+                  backgroundColor: Color(0xFFF5F0E8),
+                  child: Icon(Icons.person, size: 14, color: Color(0xFF8B7355)),
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    name,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF2D1F0E),
+                      fontFamily: 'Cairo',
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Expanded(
+            flex: 3,
+            child: Text(
+              company,
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(
+                fontSize: 12,
+                color: Color(0xFF8B7355),
+                fontFamily: 'Cairo',
+              ),
+            ),
+          ),
+          Expanded(
+            flex: 2,
+            child: Text(
+              amountText,
+              style: const TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF2D1F0E),
+                fontFamily: 'Cairo',
+              ),
+            ),
+          ),
+          Expanded(
+            flex: 2,
+            child: Align(
+              alignment: Alignment.centerRight,
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                decoration: BoxDecoration(
+                  color: bg,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Text(
+                  statusText,
+                  style: TextStyle(
+                    fontSize: 10,
+                    fontWeight: FontWeight.bold,
+                    color: fg,
+                    fontFamily: 'Cairo',
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

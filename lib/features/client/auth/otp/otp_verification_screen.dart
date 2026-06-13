@@ -1,10 +1,13 @@
+import 'dart:async';
+import 'package:tameenidz/features/shared/widgets/page_entry_animation.dart';
+import 'package:tameenidz/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../../generated/l10n/app_localizations.dart';
-import '../../../../../core/constants/app_colors.dart';
 import '../../../../../core/theme/app_colors_extension.dart';
+import '../../../../../core/router/route_arguments.dart';
 
 class OtpVerificationScreen extends ConsumerStatefulWidget {
   final String verificationId;
@@ -13,6 +16,9 @@ class OtpVerificationScreen extends ConsumerStatefulWidget {
   final String? email;
   final String? fullName;
   final String? ccpNumber;
+  final String? nin;
+  final String? wilaya;
+  final String? dob;
 
   const OtpVerificationScreen({
     super.key,
@@ -22,6 +28,9 @@ class OtpVerificationScreen extends ConsumerStatefulWidget {
     this.email,
     this.fullName,
     this.ccpNumber,
+    this.nin,
+    this.wilaya,
+    this.dob,
   });
 
   @override
@@ -35,11 +44,15 @@ class _OtpVerificationScreenState extends ConsumerState<OtpVerificationScreen> {
     (_) => TextEditingController(),
   );
   final List<FocusNode> _focusNodes = List.generate(6, (_) => FocusNode());
+  
+  // BUG #8 FIX: Pre-allocate nodes for KeyboardListener to prevent leaks
+  final List<FocusNode> _keyListenerNodes = List.generate(6, (_) => FocusNode());
 
   int _secondsRemaining = 90; // 1:30
   bool _canResend = false;
   bool _isVerifying = false;
   String? _errorMessage;
+  Timer? _timer; // BUG #9 FIX: Use a managed Timer instead of Future.doWhile
 
   @override
   void initState() {
@@ -49,27 +62,34 @@ class _OtpVerificationScreenState extends ConsumerState<OtpVerificationScreen> {
 
   @override
   void dispose() {
+    _timer?.cancel();
     for (var controller in _controllers) {
       controller.dispose();
     }
     for (var node in _focusNodes) {
       node.dispose();
     }
+    for (var node in _keyListenerNodes) {
+      node.dispose();
+    }
     super.dispose();
   }
 
   void _startTimer() {
-    Future.doWhile(() async {
-      await Future.delayed(const Duration(seconds: 1));
-      if (!mounted) return false;
+    _timer?.cancel();
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (!mounted) {
+        timer.cancel();
+        return;
+      }
       setState(() {
         if (_secondsRemaining > 0) {
           _secondsRemaining--;
         } else {
           _canResend = true;
+          timer.cancel();
         }
       });
-      return _secondsRemaining > 0;
     });
   }
 
@@ -103,49 +123,38 @@ class _OtpVerificationScreenState extends ConsumerState<OtpVerificationScreen> {
     setState(() => _isVerifying = true);
     _errorMessage = null;
 
-
-    // DUMMY VERIFICATION FOR UI TESTING
-    await Future.delayed(const Duration(seconds: 1));
+    // DEMO VERIFICATION: Bypasses real Firebase Auth for showcase purposes
+    await Future.delayed(const Duration(milliseconds: 800));
     
-    try {
-      // In a real scenario, we'd call firebaseService.signInWithOtp
-      // For now, we simulate success
-      final verifiedPhone = widget.phoneNumber;
+    if (mounted) {
+      setState(() => _isVerifying = false);
+      _navigateToNextStep();
+    }
+  }
 
-      if (widget.isRegistration) {
-        if (mounted) {
-          setState(() => _isVerifying = false);
-          context.push(
-            '/register/step2',
-            extra: {
-              'email': widget.email,
-              'fullName': widget.fullName,
-              'phoneNumber': verifiedPhone,
-              'ccpNumber': widget.ccpNumber,
-            },
-          );
-        }
-      } else {
-        // Login flow dummy success
-        if (mounted) {
-          setState(() => _isVerifying = false);
-          context.go('/client');
-        }
-      }
-    } catch (e) {
-      if (mounted) {
-        setState(() {
-          _isVerifying = false;
-          _errorMessage = AppLocalizations.of(context)!.unexpectedAuthError;
-        });
-      }
+  void _navigateToNextStep() {
+    if (widget.isRegistration) {
+      context.push(
+        '/register/step2',
+        extra: RegisterStep2Args(
+          email: widget.email ?? '',
+          fullName: widget.fullName ?? '',
+          phoneNumber: widget.phoneNumber,
+          ccpNumber: widget.ccpNumber ?? '',
+          nin: widget.nin,
+          wilaya: widget.wilaya,
+          dob: widget.dob,
+        ),
+      );
+    } else {
+      context.go('/client');
     }
   }
 
   void _resendCode() async {
     setState(() => _isVerifying = true);
     
-    // DUMMY RESEND TO BYPASS FIREBASE BILLING ERROR
+    // DUMMY RESEND
     await Future.delayed(const Duration(seconds: 1));
     
     if (mounted) {
@@ -168,17 +177,22 @@ class _OtpVerificationScreenState extends ConsumerState<OtpVerificationScreen> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     return Scaffold(
-      backgroundColor: context.colors.background,
+      backgroundColor: context.colors.beigeBg,
       appBar: AppBar(
         backgroundColor: AppColors.primaryGreen,
         iconTheme: const IconThemeData(color: Colors.white),
         title: Text(
           l10n.otpVerification,
-          style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+          style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontFamily: 'Cairo'),
         ),
         centerTitle: true,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_rounded, size: 24),
+          icon: Icon(
+            Directionality.of(context) == TextDirection.rtl
+                ? Icons.arrow_forward_rounded
+                : Icons.arrow_back_rounded,
+            size: 24,
+          ),
           onPressed: () {
             if (widget.isRegistration) {
               context.go('/register/step1');
@@ -188,12 +202,13 @@ class _OtpVerificationScreenState extends ConsumerState<OtpVerificationScreen> {
           },
         ),
       ),
-      body: SafeArea(
+      body: PageEntryAnimation(child: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
+              // BUG #24 FIX: Stepper order [1, 2, 3]
               if (widget.isRegistration) ...[
                 _buildStepper(l10n),
                 const SizedBox(height: 32),
@@ -202,31 +217,23 @@ class _OtpVerificationScreenState extends ConsumerState<OtpVerificationScreen> {
               const SizedBox(height: 32),
               _buildVerifyButton(),
               const SizedBox(height: 16),
+              
+              // Demo Skip Button - Always available as requested
               TextButton(
-                onPressed: () {
-                  if (widget.isRegistration) {
-                    context.push('/register/step2', extra: {
-                      'email': widget.email,
-                      'fullName': widget.fullName,
-                      'phoneNumber': widget.phoneNumber,
-                      'ccpNumber': widget.ccpNumber,
-                    });
-                  } else {
-                    context.go('/client');
-                  }
-                },
+                onPressed: _navigateToNextStep,
                 child: Text(
                   l10n.skipForDemo,
                   style: TextStyle(
                     color: context.colors.slate400,
                     decoration: TextDecoration.underline,
+                    fontFamily: 'Cairo',
                   ),
                 ),
               ),
             ],
           ),
         ),
-      ),
+      )),
     );
   }
 
@@ -234,11 +241,11 @@ class _OtpVerificationScreenState extends ConsumerState<OtpVerificationScreen> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        _buildStepNode(number: '3', title: l10n.documents, state: _StepState.upcoming),
+        _buildStepNode(number: '1', title: l10n.information, state: _StepState.completed),
         _buildStepDivider(),
         _buildStepNode(number: '2', title: l10n.verification, state: _StepState.active),
         _buildStepDivider(),
-        _buildStepNode(number: '1', title: l10n.information, state: _StepState.completed),
+        _buildStepNode(number: '3', title: l10n.documents, state: _StepState.upcoming),
       ],
     );
   }
@@ -264,22 +271,22 @@ class _OtpVerificationScreenState extends ConsumerState<OtpVerificationScreen> {
 
     switch (state) {
       case _StepState.completed:
-        circleColor = AppColors.primaryGreen;
-        borderColor = AppColors.primaryGreen;
+        circleColor = AppColors.goldAccent;
+        borderColor = AppColors.goldAccent;
         content = const Icon(Icons.check, color: Colors.white, size: 16);
-        textColor = AppColors.primaryGreen;
+        textColor = AppColors.goldAccent;
         break;
       case _StepState.active:
         circleColor = Colors.white;
-        borderColor = AppColors.primaryGreen;
+        borderColor = AppColors.goldAccent;
         content = Text(
           number,
           style: TextStyle(
-            color: AppColors.primaryGreen,
+            color: AppColors.goldAccent,
             fontWeight: FontWeight.bold,
           ),
         );
-        textColor = AppColors.primaryGreen;
+        textColor = AppColors.goldAccent;
         break;
       case _StepState.upcoming:
         circleColor = Colors.transparent;
@@ -319,6 +326,7 @@ class _OtpVerificationScreenState extends ConsumerState<OtpVerificationScreen> {
             style: TextStyle(
               color: textColor,
               fontSize: 10,
+              fontFamily: 'Cairo',
               fontWeight:
                   state == _StepState.active
                       ? FontWeight.bold
@@ -371,6 +379,7 @@ class _OtpVerificationScreenState extends ConsumerState<OtpVerificationScreen> {
               fontSize: 22,
               fontWeight: FontWeight.bold,
               color: context.colors.darkText,
+              fontFamily: 'Cairo',
             ),
           ),
           const SizedBox(height: 8),
@@ -381,6 +390,7 @@ class _OtpVerificationScreenState extends ConsumerState<OtpVerificationScreen> {
               color: context.colors.slate500,
               height: 1.5,
               fontSize: 14,
+              fontFamily: 'Cairo',
             ),
             textDirection: TextDirection.ltr,
           ),
@@ -393,14 +403,14 @@ class _OtpVerificationScreenState extends ConsumerState<OtpVerificationScreen> {
           if (_errorMessage != null) ...[
             Text(
               _errorMessage!,
-              style: TextStyle(color: AppColors.error, fontSize: 14),
+              style: const TextStyle(color: AppColors.error, fontSize: 14, fontFamily: 'Cairo'),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 16),
           ],
           Text(
             l10n.resendAfter(_formattedTime),
-            style: TextStyle(color: context.colors.slate500, fontSize: 14),
+            style: TextStyle(color: context.colors.slate500, fontSize: 14, fontFamily: 'Cairo'),
           ),
           const SizedBox(height: 8),
           TextButton(
@@ -414,6 +424,7 @@ class _OtpVerificationScreenState extends ConsumerState<OtpVerificationScreen> {
                         : context.colors.slate300,
                 fontWeight: FontWeight.bold,
                 fontSize: 16,
+                fontFamily: 'Cairo',
               ),
             ),
           ),
@@ -428,7 +439,7 @@ class _OtpVerificationScreenState extends ConsumerState<OtpVerificationScreen> {
       height: 50,
       margin: const EdgeInsets.symmetric(horizontal: 2),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: context.colors.surface,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
           color:
@@ -440,7 +451,7 @@ class _OtpVerificationScreenState extends ConsumerState<OtpVerificationScreen> {
         ),
       ),
       child: KeyboardListener(
-        focusNode: FocusNode(),
+        focusNode: _keyListenerNodes[index], // FIXED: Use pre-allocated node
         onKeyEvent: (event) => _onKeyPress(index, event),
         child: TextField(
           controller: _controllers[index],
@@ -448,7 +459,7 @@ class _OtpVerificationScreenState extends ConsumerState<OtpVerificationScreen> {
           textAlign: TextAlign.center,
           keyboardType: TextInputType.number,
           maxLength: 1,
-          style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+          style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold, fontFamily: 'Cairo'),
           decoration: const InputDecoration(
             border: InputBorder.none,
             counterText: '',
@@ -477,17 +488,17 @@ class _OtpVerificationScreenState extends ConsumerState<OtpVerificationScreen> {
         onPressed: _isVerifying ? null : _verifyCode,
         child:
             _isVerifying
-                ? const SizedBox(
+                ? SizedBox(
                   width: 24,
                   height: 24,
                   child: CircularProgressIndicator(
-                    color: Colors.white,
+                    color: context.colors.surface,
                     strokeWidth: 2,
                   ),
                 )
                 : Text(
                   l10n.verify,
-                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, fontFamily: 'Cairo'),
                 ),
       ),
     );

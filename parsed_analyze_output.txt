@@ -1,0 +1,36 @@
+Analyzing tameenidz...                                          
+
+warning - Unused import: 'package:google_fonts/google_fonts.dart' - lib\core\about\about_us_screen.dart:4:8 - unused_import
+warning - Unused import: 'package:google_fonts/google_fonts.dart' - lib\core\about\how_takaful_works_screen.dart:5:8 - unused_import
+warning - Unused import: 'package:google_fonts/google_fonts.dart' - lib\core\theme\app_text_styles.dart:2:8 - unused_import
+warning - Duplicate import - lib\features\admin\auth\admin_register_screen.dart:10:8 - duplicate_import
+warning - Unused import: 'package:google_fonts/google_fonts.dart' - lib\features\admin\claims_management\claims_management_screen.dart:8:8 - unused_import
+warning - Unused import: 'package:google_fonts/google_fonts.dart' - lib\features\admin\notifications\admin_notifications_screen.dart:6:8 - unused_import
+warning - Unused import: 'package:google_fonts/google_fonts.dart' - lib\features\admin\plans\admin_add_plan_screen.dart:6:8 - unused_import
+warning - Unused import: 'package:google_fonts/google_fonts.dart' - lib\features\admin\plans\admin_plans_screen.dart:7:8 - unused_import
+warning - Unused import: 'package:google_fonts/google_fonts.dart' - lib\features\admin\sales\admin_sales_screen.dart:7:8 - unused_import
+warning - Unused import: 'package:google_fonts/google_fonts.dart' - lib\features\admin\settings\admin_settings_screen.dart:6:8 - unused_import
+warning - Unused import: 'package:google_fonts/google_fonts.dart' - lib\features\admin\user_management\admin_user_detail_screen.dart:8:8 - unused_import
+warning - Unused import: 'package:google_fonts/google_fonts.dart' - lib\features\admin\wallet\wallet_screen.dart:7:8 - unused_import
+warning - Unused import: 'package:google_fonts/google_fonts.dart' - lib\features\admin\widgets\dashboard_chart.dart:4:8 - unused_import
+   info - Unnecessary use of string interpolation - lib\features\client\auth\registration\steps\step2_password_setup.dart:519:11 - unnecessary_string_interpolations
+   info - 'Share' is deprecated and shouldn't be used. Use SharePlus instead - lib\features\client\payment\payment_screen.dart:138:15 - deprecated_member_use
+   info - 'shareXFiles' is deprecated and shouldn't be used. Use SharePlus.instance.share() instead - lib\features\client\payment\payment_screen.dart:138:21 - deprecated_member_use
+   info - Statements in an if should be enclosed in a block - lib\features\client\plans\plan_comparison_screen.dart:36:22 - curly_braces_in_flow_control_structures
+warning - Unused import: 'package:google_fonts/google_fonts.dart' - lib\features\client\quotes\quote_result_screen.dart:5:8 - unused_import
+warning - Unused import: 'package:google_fonts/google_fonts.dart' - lib\features\client\screens\rafik_calculator_screen.dart:6:8 - unused_import
+   info - Statements in an if should be enclosed in a block - lib\features\client\settings\client_settings_screen.dart:169:19 - curly_braces_in_flow_control_structures
+warning - Unused import: 'package:google_fonts/google_fonts.dart' - lib\features\client\widgets\garage_card.dart:3:8 - unused_import
+warning - Duplicate import - lib\features\onboarding\screens\onboarding_screen.dart:10:8 - duplicate_import
+   info - Statements in an if should be enclosed in a block - lib\features\operator\dashboard\operator_dashboard_screen.dart:552:7 - curly_braces_in_flow_control_structures
+   info - Statements in an if should be enclosed in a block - lib\features\operator\dashboard\operator_dashboard_screen.dart:554:7 - curly_braces_in_flow_control_structures
+   info - Statements in an if should be enclosed in a block - lib\features\operator\dashboard\operator_dashboard_screen.dart:556:7 - curly_braces_in_flow_control_structures
+   info - Statements in an if should be enclosed in a block - lib\features\operator\dashboard\operator_dashboard_screen.dart:558:7 - curly_braces_in_flow_control_structures
+   info - The private field _showReason could be 'final' - lib\features\operator\operator_application_details_screen.dart:33:8 - prefer_final_fields
+warning - The value of the field '_showReason' isn't used - lib\features\operator\operator_application_details_screen.dart:33:8 - unused_field
+warning - Duplicate import - lib\features\operator\screens\operator_auth_gate_screen.dart:8:8 - duplicate_import
+warning - Unused import: 'package:google_fonts/google_fonts.dart' - lib\features\operator\widgets\commission_wallet_card.dart:2:8 - unused_import
+warning - Unused import: 'package:google_fonts/google_fonts.dart' - lib\features\operator\widgets\sale_row_card.dart:2:8 - unused_import
+warning - Unused import: 'package:tameenidz/core/theme/app_colors_extension.dart' - lib\features\shared\widgets\app_footer.dart:5:8 - unused_import
+warning - Unused import: 'package:tameenidz/core/theme/app_colors_extension.dart' - lib\features\shared\widgets\royale_widgets.dart:3:8 - unused_import
+

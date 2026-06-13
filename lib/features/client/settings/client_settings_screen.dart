@@ -1,14 +1,16 @@
+import 'package:tameenidz/features/shared/widgets/page_entry_animation.dart';
+import 'package:tameenidz/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:tameenidz/core/constants/app_colors.dart';
 import 'package:tameenidz/core/providers/service_providers.dart';
-import 'package:tameenidz/shared/widgets/portal_layout.dart';
+import 'package:tameenidz/features/shared/widgets/portal_layout.dart';
 import '../../../core/providers/theme_provider.dart';
 import '../../../core/theme/app_colors_extension.dart';
 import '../../../generated/l10n/app_localizations.dart';
-import '../../../shared/widgets/language_dropdown.dart';
+import 'package:tameenidz/features/shared/widgets/language_picker_button.dart';
+import 'package:tameenidz/core/controllers/auth_controller.dart';
 
 class ClientSettingsScreen extends ConsumerWidget {
   const ClientSettingsScreen({super.key});
@@ -34,19 +36,19 @@ class ClientSettingsScreen extends ConsumerWidget {
     } else if (role == 'employee' || role == 'operator') {
       menuItems = [
         (
-          Icons.dashboard_rounded,
-          l10n.dashboard,
-          isAT ? '/at/dashboard' : '/ai/dashboard',
+        Icons.dashboard_rounded,
+        l10n.dashboard,
+        isAT ? '/at/dashboard' : '/ai/dashboard',
         ),
         (
-          Icons.history_edu_rounded,
-          l10n.surplus,
-          isAT ? '/at/surplus' : '/ai/surplus',
+        Icons.history_edu_rounded,
+        l10n.surplus,
+        isAT ? '/at/surplus' : '/ai/surplus',
         ),
         (
-          Icons.settings_rounded,
-          l10n.settings,
-          isAT ? '/at/settings' : '/ai/settings',
+        Icons.settings_rounded,
+        l10n.settings,
+        isAT ? '/at/settings' : '/ai/settings',
         ),
       ];
     } else {
@@ -60,8 +62,8 @@ class ClientSettingsScreen extends ConsumerWidget {
     }
 
     final selectedIndex = menuItems.indexWhere(
-      (item) =>
-          item.$3 == '/client/settings' ||
+          (item) =>
+      item.$3 == '/client/settings' ||
           item.$3 == '/admin/settings' ||
           item.$3 == '/at/settings' ||
           item.$3 == '/ai/settings',
@@ -73,72 +75,96 @@ class ClientSettingsScreen extends ConsumerWidget {
       selectedIndex: selectedIndex,
       menuItems: menuItems,
       portalTitle:
-          (role == 'employee' || role == 'operator')
-              ? companyName
-              : l10n.settings,
+      (role == 'employee' || role == 'operator')
+          ? companyName
+          : l10n.settings,
       portalSubtitle:
-          (role == 'employee' || role == 'operator')
-              ? l10n.settings
-              : l10n.shariaInsurance,
+      (role == 'employee' || role == 'operator')
+          ? l10n.settings
+          : l10n.shariaInsurance,
       topHeader: (role == 'employee' || role == 'operator') ? 'PORTAL' : null,
       accentColor:
-          (role == 'employee' || role == 'operator')
-              ? (isAT ? AppColors.primaryGreen : AppColors.alIttihadGreen)
-              : colors.primary,
+      (role == 'employee' || role == 'operator')
+          ? (isAT ? AppColors.primaryGreen : AppColors.alIttihadGreen)
+          : colors.primary,
       showBackButton: true,
       fallbackRoute:
-          role == 'admin'
-              ? '/admin/dashboard'
-              : (role == 'employee' || role == 'operator')
-              ? (isAT ? '/at/dashboard' : '/ai/dashboard')
-              : '/client',
-      body: ListView(
-        padding: const EdgeInsets.all(24),
-        children: [
-          _buildProfileCard(context, ref, user, role),
-          const SizedBox(height: 32),
-          _buildSectionHeader(context, l10n.preferences),
-          const SizedBox(height: 12),
-          Card(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(16),
+      role == 'admin'
+          ? '/admin/dashboard'
+          : (role == 'employee' || role == 'operator')
+          ? (isAT ? '/at/dashboard' : '/ai/dashboard')
+          : '/client',
+      body: PageEntryAnimation(child: ListView(
+          padding: const EdgeInsets.all(24),
+          children: [
+            _buildProfileCard(context, ref, user, role),
+            const SizedBox(height: 32),
+            _buildSectionHeader(context, l10n.preferences),
+            const SizedBox(height: 12),
+            Card(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: Column(
+                children: [
+                  ListTile(
+                    leading: const Icon(Icons.language_rounded),
+                    title: Text(l10n.language),
+                    trailing: const LanguageDropdown(),
+                  ),
+                  Divider(
+                    height: 1,
+                    indent: 16,
+                    endIndent: 16,
+                    color: colors.outlineVariant.withValues(alpha: 0.1),
+                  ),
+                  SwitchListTile(
+                    value: false,
+                    onChanged: null,
+                    secondary: Icon(Icons.dark_mode_outlined, color: Colors.grey.withValues(alpha: 0.4)),
+                    title: Row(
+                      children: [
+                        Flexible(
+                          child: Text(l10n.darkMode, style: TextStyle(color: Colors.grey.withValues(alpha: 0.4)),
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                          decoration: BoxDecoration(
+                            color: Colors.amber.withValues(alpha: 0.15),
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                          child: Text(
+                            'Coming Soon',
+                            style: TextStyle(
+                              fontSize: 10,
+                              fontWeight: FontWeight.w700,
+                              color: Colors.amber.withValues(alpha: 0.6),
+                              letterSpacing: 0.3,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
-            child: Column(
-              children: [
-                ListTile(
-                  leading: const Icon(Icons.language_rounded),
-                  title: Text(l10n.language),
-                  trailing: const LanguageDropdown(),
-                ),
-                Divider(
-                  height: 1,
-                  indent: 16,
-                  endIndent: 16,
-                  color: colors.outlineVariant.withValues(alpha: 0.1),
-                ),
-                SwitchListTile(
-                  value: ref.watch(themeProvider) == ThemeMode.dark,
-                  onChanged:
-                      (_) => ref.read(themeProvider.notifier).toggleTheme(),
-                  secondary: const Icon(Icons.dark_mode_outlined),
-                  title: Text(l10n.darkMode),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(height: 48),
-          _buildLogoutButton(context, l10n),
-        ],
+            SizedBox(height: 48),
+            _buildLogoutButton(context, ref, l10n),
+          ]),
       ),
     );
   }
 
   Widget _buildProfileCard(
-    BuildContext context,
-    WidgetRef ref,
-    User? user,
-    String role,
-  ) {
+      BuildContext context,
+      WidgetRef ref,
+      User? user,
+      String role,
+      ) {
     final userAsync = ref.watch(userProfileProvider);
     final l10n = AppLocalizations.of(context)!;
     final colors = context.colors;
@@ -164,21 +190,24 @@ class ClientSettingsScreen extends ConsumerWidget {
               data: (profile) {
                 String defaultName = l10n.clientRoleLabel;
                 if (role == 'admin') defaultName = l10n.adminRoleLabel;
-                if (role == 'employee' || role == 'operator')
+                if (role == 'employee' || role == 'operator') {
                   defaultName = l10n.operatorRoleLabel;
+                }
 
                 final name =
                     user?.userMetadata?['full_name'] ??
-                    profile?['full_name'] ??
-                    defaultName;
+                        profile?['full_name'] ??
+                        defaultName;
 
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       name,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                       style: TextStyle(
-                        fontSize: 20,
+                        fontSize: 18,
                         fontWeight: FontWeight.w900,
                         color: colors.onSurface,
                       ),
@@ -186,8 +215,10 @@ class ClientSettingsScreen extends ConsumerWidget {
                     const SizedBox(height: 4),
                     Text(
                       email,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                       style: TextStyle(
-                        fontSize: 14,
+                        fontSize: 13,
                         color: colors.onSurfaceVariant,
                       ),
                     ),
@@ -197,25 +228,29 @@ class ClientSettingsScreen extends ConsumerWidget {
               loading: () => const Center(child: CircularProgressIndicator()),
               error:
                   (_, __) => Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        user?.userMetadata?['full_name'] ?? email,
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.w900,
-                          color: colors.onSurface,
-                        ),
-                      ),
-                      Text(
-                        email,
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: colors.onSurfaceVariant,
-                        ),
-                      ),
-                    ],
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    user?.userMetadata?['full_name'] ?? email,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w900,
+                      color: colors.onSurface,
+                    ),
                   ),
+                  Text(
+                    email,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      fontSize: 13,
+                      color: colors.onSurfaceVariant,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ],
@@ -235,12 +270,12 @@ class ClientSettingsScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildLogoutButton(BuildContext context, AppLocalizations l10n) {
+  Widget _buildLogoutButton(BuildContext context, WidgetRef ref, AppLocalizations l10n) {
     final colors = context.colors;
     return Center(
       child: TextButton.icon(
         onPressed: () async {
-          await Supabase.instance.client.auth.signOut();
+          await ref.read(authControllerProvider.notifier).signOut();
           if (context.mounted) context.go('/');
         },
         icon: Icon(Icons.logout_rounded, color: colors.error),

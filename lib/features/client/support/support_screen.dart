@@ -1,10 +1,11 @@
+import 'package:tameenidz/features/shared/widgets/page_entry_animation.dart';
+import 'package:tameenidz/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tameenidz/generated/l10n/app_localizations.dart';
-import '../../../core/constants/app_colors.dart';
 import '../../../core/theme/app_colors_extension.dart';
-import '../../../shared/widgets/email_verification_banner.dart';
+import '../../../../features/shared/widgets/email_verification_banner.dart';
 
 class SupportScreen extends ConsumerStatefulWidget {
   const SupportScreen({super.key});
@@ -31,7 +32,7 @@ class _SupportScreenState extends ConsumerState<SupportScreen> {
     final isRtl = Localizations.localeOf(context).languageCode == 'ar';
 
     return Scaffold(
-      backgroundColor: context.colors.background,
+      backgroundColor: context.colors.beigeBg,
       appBar: AppBar(
         backgroundColor: AppColors.primaryGreen,
         foregroundColor: Colors.white,
@@ -46,9 +47,7 @@ class _SupportScreenState extends ConsumerState<SupportScreen> {
         ),
         leading: IconButton(
           icon: Icon(
-            isRtl
-                ? Icons.arrow_forward_ios_rounded
-                : Icons.arrow_back_rounded,
+            isRtl ? Icons.arrow_forward_ios_rounded : Icons.arrow_back_rounded,
           ),
           onPressed: () {
             if (context.canPop()) {
@@ -59,27 +58,29 @@ class _SupportScreenState extends ConsumerState<SupportScreen> {
           },
         ),
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            const EmailVerificationBanner(),
-            _buildHeader(l10n),
-            Padding(
-              padding: const EdgeInsets.all(24.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _buildQuickContact(l10n),
-                  const SizedBox(height: 32),
-                  _buildTicketForm(l10n),
-                  const SizedBox(height: 32),
-                  _buildFaqSection(l10n),
-                  const SizedBox(height: 24),
-                ],
+      body: PageEntryAnimation(
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              const EmailVerificationBanner(),
+              _buildHeader(l10n),
+              Padding(
+                padding: const EdgeInsets.all(24.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _buildQuickContact(l10n),
+                    const SizedBox(height: 32),
+                    _buildTicketForm(l10n),
+                    const SizedBox(height: 32),
+                    _buildFaqSection(l10n),
+                    const SizedBox(height: 24),
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -103,11 +104,11 @@ class _SupportScreenState extends ConsumerState<SupportScreen> {
         children: [
           Text(
             l10n.supportHeaderTitle,
-            style: const TextStyle(
+            style: TextStyle(
               fontFamily: 'Manrope',
               fontSize: 28,
               fontWeight: FontWeight.w800,
-              color: Colors.white,
+              color: context.colors.surface,
               letterSpacing: -0.5,
             ),
           ),
@@ -136,9 +137,10 @@ class _SupportScreenState extends ConsumerState<SupportScreen> {
             icon: Icons.chat_bubble_outline,
             label: l10n.liveChat,
             color: AppColors.primaryGreen,
-            onTap: () => ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(l10n.comingSoon)),
-            ),
+            onTap:
+                () => ScaffoldMessenger.of(
+                  context,
+                ).showSnackBar(SnackBar(content: Text(l10n.comingSoon))),
           ),
         ),
         const SizedBox(width: 16),
@@ -147,9 +149,10 @@ class _SupportScreenState extends ConsumerState<SupportScreen> {
             icon: Icons.phone_in_talk_outlined,
             label: l10n.priorityCall,
             color: AppColors.goldAccent,
-            onTap: () => ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(l10n.comingSoon)),
-            ),
+            onTap:
+                () => ScaffoldMessenger.of(
+                  context,
+                ).showSnackBar(SnackBar(content: Text(l10n.comingSoon))),
           ),
         ),
       ],
@@ -184,7 +187,7 @@ class _SupportScreenState extends ConsumerState<SupportScreen> {
           mainAxisSize: MainAxisSize.min, // ← prevents unbounded height
           children: [
             Icon(icon, color: color, size: 28),
-            const SizedBox(height: 12),
+            SizedBox(height: 12),
             Text(
               label,
               style: TextStyle(
@@ -241,7 +244,7 @@ class _SupportScreenState extends ConsumerState<SupportScreen> {
             hint: l10n.supportMessageHint,
             maxLines: 4,
           ),
-          const SizedBox(height: 24),
+          SizedBox(height: 24),
           SizedBox(
             width: double.infinity,
             height: 54,
@@ -255,22 +258,23 @@ class _SupportScreenState extends ConsumerState<SupportScreen> {
                 ),
                 elevation: 0,
               ),
-              child: _isSubmitting
-                  ? const SizedBox(
-                      width: 20,
-                      height: 20,
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2,
-                        color: Colors.white,
+              child:
+                  _isSubmitting
+                      ? SizedBox(
+                        width: 20,
+                        height: 20,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          color: context.colors.surface,
+                        ),
+                      )
+                      : Text(
+                        l10n.submitTicket,
+                        style: TextStyle(
+                          fontFamily: 'Manrope',
+                          fontWeight: FontWeight.w700,
+                        ),
                       ),
-                    )
-                  : Text(
-                      l10n.submitTicket,
-                      style: const TextStyle(
-                        fontFamily: 'Manrope',
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
             ),
           ),
         ],
@@ -319,7 +323,7 @@ class _SupportScreenState extends ConsumerState<SupportScreen> {
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),
-              borderSide: const BorderSide(
+              borderSide: BorderSide(
                 color: AppColors.primaryGreen,
                 width: 1.5,
               ),

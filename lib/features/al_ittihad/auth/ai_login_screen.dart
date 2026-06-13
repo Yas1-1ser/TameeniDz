@@ -1,12 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:go_router/go_router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import '../../../core/constants/app_colors.dart';
-import '../../../core/theme/app_colors_extension.dart';
-import '../../../generated/l10n/app_localizations.dart';
+import 'package:tameenidz/core/theme/app_colors.dart';
+import 'package:tameenidz/core/theme/app_colors_extension.dart';
+import 'package:tameenidz/features/shared/widgets/page_entry_animation.dart';
+import 'package:tameenidz/features/splash/widgets/floating_particles.dart';
+import 'package:tameenidz/core/utils/auth_exception_handler.dart';
+import 'package:tameenidz/generated/l10n/app_localizations.dart';
+import 'package:tameenidz/features/shared/widgets/language_picker_button.dart';
+import 'package:tameenidz/core/services/auth_service.dart';
+import 'package:tameenidz/core/constants/role_constants.dart';
+import 'package:tameenidz/core/router/app_routes.dart';
 
 class AiLoginScreen extends StatefulWidget {
   const AiLoginScreen({super.key});
+
   @override
   State<AiLoginScreen> createState() => _AiLoginScreenState();
 }
@@ -15,11 +24,13 @@ class _AiLoginScreenState extends State<AiLoginScreen> {
   final _formKey = GlobalKey<FormState>();
   final _emailCtrl = TextEditingController();
   final _pwCtrl = TextEditingController();
-  bool _obscure = true;
+
+  bool _obscurePw = true;
   bool _loading = false;
   String? _error;
 
-  static const Color _aiColor = Color(0xFF0D5235);
+  static const _accent = AppColors.alIttihadGreen;
+  static const _dark = Color(0xFF073D27);
 
   @override
   void dispose() {
@@ -44,268 +55,461 @@ class _AiLoginScreenState extends State<AiLoginScreen> {
       final company = res.user?.userMetadata?['company'] as String?;
       if (company != 'al_ittihad') {
         await Supabase.instance.client.auth.signOut();
-        setState(
-          () =>
-              _error = AppLocalizations.of(
-                context,
-              )!.wrongCompanyError(AppLocalizations.of(context)!.alIttihad),
-        );
+        if (mounted) {
+          final locale = Localizations.localeOf(context).languageCode;
+          setState(() => _error = AuthExceptionHandler.translateCode('company_mismatch_ittihad', locale));
+        }
         return;
       }
 
-      if (mounted) context.go('/ai/dashboard');
+      AuthService.instance.applyOperatorSession(RoleConstants.companyIttihad);
+      await AuthService.instance.refreshRoleFromSession();
+      if (mounted) context.go(AppRoutes.aiDashboard);
     } on AuthException catch (e) {
-      setState(() => _error = _translate(e.message));
-    } catch (_) {
-      setState(() => _error = AppLocalizations.of(context)!.unexpectedError);
+      if (mounted) {
+        final locale = Localizations.localeOf(context).languageCode;
+        setState(() => _error = AuthExceptionHandler.translate(e, locale));
+      }
+    } catch (e) {
+      if (mounted) {
+        final locale = Localizations.localeOf(context).languageCode;
+        setState(() => _error = AuthExceptionHandler.translateCode('auth_unexpected_error', locale));
+      }
     } finally {
       if (mounted) setState(() => _loading = false);
     }
   }
 
-  String _translate(String msg) {
-    if (msg.contains('Invalid login')) {
-      return AppLocalizations.of(context)!.wrongPassword;
-    }
-    if (msg.contains('Email not confirmed')) {
-      return AppLocalizations.of(context)!.codeExpired;
-    }
-    if (msg.contains('Too many')) {
-      return AppLocalizations.of(context)!.tooManyRequests;
-    }
-    return msg;
-  }
-
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final isRtl = Directionality.of(context) == TextDirection.rtl;
+    final colors = context.colors;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Scaffold(
-      backgroundColor: context.colors.background,
+      backgroundColor: colors.beigeBg,
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back_rounded, color: context.colors.onSurface, size: 24),
+          icon: Container(
+            width: 36,
+            height: 36,
+            decoration: BoxDecoration(
+              color: colors.surface.withValues(alpha: 0.85),
+              shape: BoxShape.circle,
+              border: Border.all(
+                color: colors.goldAccent.withValues(alpha: 0.30),
+              ),
+            ),
+            child: Icon(
+              isRtl ? Icons.arrow_forward_ios_rounded : Icons.arrow_back_ios_new_rounded,
+              color: _accent,
+              size: 16,
+            ),
+          ),
           onPressed: () => context.go('/role/operator'),
         ),
+        actions: const [
+          LanguagePickerButton(),
+          SizedBox(width: 16),
+        ],
       ),
-      extendBodyBehindAppBar: true,
-      body: SafeArea(
-        child: Row(
+      body: PageEntryAnimation(
+        child: Stack(
           children: [
-            Expanded(
+            Positioned.fill(
+              child: Container(
+                decoration: BoxDecoration(
+                  gradient: RadialGradient(
+                    center: const Alignment(0.0, -0.3),
+                    radius: 1.2,
+                    colors: isDark 
+                      ? [
+                          colors.background,
+                          colors.surface,
+                          colors.surfaceContainerLow,
+                        ]
+                      : [
+                          const Color(0xFFFFFDF9),
+                          const Color(0xFFF9F6F0),
+                          const Color(0xFFF2ECE0),
+                        ],
+                  ),
+                ),
+              ),
+            ),
+            Positioned.fill(
+              child: FloatingParticles(count: 10, color: colors.goldAccent),
+            ),
+            SafeArea(
               child: Center(
                 child: SingleChildScrollView(
-                  padding: const EdgeInsets.all(28),
-                  child: Form(
-                    key: _formKey,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        // Brand
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.shield_outlined,
-                              color: _aiColor,
-                              size: 40,
-                            ),
-                            const SizedBox(width: 12),
-                            Text(
-                              l10n.alIttihad,
-                              style: TextStyle(
-                                fontSize: 28,
-                                fontWeight: FontWeight.w900,
-                                color: _aiColor,
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 28),
-                        Text(
-                          '${l10n.employeePortalSubtitle} — ${l10n.alIttihad}',
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                            color: context.colors.onSurface,
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        Text(
-                          l10n.loginToSystemPrompt,
-                          style: TextStyle(
-                            color: context.colors.onSurfaceVariant,
-                          ),
-                        ),
-                        const SizedBox(height: 32),
-
-                        // ── Error ──────────────────────────────────
-                        if (_error != null) ...[
-                          Container(
-                            width: double.infinity,
-                            padding: const EdgeInsets.all(12),
-                            margin: const EdgeInsets.only(bottom: 16),
-                            decoration: BoxDecoration(
-                              color: AppColors.rejected.withValues(alpha: 0.08),
-                              borderRadius: BorderRadius.circular(8),
-                              border: Border.all(
-                                color: AppColors.rejected.withValues(
-                                  alpha: 0.3,
-                                ),
-                              ),
-                            ),
-                            child: Text(
-                              _error!,
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                fontSize: 13,
-                                color: AppColors.rejected,
-                              ),
-                            ),
-                          ),
-                        ],
-
-                        // ── Email ───────────────────────────────────
-                        TextFormField(
-                          controller: _emailCtrl,
-                          keyboardType: TextInputType.emailAddress,
-                          textDirection: TextDirection.ltr,
-                          decoration: InputDecoration(
-                            labelText: l10n.emailLabel,
-                            prefixIcon: const Icon(Icons.email_outlined),
-                            hintText: 'employee@alittihad.dz',
-                          ),
-                          validator: (v) {
-                            if (v == null || v.isEmpty) {
-                              return l10n.emailRequired;
-                            }
-                            if (!v.contains('@')) return l10n.invalidEmailError;
-                            return null;
-                          },
-                        ),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 28,
+                    vertical: 16,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      const SizedBox(height: 24),
+                      _buildLogoCenterpiece(l10n),
+                      const SizedBox(height: 28),
+                      if (_error != null) ...[
+                        _buildErrorBanner(_error!),
                         const SizedBox(height: 16),
-
-                        // ── Password ────────────────────────────────
-                        TextFormField(
-                          controller: _pwCtrl,
-                          obscureText: _obscure,
-                          decoration: InputDecoration(
-                            labelText: l10n.password,
-                            prefixIcon: const Icon(Icons.lock_outlined),
-                            suffixIcon: IconButton(
-                              icon: Icon(
-                                _obscure
-                                    ? Icons.visibility_off_outlined
-                                    : Icons.visibility_outlined,
-                              ),
-                              onPressed:
-                                  () => setState(() => _obscure = !_obscure),
-                            ),
-                          ),
-                          validator: (v) {
-                            if (v == null || v.isEmpty) {
-                              return l10n.passwordRequired;
-                            }
-                            if (v.length < 6) return l10n.passwordTooShortError;
-                            return null;
-                          },
-                        ),
-                        const SizedBox(height: 24),
-
-                        // ── Login button ─────────────────────────────
-                        SizedBox(
-                          width: double.infinity,
-                          child: ElevatedButton(
-                            onPressed: _loading ? null : _login,
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: _aiColor,
-                              minimumSize: const Size.fromHeight(52),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(14),
-                              ),
-                            ),
-                            child:
-                                _loading
-                                    ? const CircularProgressIndicator(
-                                      color: Colors.white,
-                                      strokeWidth: 2,
-                                    )
-                                    : Text(
-                                      l10n.loginAction,
-                                      style: const TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                          ),
-                        ),
-                        const SizedBox(height: 16),
-
-                        // ── Register link ────────────────────────────
-                        Wrap(
-                          alignment: WrapAlignment.center,
-                          crossAxisAlignment: WrapCrossAlignment.center,
-                          children: [
-                            TextButton(
-                              onPressed: () => context.go('/ai/register'),
-                              child: Text(
-                                l10n.createEmployeeAccount,
-                                style: TextStyle(
-                                  color: _aiColor,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                            ),
-                            Text(
-                              l10n.newEmployeeQuestion,
-                              style: TextStyle(
-                                fontSize: 13,
-                                color: context.colors.slate500,
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 8),
-
-                        // ── Isolation note ────────────────────────────
-                        Container(
-                          padding: const EdgeInsets.all(12),
-                          decoration: BoxDecoration(
-                            color: _aiColor.withValues(alpha: 0.04),
-                            borderRadius: BorderRadius.circular(10),
-                            border: Border.all(
-                              color: _aiColor.withValues(alpha: 0.15),
-                            ),
-                          ),
-                          child: Row(
-                            children: [
-                              Icon(
-                                Icons.lock_outline,
-                                size: 14,
-                                color: _aiColor,
-                              ),
-                              const SizedBox(width: 8),
-                              Expanded(
-                                child: Text(
-                                  l10n.exclusivePortalNote(l10n.alIttihad),
-                                  style: TextStyle(
-                                    fontSize: 11,
-                                    color: _aiColor,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
                       ],
-                    ),
+                      _buildFormCard(l10n),
+                      const SizedBox(height: 24),
+                      _buildSubmitButton(l10n),
+                      const SizedBox(height: 16),
+                      Align(
+                        alignment: AlignmentDirectional.centerStart,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 24),
+                          child: TextButton(
+                            onPressed: () {},
+                            child: Text(
+                              l10n.forgotPassword,
+                              style: const TextStyle(
+                                color: _accent,
+                                fontWeight: FontWeight.w600,
+                                fontFamily: 'Cairo',
+                                fontSize: 13,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ).animate().fadeIn(delay: 700.ms),
+                      const SizedBox(height: 24),
+                    ],
                   ),
                 ),
               ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildLogoCenterpiece(AppLocalizations l10n) {
+    final colors = context.colors;
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Container(
+          width: 110,
+          height: 110,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(20),
+            color: Colors.transparent,
+            boxShadow: [
+              BoxShadow(
+                color: _accent.withValues(alpha: 0.16),
+                blurRadius: 20,
+                offset: const Offset(0, 6),
+              ),
+            ],
+          ),
+          child: Image.asset(
+            'assets/images/logotameen.jpg',
+            fit: BoxFit.contain,
+            errorBuilder: (_, __, ___) => Icon(Icons.shield_rounded, size: 80, color: _accent),
+          ),
+        )
+            .animate()
+            .scale(
+              begin: const Offset(0.8, 0.8),
+              duration: 700.ms,
+              curve: Curves.easeOutBack,
+            )
+            .fadeIn(duration: 500.ms),
+        const SizedBox(height: 16),
+        Text(
+          l10n.alIttihad,
+          style: const TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+            color: _accent,
+            fontFamily: 'Cairo',
+            letterSpacing: 1.2,
+          ),
+        ).animate().fadeIn(delay: 300.ms).slideY(begin: 0.2, end: 0),
+        const SizedBox(height: 4),
+        Text(
+          l10n.operatorPortalTitle,
+          style: TextStyle(
+            fontSize: 14,
+            color: colors.onSurfaceVariant,
+            fontFamily: 'Cairo',
+          ),
+        ).animate().fadeIn(delay: 350.ms),
+        const SizedBox(height: 10),
+        Container(
+          width: 32,
+          height: 2,
+          color: colors.goldAccent,
+        ).animate().fadeIn(delay: 400.ms).scaleX(begin: 0, end: 1),
+      ],
+    );
+  }
+
+  Widget _buildErrorBanner(String message) {
+    final colors = context.colors;
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      margin: const EdgeInsets.symmetric(horizontal: 24),
+      decoration: BoxDecoration(
+        color: colors.error.withValues(alpha: 0.06),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: colors.error.withValues(alpha: 0.25)),
+      ),
+      child: Row(
+        children: [
+          Icon(Icons.error_outline, color: colors.error, size: 18),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Text(
+              message,
+              style: TextStyle(
+                color: colors.error,
+                fontSize: 13,
+                fontFamily: 'Cairo',
+              ),
+            ),
+          ),
+        ],
+      ),
+    ).animate().shake(duration: 400.ms);
+  }
+
+  Widget _buildFormCard(AppLocalizations l10n) {
+    final colors = context.colors;
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 24),
+      child: Container(
+        decoration: BoxDecoration(
+          color: colors.beigeCard,
+          borderRadius: BorderRadius.circular(24),
+          border: Border.all(
+            color: colors.goldAccent.withValues(alpha: 0.25),
+            width: 1.5,
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.06),
+              blurRadius: 20,
+              offset: const Offset(0, 8),
+            ),
+          ],
+        ),
+        clipBehavior: Clip.antiAlias,
+        child: Padding(
+          padding: const EdgeInsets.all(28),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Center(
+                  child: Text(
+                    l10n.login,
+                    style: const TextStyle(
+                      fontSize: 22,
+                      fontWeight: FontWeight.w800,
+                      color: _accent,
+                      fontFamily: 'Cairo',
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Center(
+                  child: Text(
+                    l10n.alIttihad,
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: colors.onSurfaceVariant,
+                      fontFamily: 'Cairo',
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 24),
+                _PremiumFieldLabel(label: l10n.email),
+                const SizedBox(height: 8),
+                Directionality(
+                  textDirection: TextDirection.ltr,
+                  child: TextFormField(
+                    controller: _emailCtrl,
+                    keyboardType: TextInputType.emailAddress,
+                    style: const TextStyle(fontSize: 14),
+                    decoration: _inputDecoration(
+                      hint: 'example@email.com',
+                      icon: Icons.email_outlined,
+                    ),
+                    validator: (v) =>
+                        v!.isEmpty ? l10n.emailRequired : null,
+                  ),
+                ),
+                const SizedBox(height: 16),
+                _PremiumFieldLabel(label: l10n.password),
+                const SizedBox(height: 8),
+                Directionality(
+                  textDirection: TextDirection.ltr,
+                  child: TextFormField(
+                    controller: _pwCtrl,
+                    obscureText: _obscurePw,
+                    style: const TextStyle(fontSize: 14),
+                    decoration: _inputDecoration(
+                      hint: '••••••••',
+                      icon: Icons.lock_outline,
+                    ).copyWith(
+                      suffixIcon: IconButton(
+                        icon: Icon(
+                          _obscurePw
+                              ? Icons.visibility_off_outlined
+                              : Icons.visibility_outlined,
+                          color: colors.goldAccent.withValues(alpha: 0.7),
+                          size: 20,
+                        ),
+                        onPressed: () =>
+                            setState(() => _obscurePw = !_obscurePw),
+                      ),
+                    ),
+                    validator: (v) =>
+                        v!.isEmpty ? l10n.passwordRequired : null,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    )
+        .animate()
+        .fadeIn(delay: 200.ms, duration: 400.ms)
+        .slideY(begin: 0.08, end: 0, curve: Curves.easeOutCubic);
+  }
+
+  Widget _buildSubmitButton(AppLocalizations l10n) {
+    final colors = context.colors;
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 24),
+      child: SizedBox(
+        height: 56,
+        width: double.infinity,
+        child: GestureDetector(
+          onTap: _loading ? null : _login,
+          child: DecoratedBox(
+            decoration: BoxDecoration(
+              gradient: const LinearGradient(
+                colors: [_accent, _dark],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+              borderRadius: BorderRadius.circular(40),
+              border: Border.all(
+                color: colors.goldAccent.withValues(alpha: 0.45),
+                width: 1.5,
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: _accent.withValues(alpha: 0.35),
+                  blurRadius: 20,
+                  offset: const Offset(0, 8),
+                ),
+              ],
+            ),
+            child: Center(
+              child: _loading
+                  ? SizedBox(
+                      width: 24,
+                      height: 24,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2.5,
+                        color: colors.surface,
+                      ),
+                    )
+                  : Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Icon(Icons.login_rounded, size: 18, color: Colors.white),
+                        const SizedBox(width: 8),
+                        Text(
+                          l10n.login,
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: colors.surface,
+                            fontFamily: 'Cairo',
+                          ),
+                        ),
+                      ],
+                    ),
+            ),
+          ),
+        ),
+      ),
+    )
+        .animate()
+        .fadeIn(delay: 600.ms)
+        .slideY(begin: 0.2, end: 0, curve: Curves.easeOutBack)
+        .shimmer(delay: 1400.ms, duration: 1800.ms);
+  }
+
+  InputDecoration _inputDecoration({
+    required String hint,
+    required IconData icon,
+  }) {
+    final colors = context.colors;
+    return InputDecoration(
+      hintText: hint,
+      filled: true,
+      fillColor: colors.beigeCard,
+      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+      prefixIcon: Icon(icon, color: colors.goldAccent, size: 20),
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(14),
+        borderSide: BorderSide(color: colors.warmDivider),
+      ),
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(14),
+        borderSide: BorderSide(color: colors.warmDivider),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(14),
+        borderSide: const BorderSide(color: _accent, width: 1.5),
+      ),
+      errorBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(14),
+        borderSide: BorderSide(color: colors.error),
+      ),
+      focusedErrorBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(14),
+        borderSide: BorderSide(color: colors.error, width: 1.5),
+      ),
+    );
+  }
+}
+
+class _PremiumFieldLabel extends StatelessWidget {
+  const _PremiumFieldLabel({required this.label});
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
+    return Align(
+      alignment: AlignmentDirectional.centerStart,
+      child: Text(
+        label,
+        style: TextStyle(
+          fontSize: 13,
+          fontWeight: FontWeight.w600,
+          color: context.colors.darkText,
+          fontFamily: 'Cairo',
         ),
       ),
     );
